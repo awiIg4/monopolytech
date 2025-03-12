@@ -1,0 +1,609 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DFE491522D8194EB00A9FA2C /* monopolytechApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE491512D8194EB00A9FA2C /* monopolytechApp.swift */; };
+		DFE491542D8194EB00A9FA2C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE491532D8194EB00A9FA2C /* ContentView.swift */; };
+		DFE491562D8194EC00A9FA2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFE491552D8194EC00A9FA2C /* Assets.xcassets */; };
+		DFE4915A2D8194EC00A9FA2C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFE491592D8194EC00A9FA2C /* Preview Assets.xcassets */; };
+		DFE491642D8194ED00A9FA2C /* monopolytechTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE491632D8194ED00A9FA2C /* monopolytechTests.swift */; };
+		DFE4916E2D8194ED00A9FA2C /* monopolytechUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE4916D2D8194ED00A9FA2C /* monopolytechUITests.swift */; };
+		DFE491702D8194ED00A9FA2C /* monopolytechUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE4916F2D8194ED00A9FA2C /* monopolytechUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DFE491602D8194ED00A9FA2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DFE491462D8194EB00A9FA2C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DFE4914D2D8194EB00A9FA2C;
+			remoteInfo = monopolytech;
+		};
+		DFE4916A2D8194ED00A9FA2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DFE491462D8194EB00A9FA2C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DFE4914D2D8194EB00A9FA2C;
+			remoteInfo = monopolytech;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		DFE4914E2D8194EB00A9FA2C /* monopolytech.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = monopolytech.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFE491512D8194EB00A9FA2C /* monopolytechApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = monopolytechApp.swift; sourceTree = "<group>"; };
+		DFE491532D8194EB00A9FA2C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		DFE491552D8194EC00A9FA2C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DFE491572D8194EC00A9FA2C /* monopolytech.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = monopolytech.entitlements; sourceTree = "<group>"; };
+		DFE491592D8194EC00A9FA2C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		DFE4915F2D8194EC00A9FA2C /* monopolytechTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = monopolytechTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFE491632D8194ED00A9FA2C /* monopolytechTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = monopolytechTests.swift; sourceTree = "<group>"; };
+		DFE491692D8194ED00A9FA2C /* monopolytechUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = monopolytechUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFE4916D2D8194ED00A9FA2C /* monopolytechUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = monopolytechUITests.swift; sourceTree = "<group>"; };
+		DFE4916F2D8194ED00A9FA2C /* monopolytechUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = monopolytechUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DFE4914B2D8194EB00A9FA2C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFE4915C2D8194EC00A9FA2C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFE491662D8194ED00A9FA2C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DFE491452D8194EB00A9FA2C = {
+			isa = PBXGroup;
+			children = (
+				DFE491502D8194EB00A9FA2C /* monopolytech */,
+				DFE491622D8194ED00A9FA2C /* monopolytechTests */,
+				DFE4916C2D8194ED00A9FA2C /* monopolytechUITests */,
+				DFE4914F2D8194EB00A9FA2C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DFE4914F2D8194EB00A9FA2C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DFE4914E2D8194EB00A9FA2C /* monopolytech.app */,
+				DFE4915F2D8194EC00A9FA2C /* monopolytechTests.xctest */,
+				DFE491692D8194ED00A9FA2C /* monopolytechUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DFE491502D8194EB00A9FA2C /* monopolytech */ = {
+			isa = PBXGroup;
+			children = (
+				DFE491512D8194EB00A9FA2C /* monopolytechApp.swift */,
+				DFE491532D8194EB00A9FA2C /* ContentView.swift */,
+				DFE491552D8194EC00A9FA2C /* Assets.xcassets */,
+				DFE491572D8194EC00A9FA2C /* monopolytech.entitlements */,
+				DFE491582D8194EC00A9FA2C /* Preview Content */,
+			);
+			path = monopolytech;
+			sourceTree = "<group>";
+		};
+		DFE491582D8194EC00A9FA2C /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				DFE491592D8194EC00A9FA2C /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		DFE491622D8194ED00A9FA2C /* monopolytechTests */ = {
+			isa = PBXGroup;
+			children = (
+				DFE491632D8194ED00A9FA2C /* monopolytechTests.swift */,
+			);
+			path = monopolytechTests;
+			sourceTree = "<group>";
+		};
+		DFE4916C2D8194ED00A9FA2C /* monopolytechUITests */ = {
+			isa = PBXGroup;
+			children = (
+				DFE4916D2D8194ED00A9FA2C /* monopolytechUITests.swift */,
+				DFE4916F2D8194ED00A9FA2C /* monopolytechUITestsLaunchTests.swift */,
+			);
+			path = monopolytechUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DFE4914D2D8194EB00A9FA2C /* monopolytech */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DFE491732D8194ED00A9FA2C /* Build configuration list for PBXNativeTarget "monopolytech" */;
+			buildPhases = (
+				DFE4914A2D8194EB00A9FA2C /* Sources */,
+				DFE4914B2D8194EB00A9FA2C /* Frameworks */,
+				DFE4914C2D8194EB00A9FA2C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = monopolytech;
+			productName = monopolytech;
+			productReference = DFE4914E2D8194EB00A9FA2C /* monopolytech.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DFE4915E2D8194EC00A9FA2C /* monopolytechTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DFE491762D8194ED00A9FA2C /* Build configuration list for PBXNativeTarget "monopolytechTests" */;
+			buildPhases = (
+				DFE4915B2D8194EC00A9FA2C /* Sources */,
+				DFE4915C2D8194EC00A9FA2C /* Frameworks */,
+				DFE4915D2D8194EC00A9FA2C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DFE491612D8194ED00A9FA2C /* PBXTargetDependency */,
+			);
+			name = monopolytechTests;
+			productName = monopolytechTests;
+			productReference = DFE4915F2D8194EC00A9FA2C /* monopolytechTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		DFE491682D8194ED00A9FA2C /* monopolytechUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DFE491792D8194ED00A9FA2C /* Build configuration list for PBXNativeTarget "monopolytechUITests" */;
+			buildPhases = (
+				DFE491652D8194ED00A9FA2C /* Sources */,
+				DFE491662D8194ED00A9FA2C /* Frameworks */,
+				DFE491672D8194ED00A9FA2C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DFE4916B2D8194ED00A9FA2C /* PBXTargetDependency */,
+			);
+			name = monopolytechUITests;
+			productName = monopolytechUITests;
+			productReference = DFE491692D8194ED00A9FA2C /* monopolytechUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DFE491462D8194EB00A9FA2C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1420;
+				LastUpgradeCheck = 1420;
+				TargetAttributes = {
+					DFE4914D2D8194EB00A9FA2C = {
+						CreatedOnToolsVersion = 14.2;
+					};
+					DFE4915E2D8194EC00A9FA2C = {
+						CreatedOnToolsVersion = 14.2;
+						TestTargetID = DFE4914D2D8194EB00A9FA2C;
+					};
+					DFE491682D8194ED00A9FA2C = {
+						CreatedOnToolsVersion = 14.2;
+						TestTargetID = DFE4914D2D8194EB00A9FA2C;
+					};
+				};
+			};
+			buildConfigurationList = DFE491492D8194EB00A9FA2C /* Build configuration list for PBXProject "monopolytech" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = DFE491452D8194EB00A9FA2C;
+			productRefGroup = DFE4914F2D8194EB00A9FA2C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DFE4914D2D8194EB00A9FA2C /* monopolytech */,
+				DFE4915E2D8194EC00A9FA2C /* monopolytechTests */,
+				DFE491682D8194ED00A9FA2C /* monopolytechUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DFE4914C2D8194EB00A9FA2C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFE4915A2D8194EC00A9FA2C /* Preview Assets.xcassets in Resources */,
+				DFE491562D8194EC00A9FA2C /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFE4915D2D8194EC00A9FA2C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFE491672D8194ED00A9FA2C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DFE4914A2D8194EB00A9FA2C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFE491542D8194EB00A9FA2C /* ContentView.swift in Sources */,
+				DFE491522D8194EB00A9FA2C /* monopolytechApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFE4915B2D8194EC00A9FA2C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFE491642D8194ED00A9FA2C /* monopolytechTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFE491652D8194ED00A9FA2C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFE4916E2D8194ED00A9FA2C /* monopolytechUITests.swift in Sources */,
+				DFE491702D8194ED00A9FA2C /* monopolytechUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DFE491612D8194ED00A9FA2C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DFE4914D2D8194EB00A9FA2C /* monopolytech */;
+			targetProxy = DFE491602D8194ED00A9FA2C /* PBXContainerItemProxy */;
+		};
+		DFE4916B2D8194ED00A9FA2C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DFE4914D2D8194EB00A9FA2C /* monopolytech */;
+			targetProxy = DFE4916A2D8194ED00A9FA2C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		DFE491712D8194ED00A9FA2C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		DFE491722D8194ED00A9FA2C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		DFE491742D8194ED00A9FA2C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = monopolytech/monopolytech.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"monopolytech/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 12.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.polytech.monopolytech;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DFE491752D8194ED00A9FA2C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = monopolytech/monopolytech.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"monopolytech/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 12.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.polytech.monopolytech;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		DFE491772D8194ED00A9FA2C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MACOSX_DEPLOYMENT_TARGET = 12.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.polytech.monopolytechTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/monopolytech.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/monopolytech";
+			};
+			name = Debug;
+		};
+		DFE491782D8194ED00A9FA2C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MACOSX_DEPLOYMENT_TARGET = 12.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.polytech.monopolytechTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/monopolytech.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/monopolytech";
+			};
+			name = Release;
+		};
+		DFE4917A2D8194ED00A9FA2C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MACOSX_DEPLOYMENT_TARGET = 12.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.polytech.monopolytechUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = monopolytech;
+			};
+			name = Debug;
+		};
+		DFE4917B2D8194ED00A9FA2C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MACOSX_DEPLOYMENT_TARGET = 12.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.polytech.monopolytechUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = monopolytech;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DFE491492D8194EB00A9FA2C /* Build configuration list for PBXProject "monopolytech" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DFE491712D8194ED00A9FA2C /* Debug */,
+				DFE491722D8194ED00A9FA2C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DFE491732D8194ED00A9FA2C /* Build configuration list for PBXNativeTarget "monopolytech" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DFE491742D8194ED00A9FA2C /* Debug */,
+				DFE491752D8194ED00A9FA2C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DFE491762D8194ED00A9FA2C /* Build configuration list for PBXNativeTarget "monopolytechTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DFE491772D8194ED00A9FA2C /* Debug */,
+				DFE491782D8194ED00A9FA2C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DFE491792D8194ED00A9FA2C /* Build configuration list for PBXNativeTarget "monopolytechUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DFE4917A2D8194ED00A9FA2C /* Debug */,
+				DFE4917B2D8194ED00A9FA2C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = DFE491462D8194EB00A9FA2C /* Project object */;
+}
