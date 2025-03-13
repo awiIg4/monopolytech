@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DF7EECD12D82E85700ADACAA /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECD02D82E85700ADACAA /* AuthService.swift */; };
+		DF7EECD32D82E87600ADACAA /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECD22D82E87600ADACAA /* APIService.swift */; };
+		DF7EECD52D82E89100ADACAA /* GameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECD42D82E89100ADACAA /* GameModel.swift */; };
+		DF7EECD72D82E8B800ADACAA /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECD62D82E8B800ADACAA /* HomeView.swift */; };
+		DF7EECD92D82E8CB00ADACAA /* HomeIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECD82D82E8CB00ADACAA /* HomeIntent.swift */; };
+		DF7EECDB2D82E94E00ADACAA /* HomeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECDA2D82E94E00ADACAA /* HomeState.swift */; };
+		DF7EECDD2D82E99D00ADACAA /* GameCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECDC2D82E99D00ADACAA /* GameCard.swift */; };
 		DFE491522D8194EB00A9FA2C /* monopolytechApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE491512D8194EB00A9FA2C /* monopolytechApp.swift */; };
 		DFE491542D8194EB00A9FA2C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE491532D8194EB00A9FA2C /* ContentView.swift */; };
 		DFE491562D8194EC00A9FA2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFE491552D8194EC00A9FA2C /* Assets.xcassets */; };
@@ -34,6 +41,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DF7EECD02D82E85700ADACAA /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		DF7EECD22D82E87600ADACAA /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		DF7EECD42D82E89100ADACAA /* GameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModel.swift; sourceTree = "<group>"; };
+		DF7EECD62D82E8B800ADACAA /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		DF7EECD82D82E8CB00ADACAA /* HomeIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeIntent.swift; sourceTree = "<group>"; };
+		DF7EECDA2D82E94E00ADACAA /* HomeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeState.swift; sourceTree = "<group>"; };
+		DF7EECDC2D82E99D00ADACAA /* GameCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCard.swift; sourceTree = "<group>"; };
 		DFE4914E2D8194EB00A9FA2C /* monopolytech.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = monopolytech.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFE491512D8194EB00A9FA2C /* monopolytechApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = monopolytechApp.swift; sourceTree = "<group>"; };
 		DFE491532D8194EB00A9FA2C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -72,6 +86,73 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DF7EECC82D82E64900ADACAA /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				DF7EECC92D82E66800ADACAA /* Home */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		DF7EECC92D82E66800ADACAA /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				DF7EECD62D82E8B800ADACAA /* HomeView.swift */,
+				DF7EECD82D82E8CB00ADACAA /* HomeIntent.swift */,
+				DF7EECDA2D82E94E00ADACAA /* HomeState.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		DF7EECCA2D82E6FD00ADACAA /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				DF7EECCB2D82E70B00ADACAA /* Models */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		DF7EECCB2D82E70B00ADACAA /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				DF7EECD42D82E89100ADACAA /* GameModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		DF7EECCC2D82E72100ADACAA /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				DF7EECCF2D82E7E900ADACAA /* Authentification */,
+				DF7EECCE2D82E7D500ADACAA /* Network */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		DF7EECCD2D82E72F00ADACAA /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				DF7EECDC2D82E99D00ADACAA /* GameCard.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		DF7EECCE2D82E7D500ADACAA /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				DF7EECD22D82E87600ADACAA /* APIService.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		DF7EECCF2D82E7E900ADACAA /* Authentification */ = {
+			isa = PBXGroup;
+			children = (
+				DF7EECD02D82E85700ADACAA /* AuthService.swift */,
+			);
+			path = Authentification;
+			sourceTree = "<group>";
+		};
 		DFE491452D8194EB00A9FA2C = {
 			isa = PBXGroup;
 			children = (
@@ -95,6 +176,10 @@
 		DFE491502D8194EB00A9FA2C /* monopolytech */ = {
 			isa = PBXGroup;
 			children = (
+				DF7EECCD2D82E72F00ADACAA /* UI */,
+				DF7EECCC2D82E72100ADACAA /* Data */,
+				DF7EECCA2D82E6FD00ADACAA /* Domain */,
+				DF7EECC82D82E64900ADACAA /* Features */,
 				DFE491512D8194EB00A9FA2C /* monopolytechApp.swift */,
 				DFE491532D8194EB00A9FA2C /* ContentView.swift */,
 				DFE491552D8194EC00A9FA2C /* Assets.xcassets */,
@@ -259,7 +344,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF7EECD52D82E89100ADACAA /* GameModel.swift in Sources */,
+				DF7EECDD2D82E99D00ADACAA /* GameCard.swift in Sources */,
+				DF7EECD12D82E85700ADACAA /* AuthService.swift in Sources */,
+				DF7EECD92D82E8CB00ADACAA /* HomeIntent.swift in Sources */,
 				DFE491542D8194EB00A9FA2C /* ContentView.swift in Sources */,
+				DF7EECDB2D82E94E00ADACAA /* HomeState.swift in Sources */,
+				DF7EECD72D82E8B800ADACAA /* HomeView.swift in Sources */,
+				DF7EECD32D82E87600ADACAA /* APIService.swift in Sources */,
 				DFE491522D8194EB00A9FA2C /* monopolytechApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
