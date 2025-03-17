@@ -2,7 +2,7 @@
 //  LicenseModel.swift
 //  monopolytech
 //
-//  Created by hugo on 17/03/2024.
+//  Created by Hugo Brun on 17/03/2025.
 //
 
 import Foundation

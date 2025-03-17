@@ -20,7 +20,6 @@ struct Game: Identifiable, Codable, Hashable {
     let createdAt: Date?
     let updatedAt: Date?
     
-    // Pour faciliter les previews et tests
     static let placeholder = Game(
         id: "1",
         title: "Assassin's Creed",
