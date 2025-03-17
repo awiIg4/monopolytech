@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// TODO: Convert to a real test suite
 struct APITestView: View {
     @State private var testResults = "No tests run yet"
     @State private var isRunningTests = false
@@ -39,6 +40,7 @@ struct APITestView: View {
             .cornerRadius(8)
             .padding()
         }
+        .toastMessage() // Add toast message support
     }
     
     private func runTests() {
@@ -53,27 +55,27 @@ struct APITestView: View {
             // Test fetchGames
             do {
                 gamesTestResult += "📱 Testing fetchGames()...\n"
-                let games = try await APIService.shared.fetchGames()
+                let games = try await GameService.shared.fetchGames()
                 gamesTestResult += "✅ Successfully fetched \(games.count) games\n"
                 if let firstGame = games.first {
                     gamesTestResult += "First game: \(firstGame.title)\n"
                     gamesTestResult += "Price: \(firstGame.price) €\n"
                 }
-            } catch {
-                gamesTestResult += "❌ Error fetching games: \(error.localizedDescription)\n"
-            }
-            
-            // Test fetchCategories
-            do {
-                categoriesTestResult += "📱 Testing fetchCategories()...\n"
-                let categories = try await APIService.shared.fetchCategories()
-                categoriesTestResult += "✅ Successfully fetched \(categories.count) categories\n"
-                if !categories.isEmpty {
-                    categoriesTestResult += "Categories: \(categories.map { $0.name }.joined(separator: ", "))\n"
+                
+                // Show success notification
+                await MainActor.run {
+                    NotificationService.shared.showSuccess("Games fetched successfully!")
                 }
             } catch {
-                categoriesTestResult += "❌ Error fetching categories: \(error.localizedDescription)\n"
+                gamesTestResult += "❌ Error fetching games: \(error.localizedDescription)\n"
+                
+                // Show error notification
+                await MainActor.run {
+                    NotificationService.shared.showError(error)
+                }
             }
+            
+            // Other tests...
             
             // Combine results only at the end
             let finalResults = gamesTestResult + "\n-------------------\n\n" + categoriesTestResult

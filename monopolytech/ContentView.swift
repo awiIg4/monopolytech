@@ -36,17 +36,47 @@ struct ContentView: View {
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
-                    
-                    // API Test Button
-                    NavigationLink(destination: APITestView()) {
-                        HStack {
-                            Image(systemName: "antenna.radiowaves.left.and.right")
-                            Text("Tester l'API")
+
+                    // Navigation Buttons
+                    VStack(spacing: 15) {
+                        // Game Catalog Button
+                        NavigationLink(destination: HomeView()) {
+                            HStack {
+                                Image(systemName: "gamecontroller")
+                                Text("Catalogue de Jeux")
+                            }
+                            .frame(minWidth: 250)
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
                         }
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                        
+                        // Login Button
+                        NavigationLink(destination: Text("Login View - Coming Soon")) {
+                            HStack {
+                                Image(systemName: "person.circle")
+                                Text("Se Connecter")
+                            }
+                            .frame(minWidth: 250)
+                            .padding()
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                        }
+                        
+                        // API Test Button (for development)
+                        NavigationLink(destination: APITestView()) {
+                            HStack {
+                                Image(systemName: "antenna.radiowaves.left.and.right")
+                                Text("Tester l'API")
+                            }
+                            .frame(minWidth: 250)
+                            .padding()
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                        }
                     }
                     .padding(.top, 20)
                     

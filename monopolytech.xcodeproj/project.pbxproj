@@ -16,6 +16,9 @@
 		DF7EECDD2D82E99D00ADACAA /* GameCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECDC2D82E99D00ADACAA /* GameCard.swift */; };
 		DF7EECDF2D88581200ADACAA /* APITester.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECDE2D88581200ADACAA /* APITester.swift */; };
 		DF7EECE12D88583F00ADACAA /* APITestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECE02D88583F00ADACAA /* APITestView.swift */; };
+		DF7EECE42D886DD100ADACAA /* GameService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECE32D886DD100ADACAA /* GameService.swift */; };
+		DF7EECE72D886E7200ADACAA /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECE62D886E7200ADACAA /* NotificationService.swift */; };
+		DF7EECE92D88711200ADACAA /* APITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECE82D88711200ADACAA /* APITests.swift */; };
 		DFE491522D8194EB00A9FA2C /* monopolytechApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE491512D8194EB00A9FA2C /* monopolytechApp.swift */; };
 		DFE491542D8194EB00A9FA2C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE491532D8194EB00A9FA2C /* ContentView.swift */; };
 		DFE491562D8194EC00A9FA2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFE491552D8194EC00A9FA2C /* Assets.xcassets */; };
@@ -53,6 +56,9 @@
 		DF7EECDE2D88581200ADACAA /* APITester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITester.swift; sourceTree = "<group>"; };
 		DF7EECE02D88583F00ADACAA /* APITestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITestView.swift; sourceTree = "<group>"; };
 		DF7EECE22D8868C300ADACAA /* temp.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = temp.md; sourceTree = "<group>"; };
+		DF7EECE32D886DD100ADACAA /* GameService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameService.swift; sourceTree = "<group>"; };
+		DF7EECE62D886E7200ADACAA /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		DF7EECE82D88711200ADACAA /* APITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITests.swift; sourceTree = "<group>"; };
 		DFE4914E2D8194EB00A9FA2C /* monopolytech.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = monopolytech.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFE491512D8194EB00A9FA2C /* monopolytechApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = monopolytechApp.swift; sourceTree = "<group>"; };
 		DFE491532D8194EB00A9FA2C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -128,6 +134,7 @@
 		DF7EECCC2D82E72100ADACAA /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				DF7EECE52D886DDE00ADACAA /* Services */,
 				DF7EECCF2D82E7E900ADACAA /* Authentification */,
 				DF7EECCE2D82E7D500ADACAA /* Network */,
 			);
@@ -158,6 +165,15 @@
 				DF7EECD02D82E85700ADACAA /* AuthService.swift */,
 			);
 			path = Authentification;
+			sourceTree = "<group>";
+		};
+		DF7EECE52D886DDE00ADACAA /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				DF7EECE32D886DD100ADACAA /* GameService.swift */,
+				DF7EECE62D886E7200ADACAA /* NotificationService.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		DFE491452D8194EB00A9FA2C = {
@@ -209,6 +225,7 @@
 			isa = PBXGroup;
 			children = (
 				DFE491632D8194ED00A9FA2C /* monopolytechTests.swift */,
+				DF7EECE82D88711200ADACAA /* APITests.swift */,
 			);
 			path = monopolytechTests;
 			sourceTree = "<group>";
@@ -354,7 +371,9 @@
 			files = (
 				DF7EECD52D82E89100ADACAA /* GameModel.swift in Sources */,
 				DF7EECE12D88583F00ADACAA /* APITestView.swift in Sources */,
+				DF7EECE72D886E7200ADACAA /* NotificationService.swift in Sources */,
 				DF7EECDD2D82E99D00ADACAA /* GameCard.swift in Sources */,
+				DF7EECE42D886DD100ADACAA /* GameService.swift in Sources */,
 				DF7EECD12D82E85700ADACAA /* AuthService.swift in Sources */,
 				DF7EECDF2D88581200ADACAA /* APITester.swift in Sources */,
 				DF7EECD92D82E8CB00ADACAA /* HomeIntent.swift in Sources */,
@@ -370,6 +389,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF7EECE92D88711200ADACAA /* APITests.swift in Sources */,
 				DFE491642D8194ED00A9FA2C /* monopolytechTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

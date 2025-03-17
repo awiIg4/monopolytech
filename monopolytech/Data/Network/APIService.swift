@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum APIError: Error, LocalizedError {
     case invalidURL
@@ -33,6 +34,7 @@ enum APIError: Error, LocalizedError {
     }
 }
 
+// Core API service that handles network communication
 class APIService {
     // URL de base de l'API
     private let baseURL: String
@@ -52,7 +54,7 @@ class APIService {
     
     // MARK: - Generic Request Methods
     
-    private func request<T: Decodable>(_ endpoint: String, method: String = "GET", body: Data? = nil) async throws -> T {
+    func request<T: Decodable>(_ endpoint: String, method: String = "GET", body: Data? = nil) async throws -> T {
         guard let url = URL(string: "\(baseURL)/\(endpoint)") else {
             throw APIError.invalidURL
         }
@@ -71,6 +73,12 @@ class APIService {
         
         do {
             let (data, response) = try await session.data(for: request)
+            
+            // Debug the response in development
+            #if DEBUG
+            let jsonString = String(data: data, encoding: .utf8) ?? "Invalid data"
+            print("API Response for \(endpoint): \(jsonString)")
+            #endif
             
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw APIError.invalidResponse
@@ -99,85 +107,6 @@ class APIService {
         }
     }
     
-    // MARK: - Game Endpoints
-    
-    func fetchGames() async throws -> [Game] {
-        do {
-            let url = URL(string: "\(baseURL)/jeux/rechercher")!
-            let (data, _) = try await session.data(for: URLRequest(url: url))
-            
-            // Debug the response
-            let jsonString = String(data: data, encoding: .utf8) ?? "Invalid data"
-            print("API Response: \(jsonString)")
-            
-            // Define a DTO that matches exactly what the API returns
-            struct GameDTO: Decodable {
-                let quantite: Int
-                let prix_min: Double
-                let prix_max: Double
-                let licence_nom: String
-                let editeur_nom: String
-                
-                // Convert to your app's Game model
-                func toGame() -> Game {
-                    return Game(
-                        id: UUID().uuidString, // Generate a temporary ID
-                        title: licence_nom,
-                        description: nil,
-                        price: prix_min,
-                        categoryId: nil,
-                        category: nil,
-                        imageUrl: nil,
-                        sellerId: nil,
-                        sellerName: editeur_nom,
-                        createdAt: nil,
-                        updatedAt: nil
-                    )
-                }
-            }
-            
-            // Decode the array directly
-            let gamesDTO = try JSONDecoder().decode([GameDTO].self, from: data)
-            
-            // Convert to your app's Game model
-            return gamesDTO.map { $0.toGame() }
-        } catch {
-            print("Debug error: \(error)")
-            throw error
-        }
-    }
-    
-    func fetchGame(id: String) async throws -> Game {
-        return try await request("games/\(id)")
-    }
-    
-    func createGame(_ game: Game) async throws -> Game {
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-        let data = try encoder.encode(game)
-        
-        return try await request("games", method: "POST", body: data)
-    }
-    
-    func updateGame(_ game: Game) async throws -> Game {
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-        let data = try encoder.encode(game)
-        
-        return try await request("games/\(game.id)", method: "PUT", body: data)
-    }
-    
-    func deleteGame(id: String) async throws {
-        _ = try await request("games/\(id)", method: "DELETE") as EmptyResponse
-    }
-    
-    // MARK: - Category Endpoints
-    
-    func fetchCategories() async throws -> [Category] {
-        return try await request("categories")
-    }
-    
-    // MARK: - Helper Types
-    
-    private struct EmptyResponse: Decodable {}
+    // Helper struct for empty responses
+    struct EmptyResponse: Decodable {}
 }
