@@ -34,6 +34,7 @@ struct Game: Identifiable, Codable, Hashable {
         updatedAt: Date()
     )
     
+    // For preview and testing purposes
     static let placeholders = [
         Game(
             id: "1",
