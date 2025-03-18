@@ -8,28 +8,24 @@
 import Foundation
 
 struct Game: Identifiable, Codable, Hashable {
-    let id: String
-    let title: String
-    let description: String?
-    let price: Double
-    let categoryId: String?
-    let category: Category?
-    let imageUrl: String?
-    let sellerId: String?
-    let sellerName: String?
+    let id: String?
+    let licence_id: String
+    let licence_name: String?
+    let prix: Double
+    let statut: String?
+    let depot_id: Int?
     let createdAt: Date?
     let updatedAt: Date?
     
+
+    // For previews and tests
     static let placeholder = Game(
         id: "1",
-        title: "Assassin's Creed",
-        description: "Action-aventure dans un univers historique ouvert",
-        price: 39.99,
-        categoryId: "action",
-        category: Category(id: "action", name: "Action"),
-        imageUrl: nil,
-        sellerId: "seller1",
-        sellerName: "GameStore",
+        licence_id: "ac-valhalla",
+        licence_name: "Assassin's Creed Valhalla",
+        prix: 39.99,
+        statut: "available",
+        depot_id: 123,
         createdAt: Date(),
         updatedAt: Date()
     )
@@ -38,40 +34,51 @@ struct Game: Identifiable, Codable, Hashable {
     static let placeholders = [
         Game(
             id: "1",
-            title: "Assassin's Creed",
-            description: "Action-aventure dans un univers historique ouvert",
-            price: 39.99,
-            categoryId: "action",
-            category: Category(id: "action", name: "Action"),
-            imageUrl: nil,
-            sellerId: "seller1",
-            sellerName: "GameStore",
+            licence_id: "ac-valhalla",
+            licence_name: "Assassin's Creed Valhalla",
+            prix: 39.99,
+            statut: "available",
+            depot_id: 123,
             createdAt: Date(),
             updatedAt: Date()
         ),
         Game(
             id: "2",
-            title: "FIFA 2025",
-            description: "Simulation de football avec tous les championnats",
-            price: 59.99,
-            categoryId: "sport",
-            category: Category(id: "sport", name: "Sport"),
-            imageUrl: nil,
-            sellerId: "seller2",
-            sellerName: "SportGames",
+            licence_id: "fifa2025",
+            licence_name: "FIFA 2025",
+            prix: 59.99,
+            statut: "available",
+            depot_id: 124,
             createdAt: Date(),
             updatedAt: Date()
         ),
         Game(
             id: "3",
-            title: "Minecraft",
-            description: "Jeu bac à sable de construction et d'aventure",
-            price: 29.99,
-            categoryId: "sandbox",
-            category: Category(id: "sandbox", name: "Bac à sable"),
-            imageUrl: nil,
-            sellerId: "seller1",
-            sellerName: "GameStore",
+            licence_id: "minecraft",
+            licence_name: "Minecraft",
+            prix: 29.99,
+            statut: "available",
+            depot_id: 125,
+            createdAt: Date(),
+            updatedAt: Date()
+        ),
+        Game(
+            id: "4",
+            licence_id: "fortnite",
+            licence_name: "Fortnite",
+            prix: 0.00,
+            statut: "available",
+            depot_id: 126,
+            createdAt: Date(),
+            updatedAt: Date()
+        ),
+        Game(
+            id: "5",
+            licence_id: "gta-v",
+            licence_name: "Grand Theft Auto V",
+            prix: 29.99,
+            statut: "sold",
+            depot_id: 127,
             createdAt: Date(),
             updatedAt: Date()
         )
