@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct GameCard: View {
+
     let game: Game
     var onTap: ((Game) -> Void)? = nil
     
@@ -16,28 +17,21 @@ struct GameCard: View {
             onTap?(game)
         }) {
             VStack(alignment: .leading, spacing: 8) {
-                // Titre du jeu
-                Text(game.title)
+                // Game title
+                Text(game.licence_name ?? "Unknown Game")
                     .font(.headline)
                     .foregroundColor(.primary)
                     .lineLimit(2)
                 
-                // Catégorie (si disponible)
-                if let categoryName = game.category?.name ?? (game.categoryId != nil ? "Catégorie \(game.categoryId!)" : nil) {
-                    Text(categoryName)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-                
-                // Prix
-                Text("\(formatPrice(game.price)) €")
+                // Price
+                Text("\(formatPrice(game.prix)) €")
                     .font(.title3)
                     .fontWeight(.bold)
                     .foregroundColor(.blue)
                 
-                // Vendeur (si disponible)
-                if let sellerName = game.sellerName {
-                    Text("Vendeur: \(sellerName)")
+                // Status if available
+                if let status = game.statut {
+                    Text("Status: \(status)")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -68,11 +62,8 @@ struct GameCard_Previews: PreviewProvider {
             GameCard(game: Game.placeholder)
                 .padding()
             
-            // Preview en mode grille
+            // Grid preview
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                ForEach(Game.placeholders) { game in
-                    GameCard(game: game)
-                }
                 ForEach(Game.placeholders) { game in
                     GameCard(game: game)
                 }

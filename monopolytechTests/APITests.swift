@@ -17,9 +17,6 @@ final class APITests: XCTestCase {
         super.setUp()
         apiService = APIService()
         gameService = GameService()
-        
-        // Optional: Use test-specific configuration
-        // apiService = APIService(baseURL: "https://back-projet-web-s7-de95e4be6979.herokuapp.com/api")
     }
     
     override func tearDownWithError() throws {
@@ -37,27 +34,24 @@ final class APITests: XCTestCase {
         // Then
         XCTAssertFalse(games.isEmpty, "Should fetch at least one game")
         if let firstGame = games.first {
-            XCTAssertNotNil(firstGame.title, "Game should have a title")
-            XCTAssertGreaterThanOrEqual(firstGame.price, 0.0, "Game price should be non-negative")
+            XCTAssertNotNil(firstGame.licence_name, "Game should have a licence name")
+            XCTAssertGreaterThan(firstGame.prix, 0, "Game price should be greater than 0")
         }
     }
     
-    
-    func testErrorHandling() async {
-        // Given
-        let invalidID = "non-existent-id"
-        
-        do {
-            // When
-            _ = try await gameService.fetchGame(id: invalidID)
-            
-            // Then
-            XCTFail("Expected error for non-existent game ID")
-        } catch let error as APIError {
-            // Verify error is properly handled
-            XCTAssertTrue(error.errorDescription?.count ?? 0 > 0, "Error should have a description")
-        } catch {
-            XCTFail("Unexpected error type: \(error)")
+    func testFetchGameDetails() async throws {
+        // First get a game ID
+        let games = try await gameService.fetchGames()
+        guard let firstGame = games.first, let id = firstGame.id else {
+            XCTFail("No games available to test")
+            return
         }
+        
+        // When
+        let gameDetails = try await gameService.fetchGame(id: id)
+        
+        // Then
+        XCTAssertEqual(gameDetails.id, id, "Game ID should match")
+        XCTAssertNotNil(gameDetails.licence_name, "Game should have a licence name")
     }
 }

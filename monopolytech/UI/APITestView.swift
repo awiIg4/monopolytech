@@ -50,7 +50,7 @@ struct APITestView: View {
         Task {
             // Create separate results for each test to avoid mutation issues
             var gamesTestResult = ""
-            var categoriesTestResult = ""
+            let categoriesTestResult = ""
             
             // Test fetchGames
             do {
