@@ -46,6 +46,6 @@ struct Buyer: Identifiable, Codable, Hashable {
     }
     
     var displayAddress: String {
-        return adresse.isEmpty ? "No address found" : adresse
+        return adresse ?? "No address found"
     }
 } 
