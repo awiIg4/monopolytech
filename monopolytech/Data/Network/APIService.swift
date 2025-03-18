@@ -56,7 +56,7 @@ class APIService {
     
     /// Set the authentication token for secured API endpoints
     /// - Parameter token: The JWT or other authentication token
-    func setSecurityToken(_ token: String) {
+    func setSecurityToken(_ token: String?) {
         self.securityToken = token
     }
     

@@ -7,8 +7,9 @@
 
 import SwiftUI
 
-
 struct ContentView: View {
+    @StateObject private var authService = AuthService.shared
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -52,17 +53,33 @@ struct ContentView: View {
                             .cornerRadius(10)
                         }
                         
-                        // Login Button
-                        NavigationLink(destination: Text("Login View - Coming Soon")) {
-                            HStack {
-                                Image(systemName: "person.circle")
-                                Text("Se Connecter")
+                        // Login/Profile Button
+                        if authService.isAuthenticated {
+                            Button(action: {
+                                authService.logout()
+                            }) {
+                                HStack {
+                                    Image(systemName: "rectangle.portrait.and.arrow.right")
+                                    Text("Se déconnecter")
+                                }
+                                .frame(minWidth: 250)
+                                .padding()
+                                .background(Color.red)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
                             }
-                            .frame(minWidth: 250)
-                            .padding()
-                            .background(Color.green)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
+                        } else {
+                            NavigationLink(destination: LoginView()) {
+                                HStack {
+                                    Image(systemName: "person.circle")
+                                    Text("Se Connecter")
+                                }
+                                .frame(minWidth: 250)
+                                .padding()
+                                .background(Color.green)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                            }
                         }
                         
                         // API Test Button (for development)
@@ -92,6 +109,7 @@ struct ContentView: View {
             }
             .navigationBarHidden(true)
         }
+        .environmentObject(authService)
     }
 }
 
