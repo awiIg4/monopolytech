@@ -118,6 +118,104 @@ class APIService {
         }
     }
     
+    /// Debug function to make raw API requests and return unparsed data
+    func debugRawRequest(
+        _ endpoint: String,
+        httpMethod: String = "POST",
+        requestBody: Data? = nil
+    ) async throws -> (Data, Int) {
+        guard let fullRequestURL = URL(string: "\(apiBaseURL)/\(endpoint)") else {
+            throw APIError.invalidURL
+        }
+        
+        var httpRequest = URLRequest(url: fullRequestURL)
+        httpRequest.httpMethod = httpMethod
+        httpRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        if let securityToken = securityToken {
+            httpRequest.addValue("Bearer \(securityToken)", forHTTPHeaderField: "Authorization")
+        }
+        
+        if let requestBody = requestBody {
+            httpRequest.httpBody = requestBody
+        }
+        
+        // Print the full request for debugging
+        print("REQUEST URL: \(fullRequestURL)")
+        print("REQUEST HEADERS: \(httpRequest.allHTTPHeaderFields ?? [:])")
+        if let body = httpRequest.httpBody {
+            print("REQUEST BODY: \(String(data: body, encoding: .utf8) ?? "Invalid body data")")
+        }
+        
+        do {
+            let (responseData, serverResponse) = try await httpSession.data(for: httpRequest)
+            
+            guard let httpResponse = serverResponse as? HTTPURLResponse else {
+                throw APIError.invalidResponse
+            }
+            
+            // Print the full response for debugging
+            print("RESPONSE STATUS: \(httpResponse.statusCode)")
+            print("RESPONSE HEADERS: \(httpResponse.allHeaderFields)")
+            let responseString = String(data: responseData, encoding: .utf8) ?? "Invalid UTF-8 data"
+            print("RESPONSE BODY: \(responseString)")
+            
+            return (responseData, httpResponse.statusCode)
+        } catch {
+            print("NETWORK ERROR: \(error)")
+            throw APIError.networkError(error)
+        }
+    }
+    
+    /// Debug function to make raw API requests and return unparsed data with headers
+    func debugRawRequestWithHeaders(
+        _ endpoint: String,
+        httpMethod: String = "POST",
+        requestBody: Data? = nil
+    ) async throws -> (Data, Int, [AnyHashable: Any]) {
+        guard let fullRequestURL = URL(string: "\(apiBaseURL)/\(endpoint)") else {
+            throw APIError.invalidURL
+        }
+        
+        var httpRequest = URLRequest(url: fullRequestURL)
+        httpRequest.httpMethod = httpMethod
+        httpRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        if let securityToken = securityToken {
+            httpRequest.addValue("Bearer \(securityToken)", forHTTPHeaderField: "Authorization")
+        }
+        
+        if let requestBody = requestBody {
+            httpRequest.httpBody = requestBody
+        }
+        
+        // Print the full request for debugging
+        print("REQUEST URL: \(fullRequestURL)")
+        print("REQUEST HEADERS: \(httpRequest.allHTTPHeaderFields ?? [:])")
+        if let body = httpRequest.httpBody {
+            print("REQUEST BODY: \(String(data: body, encoding: .utf8) ?? "Invalid body data")")
+        }
+        
+        do {
+            let (responseData, serverResponse) = try await httpSession.data(for: httpRequest)
+            
+            guard let httpResponse = serverResponse as? HTTPURLResponse else {
+                throw APIError.invalidResponse
+            }
+            
+            // Print the full response for debugging
+            print("RESPONSE STATUS: \(httpResponse.statusCode)")
+            print("RESPONSE HEADERS: \(httpResponse.allHeaderFields)")
+            let responseString = String(data: responseData, encoding: .utf8) ?? "Invalid UTF-8 data"
+            print("RESPONSE BODY: \(responseString)")
+            
+            return (responseData, httpResponse.statusCode, httpResponse.allHeaderFields)
+        } catch {
+            print("NETWORK ERROR: \(error)")
+            throw APIError.networkError(error)
+        }
+    }
+    
     /// TODO: Ensure usage or remove
     /// Empty response type for endpoints that don't return data
     struct EmptyResponse: Decodable {

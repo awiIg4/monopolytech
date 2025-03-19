@@ -8,24 +8,24 @@
 import Foundation
 import Combine
 
-// Modèle de la requête d'authentification - correction du champ password vers motdepasse
+/// Authentication request model
 struct LoginRequest: Codable {
     let email: String
-    let motdepasse: String // Changé de 'password' à 'motdepasse' pour correspondre à l'API
+    let motdepasse: String
     
     enum CodingKeys: String, CodingKey {
         case email
-        case motdepasse // Clé correspondant au backend
+        case motdepasse
     }
 }
 
-// Modèle de la réponse d'authentification
+/// Authentication response model
 struct LoginResponse: Codable {
-    let token: String
-    let user: User
+    var token: String?
+    var user: User?
 }
 
-// Modèle utilisateur
+/// User model
 struct User: Codable, Identifiable {
     let id: String
     let email: String
@@ -48,6 +48,7 @@ struct User: Codable, Identifiable {
     }
 }
 
+/// Authentication error types
 enum AuthError: Error, LocalizedError {
     case invalidCredentials
     case tokenExpired
@@ -71,6 +72,7 @@ enum AuthError: Error, LocalizedError {
     }
 }
 
+/// Authentication service for managing user sessions
 class AuthService: ObservableObject {
     private let apiService: APIService
     
@@ -85,12 +87,13 @@ class AuthService: ObservableObject {
     private let tokenKey = "auth.token"
     private let userKey = "auth.user"
     
+    /// Private initializer for singleton
     private init(apiService: APIService = .shared) {
         self.apiService = apiService
         loadFromStorage()
     }
     
-    // Load saved authentication data
+    /// Load authentication data from storage
     private func loadFromStorage() {
         if let tokenData = UserDefaults.standard.string(forKey: tokenKey) {
             apiService.setSecurityToken(tokenData)
@@ -103,7 +106,7 @@ class AuthService: ObservableObject {
         }
     }
     
-    // Save authentication data to storage
+    /// Save authentication data to storage
     private func saveToStorage(token: String, user: User) {
         UserDefaults.standard.set(token, forKey: tokenKey)
         
@@ -112,12 +115,11 @@ class AuthService: ObservableObject {
         }
     }
     
-    // Méthode de login qui utilise l'endpoint correct en fonction du type d'utilisateur
+    /// Login method that uses the correct endpoint based on user type
     func login(email: String, password: String, userType: String) async throws -> User {
-        // Créer le bon modèle de requête avec le champ "motdepasse"
         let loginRequest = LoginRequest(email: email, motdepasse: password)
         
-        // Déterminer l'endpoint en fonction du type d'utilisateur (seulement admin et gestionnaire)
+        // Determine endpoint based on user type
         let endpoint: String
         switch userType.lowercased() {
         case "admin":
@@ -125,64 +127,114 @@ class AuthService: ObservableObject {
         case "gestionnaire":
             endpoint = "gestionnaires/login"
         default:
-            throw AuthError.invalidCredentials // Type utilisateur non supporté
+            throw AuthError.invalidCredentials
         }
         
         do {
             let requestData = try JSONEncoder().encode(loginRequest)
             
-            // Log pour déboguer le JSON envoyé
-            print("JSON envoyé: \(String(data: requestData, encoding: .utf8) ?? "Invalid JSON")")
+            // TODO: Remove this debug log in production
+            print("JSON sent: \(String(data: requestData, encoding: .utf8) ?? "Invalid JSON")")
             
-            let loginResponse: LoginResponse = try await apiService.request(
+            // First, make a debug raw request to see what's happening
+            let (responseData, statusCode, headerFields) = try await apiService.debugRawRequestWithHeaders(
                 endpoint,
                 httpMethod: "POST",
                 requestBody: requestData
             )
             
-            // Sauvegarder le token pour les futures requêtes
-            apiService.setSecurityToken(loginResponse.token)
-            
-            // Mise à jour de l'état sur le thread principal
-            await MainActor.run {
-                self.currentUser = loginResponse.user
-                self.isAuthenticated = true
+            // If the status code is successful, try to extract the token from cookies
+            if (200...299).contains(statusCode) {
+                // Extract token from cookies
+                if let accessToken = extractCookie(named: "accessToken", from: headerFields) {
+                    print("Found access token in cookies: \(accessToken)")
+                    
+                    // Create user from token claims (if possible) or make a separate API call
+                    // For now, create a placeholder user
+                    let user = User(
+                        id: "placeholder-id", 
+                        email: email, 
+                        username: nil, 
+                        role: userType.uppercased()
+                    )
+                    
+                    // Save token for future requests
+                    apiService.setSecurityToken(accessToken)
+                    
+                    // Update state on main thread
+                    await MainActor.run {
+                        self.currentUser = user
+                        self.isAuthenticated = true
+                    }
+                    
+                    // Persist authentication
+                    saveToStorage(token: accessToken, user: user)
+                    
+                    return user
+                } else {
+                    print("No access token found in cookies")
+                    throw AuthError.unknown("Authentication successful but no token received")
+                }
+            } else {
+                // Handle error status codes
+                let errorMessage = String(data: responseData, encoding: .utf8) ?? "Unknown error"
+                throw AuthError.unknown("Server error (\(statusCode)): \(errorMessage)")
             }
-            
-            // Persistance de l'authentification
-            saveToStorage(token: loginResponse.token, user: loginResponse.user)
-            
-            return loginResponse.user
+        } catch let error as AuthError {
+            throw error
         } catch let error as APIError {
-            print("Erreur API: \(error)")
-            switch error {
-            case .serverError(401, let message):
-                print("Erreur 401: \(message ?? "Aucun message")")
-                throw AuthError.invalidCredentials
-            case .serverError(403, _):
-                throw AuthError.accessDenied
-            case .serverError(500...599, _):
-                throw AuthError.serverError
-            default:
-                throw AuthError.unknown(error.localizedDescription)
-            }
+            // TODO: Remove these debug logs in production
+            print("API Error: \(error)")
+            throw AuthError.unknown("API Error: \(error.localizedDescription)")
         } catch {
-            print("Erreur non-API: \(error.localizedDescription)")
+            // TODO: Remove this debug log in production
+            print("Non-API Error: \(error.localizedDescription)")
             throw AuthError.unknown(error.localizedDescription)
         }
     }
     
-    // Déconnexion de l'utilisateur
+    /// Logout user
     func logout() {
-        // Vider l'état en mémoire
+        // Clear memory state
         currentUser = nil
         isAuthenticated = false
         
-        // Vider le token du service API
+        // Clear API service token
         apiService.setSecurityToken(nil)
         
-        // Vider le stockage
+        // Clear storage
         UserDefaults.standard.removeObject(forKey: tokenKey)
         UserDefaults.standard.removeObject(forKey: userKey)
+    }
+    
+    // Add this helper function to extract cookies
+    private func extractCookie(named name: String, from headerFields: [AnyHashable: Any]) -> String? {
+        if let cookiesStr = headerFields["Set-Cookie"] as? String {
+            // Handle single cookie string
+            if cookiesStr.contains("\(name)=") {
+                let components = cookiesStr.components(separatedBy: ";")
+                if let tokenComponent = components.first(where: { $0.contains("\(name)=") }) {
+                    let tokenParts = tokenComponent.components(separatedBy: "=")
+                    if tokenParts.count >= 2 {
+                        return tokenParts[1]
+                    }
+                }
+            }
+            return nil
+        } else if let cookies = headerFields["Set-Cookie"] as? [String] {
+            // Handle array of cookies
+            for cookie in cookies {
+                if cookie.contains("\(name)=") {
+                    let components = cookie.components(separatedBy: ";")
+                    if let tokenComponent = components.first(where: { $0.contains("\(name)=") }) {
+                        let tokenParts = tokenComponent.components(separatedBy: "=")
+                        if tokenParts.count >= 2 {
+                            return tokenParts[1]
+                        }
+                    }
+                }
+            }
+        }
+        return nil
     }
 }
