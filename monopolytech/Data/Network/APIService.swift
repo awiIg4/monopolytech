@@ -57,7 +57,11 @@ class APIService {
     /// Set the authentication token for secured API endpoints
     /// - Parameter token: The JWT or other authentication token
     func setSecurityToken(_ token: String?) {
+        // Set the token to nil explicitly
         self.securityToken = token
+        
+        // Force clear URL session cache which might retain old authentication data
+        URLCache.shared.removeAllCachedResponses()
     }
     
     /// Makes a network request to the specified endpoint and decodes the response
@@ -72,23 +76,10 @@ class APIService {
         httpMethod: String = "GET",
         requestBody: Data? = nil
     ) async throws -> ResponseType {
-        guard let fullRequestURL = URL(string: "\(apiBaseURL)/\(endpoint)") else {
-            throw APIError.invalidURL
-        }
-        
-        var httpRequest = URLRequest(url: fullRequestURL)
-        httpRequest.httpMethod = httpMethod
-        httpRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        if let securityToken = securityToken {
-            httpRequest.addValue("Bearer \(securityToken)", forHTTPHeaderField: "Authorization")
-        }
-        
-        if let requestBody = requestBody {
-            httpRequest.httpBody = requestBody
-        }
+        let httpRequest = createURLRequest(for: endpoint, httpMethod: httpMethod, requestBody: requestBody)
         
         do {
+            print("Security Token : ", securityToken)
             let (responseData, serverResponse) = try await httpSession.data(for: httpRequest)
             
             guard let httpResponse = serverResponse as? HTTPURLResponse else {
@@ -124,24 +115,10 @@ class APIService {
         httpMethod: String = "POST",
         requestBody: Data? = nil
     ) async throws -> (Data, Int) {
-        guard let fullRequestURL = URL(string: "\(apiBaseURL)/\(endpoint)") else {
-            throw APIError.invalidURL
-        }
-        
-        var httpRequest = URLRequest(url: fullRequestURL)
-        httpRequest.httpMethod = httpMethod
-        httpRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        if let securityToken = securityToken {
-            httpRequest.addValue("Bearer \(securityToken)", forHTTPHeaderField: "Authorization")
-        }
-        
-        if let requestBody = requestBody {
-            httpRequest.httpBody = requestBody
-        }
+        let httpRequest = createURLRequest(for: endpoint, httpMethod: httpMethod, requestBody: requestBody)
         
         // Print the full request for debugging
-        print("REQUEST URL: \(fullRequestURL)")
+        print("REQUEST URL: \(httpRequest.url!)")
         print("REQUEST HEADERS: \(httpRequest.allHTTPHeaderFields ?? [:])")
         if let body = httpRequest.httpBody {
             print("REQUEST BODY: \(String(data: body, encoding: .utf8) ?? "Invalid body data")")
@@ -173,24 +150,10 @@ class APIService {
         httpMethod: String = "POST",
         requestBody: Data? = nil
     ) async throws -> (Data, Int, [AnyHashable: Any]) {
-        guard let fullRequestURL = URL(string: "\(apiBaseURL)/\(endpoint)") else {
-            throw APIError.invalidURL
-        }
-        
-        var httpRequest = URLRequest(url: fullRequestURL)
-        httpRequest.httpMethod = httpMethod
-        httpRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        if let securityToken = securityToken {
-            httpRequest.addValue("Bearer \(securityToken)", forHTTPHeaderField: "Authorization")
-        }
-        
-        if let requestBody = requestBody {
-            httpRequest.httpBody = requestBody
-        }
+        let httpRequest = createURLRequest(for: endpoint, httpMethod: httpMethod, requestBody: requestBody)
         
         // Print the full request for debugging
-        print("REQUEST URL: \(fullRequestURL)")
+        print("REQUEST URL: \(httpRequest.url!)")
         print("REQUEST HEADERS: \(httpRequest.allHTTPHeaderFields ?? [:])")
         if let body = httpRequest.httpBody {
             print("REQUEST BODY: \(String(data: body, encoding: .utf8) ?? "Invalid body data")")
@@ -219,5 +182,36 @@ class APIService {
     /// TODO: Ensure usage or remove
     /// Empty response type for endpoints that don't return data
     struct EmptyResponse: Decodable {
+    }
+    
+    /// Create a URL request for the specified endpoint
+    /// - Parameters:
+    ///   - endpoint: The API endpoint path (will be appended to the base URL)
+    ///   - httpMethod: The HTTP method (GET, POST, PUT, DELETE, etc.)
+    ///   - requestBody: Optional data to send in the request body
+    /// - Returns: The URL request
+    private func createURLRequest(for endpoint: String, httpMethod: String, requestBody: Data? = nil) -> URLRequest {
+        guard let fullRequestURL = URL(string: "\(apiBaseURL)/\(endpoint)") else {
+            // Handle invalid URL error
+            fatalError("Invalid URL: \(apiBaseURL)/\(endpoint)")
+        }
+        
+        var httpRequest = URLRequest(url: fullRequestURL)
+        httpRequest.httpMethod = httpMethod
+        httpRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        // Only add Authorization header if securityToken exists
+        if let securityToken = securityToken, !securityToken.isEmpty {
+            httpRequest.addValue("Bearer \(securityToken)", forHTTPHeaderField: "Authorization")
+        }
+        
+        // Very important: Disable caching for requests that might include auth headers
+        httpRequest.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        
+        if let requestBody = requestBody {
+            httpRequest.httpBody = requestBody
+        }
+        
+        return httpRequest
     }
 }
