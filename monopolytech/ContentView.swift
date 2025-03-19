@@ -40,7 +40,7 @@ struct ContentView: View {
                     // Navigation Buttons
                     VStack(spacing: 15) {
                         // Game Catalog Button
-                        NavigationLink(destination: HomeView()) {
+                        NavigationLink(destination: CatalogView()) {
                             HStack {
                                 Image(systemName: "gamecontroller")
                                 Text("Catalogue de Jeux")

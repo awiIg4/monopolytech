@@ -85,14 +85,24 @@ struct CatalogView: View {
                             .font(.caption)
                             
                             HStack(spacing: 8) {
-                                Slider(value: $minPrice, in: 0...maxPrice)
-                                    .onChange(of: minPrice) { _ in
-                                        updateSearch()
+                                Slider(
+                                    value: $minPrice,
+                                    in: 0...maxPrice,
+                                    onEditingChanged: { editing in
+                                        if !editing { // Le slider a été relâché
+                                            updateSearch()
+                                        }
                                     }
-                                Slider(value: $maxPrice, in: minPrice...100)
-                                    .onChange(of: maxPrice) { _ in
-                                        updateSearch()
+                                )
+                                Slider(
+                                    value: $maxPrice,
+                                    in: minPrice...100,
+                                    onEditingChanged: { editing in
+                                        if !editing { // Le slider a été relâché
+                                            updateSearch()
+                                        }
                                     }
+                                )
                             }
                         }
                         .padding(.horizontal)
