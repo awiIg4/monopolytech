@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-/// Authentication request model
+/// Authentication request model matching backend API requirements
 struct LoginRequest: Codable {
     let email: String
     let motdepasse: String
@@ -25,7 +25,7 @@ struct LoginResponse: Codable {
     var user: User?
 }
 
-/// User model
+/// User model that matches backend structure
 struct User: Codable, Identifiable {
     let id: String
     let email: String
@@ -48,7 +48,7 @@ struct User: Codable, Identifiable {
     }
 }
 
-/// Authentication error types
+/// Authentication error types for user-friendly messages
 enum AuthError: Error, LocalizedError {
     case invalidCredentials
     case tokenExpired
@@ -83,17 +83,16 @@ class AuthService: ObservableObject {
     // Singleton instance
     static let shared = AuthService()
     
-    // UserDefaults keys
+    // UserDefaults keys for persistence
     private let tokenKey = "auth.token"
     private let userKey = "auth.user"
     
-    /// Private initializer for singleton
     private init(apiService: APIService = .shared) {
         self.apiService = apiService
         loadFromStorage()
     }
     
-    /// Load authentication data from storage
+    /// Load saved authentication data from UserDefaults
     private func loadFromStorage() {
         if let tokenData = UserDefaults.standard.string(forKey: tokenKey) {
             apiService.setSecurityToken(tokenData)
@@ -106,7 +105,7 @@ class AuthService: ObservableObject {
         }
     }
     
-    /// Save authentication data to storage
+    /// Save authentication data to UserDefaults
     private func saveToStorage(token: String, user: User) {
         UserDefaults.standard.set(token, forKey: tokenKey)
         
@@ -115,11 +114,11 @@ class AuthService: ObservableObject {
         }
     }
     
-    /// Login method that uses the correct endpoint based on user type
+    /// Authenticate user with email and password based on user type
     func login(email: String, password: String, userType: String) async throws -> User {
         let loginRequest = LoginRequest(email: email, motdepasse: password)
         
-        // Determine endpoint based on user type
+        // Select endpoint based on user type (admin or gestionnaire)
         let endpoint: String
         switch userType.lowercased() {
         case "admin":
@@ -133,28 +132,23 @@ class AuthService: ObservableObject {
         do {
             let requestData = try JSONEncoder().encode(loginRequest)
             
-            // TODO: Remove this debug log in production
-            print("JSON sent: \(String(data: requestData, encoding: .utf8) ?? "Invalid JSON")")
-            
-            // First, make a debug raw request to see what's happening
+            // Make authentication request
             let (responseData, statusCode, headerFields) = try await apiService.debugRawRequestWithHeaders(
                 endpoint,
                 httpMethod: "POST",
                 requestBody: requestData
             )
             
-            // If the status code is successful, try to extract the token from cookies
+            // Process successful authentication
             if (200...299).contains(statusCode) {
                 // Extract token from cookies
                 if let accessToken = extractCookie(named: "accessToken", from: headerFields) {
-                    print("Found access token in cookies: \(accessToken)")
-                    
-                    // Create user from token claims (if possible) or make a separate API call
-                    // For now, create a placeholder user
+                    // Create user from available information
+                    // In a more complete implementation, we would extract user data from JWT claims
                     let user = User(
-                        id: "placeholder-id", 
-                        email: email, 
-                        username: nil, 
+                        id: "user-\(email.hashValue)", // Generate a deterministic ID based on email
+                        email: email,
+                        username: nil,
                         role: userType.uppercased()
                     )
                     
@@ -172,28 +166,21 @@ class AuthService: ObservableObject {
                     
                     return user
                 } else {
-                    print("No access token found in cookies")
-                    throw AuthError.unknown("Authentication successful but no token received")
+                    throw AuthError.unknown("Authentification réussie mais aucun token reçu")
                 }
             } else {
                 // Handle error status codes
-                let errorMessage = String(data: responseData, encoding: .utf8) ?? "Unknown error"
-                throw AuthError.unknown("Server error (\(statusCode)): \(errorMessage)")
+                let errorMessage = String(data: responseData, encoding: .utf8) ?? "Erreur inconnue"
+                throw AuthError.unknown("Erreur serveur (\(statusCode)): \(errorMessage)")
             }
         } catch let error as AuthError {
             throw error
-        } catch let error as APIError {
-            // TODO: Remove these debug logs in production
-            print("API Error: \(error)")
-            throw AuthError.unknown("API Error: \(error.localizedDescription)")
         } catch {
-            // TODO: Remove this debug log in production
-            print("Non-API Error: \(error.localizedDescription)")
             throw AuthError.unknown(error.localizedDescription)
         }
     }
     
-    /// Logout user
+    /// Log out the current user and clear session data
     func logout() {
         // Clear memory state
         currentUser = nil
@@ -207,13 +194,13 @@ class AuthService: ObservableObject {
         UserDefaults.standard.removeObject(forKey: userKey)
     }
     
-    // Add this helper function to extract cookies
-    private func extractCookie(named name: String, from headerFields: [AnyHashable: Any]) -> String? {
+    /// Extract a cookie value from response headers
+    private func extractCookie(named cookieName: String, from headerFields: [AnyHashable: Any]) -> String? {
         if let cookiesStr = headerFields["Set-Cookie"] as? String {
             // Handle single cookie string
-            if cookiesStr.contains("\(name)=") {
+            if cookiesStr.contains("\(cookieName)=") {
                 let components = cookiesStr.components(separatedBy: ";")
-                if let tokenComponent = components.first(where: { $0.contains("\(name)=") }) {
+                if let tokenComponent = components.first(where: { $0.contains("\(cookieName)=") }) {
                     let tokenParts = tokenComponent.components(separatedBy: "=")
                     if tokenParts.count >= 2 {
                         return tokenParts[1]
@@ -224,9 +211,9 @@ class AuthService: ObservableObject {
         } else if let cookies = headerFields["Set-Cookie"] as? [String] {
             // Handle array of cookies
             for cookie in cookies {
-                if cookie.contains("\(name)=") {
+                if cookie.contains("\(cookieName)=") {
                     let components = cookie.components(separatedBy: ";")
-                    if let tokenComponent = components.first(where: { $0.contains("\(name)=") }) {
+                    if let tokenComponent = components.first(where: { $0.contains("\(cookieName)=") }) {
                         let tokenParts = tokenComponent.components(separatedBy: "=")
                         if tokenParts.count >= 2 {
                             return tokenParts[1]

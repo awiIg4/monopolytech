@@ -108,31 +108,6 @@ struct LoginView: View {
                         .cornerRadius(10)
                     }
                     .disabled(viewModel.isLoading)
-                    
-                    // Comptes de démonstration (sans client)
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Comptes de démonstration:")
-                            .font(.headline)
-                            .padding(.bottom, 5)
-                        
-                        VStack(alignment: .leading, spacing: 5) {
-                            HStack {
-                                Text("Admin:").fontWeight(.bold)
-                                Text("admin@example.com / password")
-                            }
-                            
-                            HStack {
-                                Text("Gestionnaire:").fontWeight(.bold)
-                                Text("gestionnaire@example.com / password")
-                            }
-                        }
-                        .font(.caption)
-                        .padding()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(8)
-                    }
-                    .padding(.top, 10)
                 }
                 .padding(.horizontal, 30)
             }
