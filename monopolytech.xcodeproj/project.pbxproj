@@ -17,6 +17,9 @@
 		C591B8352D88677F00D3BB3B /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C591B8342D88677D00D3BB3B /* UserModel.swift */; };
 		C591B8372D8869F400D3BB3B /* UserCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C591B8362D8869F000D3BB3B /* UserCard.swift */; };
 		C591B83C2D886C5200D3BB3B /* SellerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C591B83B2D886C4E00D3BB3B /* SellerListView.swift */; };
+		C59DF8AF2D89A923001A8531 /* CatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59DF8AE2D89A920001A8531 /* CatalogView.swift */; };
+		C59DF8B12D89A92E001A8531 /* CatalogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59DF8B02D89A926001A8531 /* CatalogViewModel.swift */; };
+		C59DF8B32D8A7703001A8531 /* GameDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59DF8B22D8A76FD001A8531 /* GameDetailView.swift */; };
 		DF7EECD12D82E85700ADACAA /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECD02D82E85700ADACAA /* AuthService.swift */; };
 		DF7EECD32D82E87600ADACAA /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECD22D82E87600ADACAA /* APIService.swift */; };
 		DF7EECD52D82E89100ADACAA /* GameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECD42D82E89100ADACAA /* GameModel.swift */; };
@@ -66,6 +69,9 @@
 		C591B8342D88677D00D3BB3B /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		C591B8362D8869F000D3BB3B /* UserCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCard.swift; sourceTree = "<group>"; };
 		C591B83B2D886C4E00D3BB3B /* SellerListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellerListView.swift; sourceTree = "<group>"; };
+		C59DF8AE2D89A920001A8531 /* CatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogView.swift; sourceTree = "<group>"; };
+		C59DF8B02D89A926001A8531 /* CatalogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogViewModel.swift; sourceTree = "<group>"; };
+		C59DF8B22D8A76FD001A8531 /* GameDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDetailView.swift; sourceTree = "<group>"; };
 		DF7EECD02D82E85700ADACAA /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		DF7EECD22D82E87600ADACAA /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		DF7EECD42D82E89100ADACAA /* GameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModel.swift; sourceTree = "<group>"; };
@@ -117,9 +123,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C59DF8A92D89A767001A8531 /* Catalog */ = {
+			isa = PBXGroup;
+			children = (
+				C59DF8B02D89A926001A8531 /* CatalogViewModel.swift */,
+				C59DF8AE2D89A920001A8531 /* CatalogView.swift */,
+				C59DF8B22D8A76FD001A8531 /* GameDetailView.swift */,
+			);
+			path = Catalog;
+			sourceTree = "<group>";
+		};
 		DF7EECC82D82E64900ADACAA /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				C59DF8A92D89A767001A8531 /* Catalog */,
 				DF7EECC92D82E66800ADACAA /* Home */,
 			);
 			path = Features;
@@ -400,6 +417,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C591B82B2D88676000D3BB3B /* EditorModel.swift in Sources */,
+				C59DF8B32D8A7703001A8531 /* GameDetailView.swift in Sources */,
 				DF7EECD52D82E89100ADACAA /* GameModel.swift in Sources */,
 				C591B8332D88677900D3BB3B /* SessionModel.swift in Sources */,
 				C591B8272D88674F00D3BB3B /* BuyerModel.swift in Sources */,
@@ -409,6 +427,7 @@
 				DF7EECE12D88583F00ADACAA /* APITestView.swift in Sources */,
 				DF7EECE72D886E7200ADACAA /* NotificationService.swift in Sources */,
 				DF7EECDD2D82E99D00ADACAA /* GameCard.swift in Sources */,
+				C59DF8AF2D89A923001A8531 /* CatalogView.swift in Sources */,
 				DF7EECE42D886DD100ADACAA /* GameService.swift in Sources */,
 				DF7EECD12D82E85700ADACAA /* AuthService.swift in Sources */,
 				C591B82F2D88676F00D3BB3B /* ManagerModel.swift in Sources */,
@@ -421,6 +440,7 @@
 				DF7EECD32D82E87600ADACAA /* APIService.swift in Sources */,
 				DFE491522D8194EB00A9FA2C /* monopolytechApp.swift in Sources */,
 				C591B8292D88675700D3BB3B /* CodePromoModel.swift in Sources */,
+				C59DF8B12D89A92E001A8531 /* CatalogViewModel.swift in Sources */,
 				C591B82D2D88676900D3BB3B /* LicenseModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

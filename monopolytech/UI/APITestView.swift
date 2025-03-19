@@ -58,8 +58,8 @@ struct APITestView: View {
                 let games = try await GameService.shared.fetchGames()
                 gamesTestResult += "✅ Successfully fetched \(games.count) games\n"
                 if let firstGame = games.first {
-                    gamesTestResult += "First game: \(firstGame.title)\n"
-                    gamesTestResult += "Price: \(firstGame.price) €\n"
+                    gamesTestResult += "First game: \(firstGame.licence_name)\n"
+                    gamesTestResult += "Price: \(firstGame.prix) €\n"
                 }
                 
                 // Show success notification

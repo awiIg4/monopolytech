@@ -43,10 +43,13 @@ class GameService {
                 // Convert response to our Game model
                 func toGame() -> Game {
                     return Game(
-                        id: UUID().uuidString, // Generate a temporary ID
-                        licence_id: UUID().uuidString, // Generate temporary licence_id
+                        id: UUID().uuidString,
+                        licence_id: UUID().uuidString,
                         licence_name: licence_nom,
                         prix: prix_min,
+                        prix_max: prix_max,
+                        quantite: quantite,
+                        editeur_nom: editeur_nom,
                         statut: "available",
                         depot_id: nil,
                         createdAt: nil,
