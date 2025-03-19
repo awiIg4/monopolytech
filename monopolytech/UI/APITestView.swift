@@ -50,7 +50,8 @@ struct APITestView: View {
         Task {
             // Create separate results for each test to avoid mutation issues
             var gamesTestResult = ""
-            let categoriesTestResult = ""
+            var categoriesTestResult = ""
+            var usersTestResult = "" // Added variable for users test
             
             // Test fetchGames
             do {
@@ -58,7 +59,7 @@ struct APITestView: View {
                 let games = try await GameService.shared.fetchGames()
                 gamesTestResult += "✅ Successfully fetched \(games.count) games\n"
                 if let firstGame = games.first {
-                    gamesTestResult += "First game: \(firstGame.licence_name)\n"
+                    gamesTestResult += "First game: \(firstGame.licence_name ?? "Unknown")\n"
                     gamesTestResult += "Price: \(firstGame.prix) €\n"
                 }
                 
@@ -75,10 +76,53 @@ struct APITestView: View {
                 }
             }
             
-            // Other tests...
+            // Test getUsers - New test section for users
+            do {
+                usersTestResult += "📱 Testing getUsers endpoint...\n"
+                
+                // Call the API tester method for users
+                let (responseData, statusCode, _) = try await APIService.shared.debugRawRequestWithHeaders(
+                    "utilisateurs", 
+                    httpMethod: "GET"
+                )
+                
+                if (200...299).contains(statusCode) {
+                    usersTestResult += "✅ Successfully accessed users endpoint with status: \(statusCode)\n"
+                    let responseString = String(data: responseData, encoding: .utf8) ?? "No data"
+                    usersTestResult += "Response preview: \(responseString.prefix(100))...\n"
+                    
+                    // Try to parse the users data
+                    do {
+                        let decoder = JSONDecoder()
+                        let users = try decoder.decode([User].self, from: responseData)
+                        usersTestResult += "✅ Successfully parsed \(users.count) users\n"
+                        
+                        await MainActor.run {
+                            NotificationService.shared.showSuccess("Users fetched successfully!")
+                        }
+                    } catch {
+                        usersTestResult += "⚠️ Could not parse users data: \(error.localizedDescription)\n"
+                        usersTestResult += "This might be expected if you're not authenticated or if the response format doesn't match the User model\n"
+                    }
+                } else {
+                    usersTestResult += "❌ Failed to access users endpoint. Status: \(statusCode)\n"
+                    usersTestResult += "This is expected if you're not authenticated - try logging in first\n"
+                }
+            } catch {
+                usersTestResult += "❌ Error fetching users: \(error.localizedDescription)\n"
+                
+                // Show error notification
+                await MainActor.run {
+                    NotificationService.shared.showError(error)
+                }
+            }
             
             // Combine results only at the end
-            let finalResults = gamesTestResult + "\n-------------------\n\n" + categoriesTestResult
+            let finalResults = gamesTestResult + 
+                              "\n-------------------\n\n" + 
+                              usersTestResult +
+                              "\n-------------------\n\n" + 
+                              categoriesTestResult
             
             // Update the UI on the main thread
             await MainActor.run {
