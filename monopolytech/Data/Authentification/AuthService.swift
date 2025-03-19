@@ -204,6 +204,7 @@ class AuthService: ObservableObject {
         }
     }
     
+    // TODO : Check if the logout function works properly
     /// Log out the current user and clear session data
     func logout() {
         // Clear memory state
