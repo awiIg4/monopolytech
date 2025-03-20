@@ -22,11 +22,11 @@ struct LoginRequest: Codable {
 /// Authentication response model
 struct LoginResponse: Codable {
     var token: String?
-    var user: User?
+    var user: UserAuth?
 }
 
 /// User model that matches backend structure
-struct User: Codable, Identifiable {
+struct UserAuth: Codable, Identifiable {
     let id: String
     let email: String
     let username: String?
@@ -77,7 +77,7 @@ class AuthService: ObservableObject {
     private let apiService: APIService
     
     // User state
-    @Published var currentUser: User?
+    @Published var currentUser: UserAuth?
     @Published var isAuthenticated: Bool = false
     
     // Singleton instance
@@ -110,7 +110,7 @@ class AuthService: ObservableObject {
                     startExpirationTimer(expiryDate: expirationDate)
                     
                     if let userData = UserDefaults.standard.data(forKey: userKey),
-                       let user = try? JSONDecoder().decode(User.self, from: userData) {
+                       let user = try? JSONDecoder().decode(UserAuth.self, from: userData) {
                         self.currentUser = user
                         self.isAuthenticated = true
                     }
@@ -123,7 +123,7 @@ class AuthService: ObservableObject {
     }
     
     /// Save authentication data to UserDefaults
-    private func saveToStorage(token: String, user: User) {
+    private func saveToStorage(token: String, user: UserAuth) {
         UserDefaults.standard.set(token, forKey: tokenKey)
         
         // Extract and save expiration time
@@ -139,7 +139,7 @@ class AuthService: ObservableObject {
     }
     
     /// Authenticate user with email and password based on user type
-    func login(email: String, password: String, userType: String) async throws -> User {
+    func login(email: String, password: String, userType: String) async throws -> UserAuth {
         let loginRequest = LoginRequest(email: email, motdepasse: password)
         
         // Select endpoint based on user type (admin or gestionnaire)
@@ -169,7 +169,7 @@ class AuthService: ObservableObject {
                 if let accessToken = extractCookie(named: "accessToken", from: headerFields) {
                     // Create user from available information
                     // In a more complete implementation, we would extract user data from JWT claims
-                    let user = User(
+                    let user = UserAuth(
                         id: "user-\(email.hashValue)", // Generate a deterministic ID based on email
                         email: email,
                         username: nil,
