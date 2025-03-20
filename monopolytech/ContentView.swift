@@ -7,6 +7,14 @@
 
 import SwiftUI
 
+// Définition de l'énumération Tab
+enum Tab {
+    case home
+    case catalog
+    case manage
+    case login
+}
+
 struct ContentView: View {
     @StateObject private var authService = AuthService.shared
     @State private var currentTab: Navbar.Tab = .home
@@ -15,22 +23,35 @@ struct ContentView: View {
         NavigationView {
             ZStack(alignment: .bottom) {
                 // Contenu principal basé sur l'onglet sélectionné
-                switch currentTab {
-                case .home:
-                    HomeView()
-                        .padding(.bottom, 80)
-                case .catalog:
-                    CatalogView()
-                        .padding(.bottom, 80)
-                case .login:
-                    LoginView()
-                        .padding(.bottom, 80)
+                Group {
+                    switch currentTab {
+                    case .home:
+                        HomeView()
+                    case .catalog:
+                        CatalogView()
+                    case .manage where authService.isAuthenticated:
+                        ManageView()
+                    case .login, .manage:
+                        LoginView()
+                    }
                 }
+                .padding(.bottom, 50)
                 
-                // Navbar en bas
-                Navbar(currentTab: $currentTab)
+                // Navbar personnalisée
+                VStack(spacing: 0) {
+                    Divider()
+                    Navbar(currentTab: $currentTab)
+                }
+                .background(Color.white)
             }
             .ignoresSafeArea(edges: .bottom)
+            .onChange(of: authService.isAuthenticated) { isAuthenticated in
+                if isAuthenticated {
+                    currentTab = .manage
+                } else {
+                    currentTab = .home
+                }
+            }
         }
         .environmentObject(authService)
     }
