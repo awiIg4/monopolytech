@@ -100,22 +100,33 @@ class GameDepositViewModel: ObservableObject {
     
     /// Soumet le formulaire complet de dépôt
     func submitDeposit() {
+        print("📍 SUBMIT DEPOSIT CALLED")
+        
         guard validateMainForm() else {
+            print("❌ FORM VALIDATION FAILED")
             return
         }
         
+        print("✅ FORM VALIDATION PASSED")
         isLoading = true
         
         Task {
             do {
+                print("🔍 LOOKING FOR SELLER: \(sellerEmail)")
                 // Récupérer le vendeur par email
                 let seller = try await sellerService.getSellerByEmail(email: sellerEmail)
+                print("✅ SELLER FOUND: \(seller.id)")
                 
                 // Préparer la requête
-                let licenseIds = gamesToDeposit.map { $0.licenseId }
+                let licenseIds = gamesToDeposit.map { Int($0.licenseId)! }  // Convertir String en Int
                 let prices = gamesToDeposit.map { $0.price }
                 let quantities = gamesToDeposit.map { $0.quantity }
                 let codePromo = hasPromoCode ? promoCode : nil
+                
+                print("📦 REQUEST DATA PREPARED:")
+                print("  - Licenses: \(licenseIds)")
+                print("  - Prices: \(prices)")
+                print("  - Quantities: \(quantities)")
                 
                 // Construire la requête
                 let request = GameDepositRequest(
@@ -126,9 +137,11 @@ class GameDepositViewModel: ObservableObject {
                     id_vendeur: seller.id
                 )
                 
+                print("🚀 CALLING depositGames WITH REQUEST")
                 // Envoyer la requête
                 let depositedGames = try await gameService.depositGames(request: request)
                 
+                print("✅ DEPOSIT COMPLETED")
                 await MainActor.run {
                     self.successMessage = "Dépôt réussi de \(depositedGames.count) jeu(x)!"
                     self.showAlert = true
@@ -136,6 +149,7 @@ class GameDepositViewModel: ObservableObject {
                     self.resetAllForms()
                 }
             } catch {
+                print("❌ ERROR DURING DEPOSIT: \(error)")
                 await MainActor.run {
                     if error.localizedDescription.contains("404") {
                         self.errorMessage = "Le vendeur n'existe pas"

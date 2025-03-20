@@ -9,8 +9,8 @@ import Foundation
 
 /// Modèle représentant une requête de dépôt de jeu, correspondant à l'API
 struct GameDepositRequest: Codable {
-    /// Tableau des identifiants de licences
-    let licence: [String]
+    /// Tableau des identifiants de licences (doit être des entiers pour l'API)
+    let licence: [Int]
     /// Tableau des prix pour chaque jeu
     let prix: [Double]
     /// Tableau des quantités pour chaque jeu

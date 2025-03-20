@@ -81,6 +81,8 @@ class GameService {
     func depositGames(request: GameDepositRequest) async throws -> [Game] {
         do {
             let requestData = try JSONEncoder().encode(request)
+            
+            // Get raw response
             let (responseData, statusCode) = try await apiService.request(
                 "jeux/deposer",
                 httpMethod: "POST",
@@ -88,19 +90,22 @@ class GameService {
                 returnRawResponse: true
             )
             
-            // Si le statut est OK mais que la réponse est vide ou non décodable, retourner tableau vide
+            // SIMPLE RAW RESPONSE PRINT - guaranteed to show in console
+            print("====================== DEPOSIT RESPONSE START ======================")
+            print("STATUS CODE: \(statusCode)")
+            print("RAW DATA: \(String(data: responseData, encoding: .utf8) ?? "No data")")
+            print("====================== DEPOSIT RESPONSE END ======================")
+            
+            // Success handling
             if (200...299).contains(statusCode) {
                 do {
-                    // Tenter de décoder en tableau de jeux
                     let games = try JSONDecoder().decode([Game].self, from: responseData)
                     return games
                 } catch {
                     do {
-                        // Tenter de décoder en un seul jeu
                         let game = try JSONDecoder().decode(Game.self, from: responseData)
                         return [game]
                     } catch {
-                        // Si c'est un succès HTTP, on considère que c'est bon malgré l'erreur de décodage
                         return []
                     }
                 }
@@ -123,7 +128,7 @@ class GameService {
     /// - Throws: APIError if the request fails
     func depositGame(licenseId: String, price: Double, quantity: Int, sellerId: String, promoCode: String? = nil) async throws -> [Game] {
         let request = GameDepositRequest(
-            licence: [licenseId],
+            licence: [Int(licenseId)!],  // Convertir en Int
             prix: [price],
             quantite: [quantity],
             code_promo: promoCode,
