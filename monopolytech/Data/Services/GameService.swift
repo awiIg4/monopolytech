@@ -61,17 +61,8 @@ class GameService {
             // Make the request and convert response
             let gamesDTO: [GameDTO] = try await apiService.request(endpoint)
             return gamesDTO.map { $0.toGame() }
-        } catch let error as APIError {
-            #if DEBUG
-            print("Error fetching games: \(error.localizedDescription)")
-            #endif
-            throw error
         } catch {
-            let wrappedError = APIError.networkError(error)
-            #if DEBUG
-            print("Unexpected error fetching games: \(wrappedError.localizedDescription)")
-            #endif
-            throw wrappedError
+            throw error
         }
     }
     
@@ -80,20 +71,7 @@ class GameService {
     /// - Returns: A single Game object
     /// - Throws: APIError if the request fails
     func fetchGame(id: String) async throws -> Game {
-        do {
-            return try await apiService.request("\(gameEndpoint)\(id)")
-        } catch {
-            throw APIError.networkError(error)
-        }
-    }
-    
-    /// Deposit a new game
-    func depositGame(requestData: Data) async throws -> Game {
-        return try await apiService.request(
-            "jeux/depot",
-            httpMethod: "POST",
-            requestBody: requestData
-        )
+        return try await apiService.request("\(gameEndpoint)\(id)")
     }
     
     /// Deposit one or more games for sale
@@ -101,11 +79,37 @@ class GameService {
     /// - Returns: Array of deposited games
     /// - Throws: APIError if the request fails
     func depositGames(request: GameDepositRequest) async throws -> [Game] {
-        return try await apiService.request(
-            "jeux/deposer",
-            httpMethod: "POST",
-            requestBody: try JSONEncoder().encode(request)
-        )
+        do {
+            let requestData = try JSONEncoder().encode(request)
+            let (responseData, statusCode) = try await apiService.request(
+                "jeux/deposer",
+                httpMethod: "POST",
+                requestBody: requestData,
+                returnRawResponse: true
+            )
+            
+            // Si le statut est OK mais que la réponse est vide ou non décodable, retourner tableau vide
+            if (200...299).contains(statusCode) {
+                do {
+                    // Tenter de décoder en tableau de jeux
+                    let games = try JSONDecoder().decode([Game].self, from: responseData)
+                    return games
+                } catch {
+                    do {
+                        // Tenter de décoder en un seul jeu
+                        let game = try JSONDecoder().decode(Game.self, from: responseData)
+                        return [game]
+                    } catch {
+                        // Si c'est un succès HTTP, on considère que c'est bon malgré l'erreur de décodage
+                        return []
+                    }
+                }
+            } else {
+                throw APIError.serverError(statusCode, "Game deposit failed with status \(statusCode)")
+            }
+        } catch {
+            throw error
+        }
     }
 
     /// Convenience method to deposit a single game

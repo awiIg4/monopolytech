@@ -157,7 +157,7 @@ class AuthService: ObservableObject {
             let requestData = try JSONEncoder().encode(loginRequest)
             
             // Make authentication request
-            let (responseData, statusCode, headerFields) = try await apiService.debugRawRequestWithHeaders(
+            let (responseData, statusCode, headerFields) = try await apiService.requestWithHeaders(
                 endpoint,
                 httpMethod: "POST",
                 requestBody: requestData
