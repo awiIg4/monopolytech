@@ -8,14 +8,29 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var currentTab: Navbar.Tab = .home
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        NavigationView {
+            ZStack(alignment: .bottom) {
+                // Contenu principal basé sur l'onglet sélectionné
+                switch currentTab {
+                case .home:
+                    HomeView()
+                        .padding(.bottom, 80)
+                case .catalog:
+                    CatalogView()
+                        .padding(.bottom, 80)
+                case .login:
+                    Text("Login - Coming Soon")
+                        .padding(.bottom, 80)
+                }
+                
+                // Navbar en bas
+                Navbar(currentTab: $currentTab)
+            }
+            .ignoresSafeArea(edges: .bottom)
         }
-        .padding()
     }
 }
 
