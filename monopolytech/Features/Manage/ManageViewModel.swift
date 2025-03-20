@@ -32,6 +32,7 @@ class ManageViewModel: ObservableObject {
     }
     
     private func setupActions() {
-        // À implémenter
+        // Handle navigation to GameDepositView when needed
+        // This could be through a NavigationLink or sheet presentation
     }
 }
