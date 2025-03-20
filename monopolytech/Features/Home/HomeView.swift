@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct HomeView: View {
+    @EnvironmentObject private var authService: AuthService
+    @State private var showLogoutAlert = false  // Pour contrôler l'affichage de l'alerte
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 30) {
@@ -113,26 +116,28 @@ struct HomeView: View {
                     }
                     
                     // Logout Button
-                    Button(action: {
-                        // Action à implémenter plus tard
-                    }) {
-                        HStack {
-                            Image(systemName: "rectangle.portrait.and.arrow.right.fill")
-                            Text("Déconnexion")
-                                .fontWeight(.semibold)
-                        }
-                        .frame(minWidth: 250)
-                        .padding()
-                        .background(
-                            LinearGradient(
-                                colors: [.red, .red.opacity(0.8)],
-                                startPoint: .leading,
-                                endPoint: .trailing
+                    if authService.isAuthenticated {
+                        Button(action: {
+                            showLogoutAlert = true  // Afficher l'alerte au lieu de se déconnecter directement
+                        }) {
+                            HStack {
+                                Image(systemName: "rectangle.portrait.and.arrow.right.fill")
+                                Text("Déconnexion")
+                                    .fontWeight(.semibold)
+                            }
+                            .frame(minWidth: 250)
+                            .padding()
+                            .background(
+                                LinearGradient(
+                                    colors: [.red, .red.opacity(0.8)],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
                             )
-                        )
-                        .foregroundColor(.white)
-                        .cornerRadius(15)
-                        .shadow(color: .red.opacity(0.3), radius: 5)
+                            .foregroundColor(.white)
+                            .cornerRadius(15)
+                            .shadow(color: .red.opacity(0.3), radius: 5)
+                        }
                     }
                 }
                 .padding(.top, 20)
@@ -169,6 +174,16 @@ struct HomeView: View {
             )
         )
         .navigationBarHidden(true)
+        .alert(isPresented: $showLogoutAlert) {
+            Alert(
+                title: Text("Confirmation"),
+                message: Text("Êtes-vous sûr de vouloir vous déconnecter ?"),
+                primaryButton: .destructive(Text("Déconnexion")) {
+                    authService.logout()
+                },
+                secondaryButton: .cancel(Text("Annuler"))
+            )
+        }
     }
 }
 

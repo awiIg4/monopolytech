@@ -9,22 +9,33 @@ import SwiftUI
 
 struct Navbar: View {
     @Binding var currentTab: Tab
+    @EnvironmentObject private var authService: AuthService
     
     enum Tab {
         case login
         case home
         case catalog
+        case manage
     }
     
     var body: some View {
         HStack {
-            // Bouton Login
-            TabButton(
-                icon: "person.fill",
-                title: "Login",
-                isSelected: currentTab == .login,
-                action: { currentTab = .login }
-            )
+            // Bouton Login/Manage selon l'état de connexion
+            if authService.isAuthenticated {
+                TabButton(
+                    icon: "person.circle.fill",
+                    title: "Gérer",
+                    isSelected: currentTab == .manage,
+                    action: { currentTab = .manage }
+                )
+            } else {
+                TabButton(
+                    icon: "person.fill",
+                    title: "Login",
+                    isSelected: currentTab == .login,
+                    action: { currentTab = .login }
+                )
+            }
             
             Spacer()
             
