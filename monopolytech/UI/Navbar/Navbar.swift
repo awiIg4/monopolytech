@@ -74,8 +74,3 @@ struct TabButton: View {
         }
     }
 }
-
-#Preview {
-    Navbar(currentTab: .constant(.home))
-}
-
