@@ -31,6 +31,8 @@
 		DF7EECE42D886DD100ADACAA /* GameService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECE32D886DD100ADACAA /* GameService.swift */; };
 		DF7EECE72D886E7200ADACAA /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECE62D886E7200ADACAA /* NotificationService.swift */; };
 		DF7EECE92D88711200ADACAA /* APITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECE82D88711200ADACAA /* APITests.swift */; };
+		DF7EECEE2D8997CE00ADACAA /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECED2D8997CE00ADACAA /* LoginView.swift */; };
+		DF7EECF02D8997E500ADACAA /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECEF2D8997E500ADACAA /* LoginViewModel.swift */; };
 		DFE491522D8194EB00A9FA2C /* monopolytechApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE491512D8194EB00A9FA2C /* monopolytechApp.swift */; };
 		DFE491542D8194EB00A9FA2C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE491532D8194EB00A9FA2C /* ContentView.swift */; };
 		DFE491562D8194EC00A9FA2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFE491552D8194EC00A9FA2C /* Assets.xcassets */; };
@@ -83,6 +85,8 @@
 		DF7EECE32D886DD100ADACAA /* GameService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameService.swift; sourceTree = "<group>"; };
 		DF7EECE62D886E7200ADACAA /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		DF7EECE82D88711200ADACAA /* APITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITests.swift; sourceTree = "<group>"; };
+		DF7EECED2D8997CE00ADACAA /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		DF7EECEF2D8997E500ADACAA /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		DFE4914E2D8194EB00A9FA2C /* monopolytech.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = monopolytech.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFE491512D8194EB00A9FA2C /* monopolytechApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = monopolytechApp.swift; sourceTree = "<group>"; };
 		DFE491532D8194EB00A9FA2C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -142,6 +146,7 @@
 		DF7EECC82D82E64900ADACAA /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				DF7EECEC2D8997C100ADACAA /* Auth */,
 				C59DF8A92D89A767001A8531 /* Catalog */,
 				DF7EECC92D82E66800ADACAA /* Home */,
 			);
@@ -226,6 +231,15 @@
 				DF7EECE62D886E7200ADACAA /* NotificationService.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		DF7EECEC2D8997C100ADACAA /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				DF7EECED2D8997CE00ADACAA /* LoginView.swift */,
+				DF7EECEF2D8997E500ADACAA /* LoginViewModel.swift */,
+			);
+			path = Auth;
 			sourceTree = "<group>";
 		};
 		DFE491452D8194EB00A9FA2C = {
@@ -439,6 +453,8 @@
 				C591B82F2D88676F00D3BB3B /* ManagerModel.swift in Sources */,
 				C591B8352D88677F00D3BB3B /* UserModel.swift in Sources */,
 				DF7EECDF2D88581200ADACAA /* APITester.swift in Sources */,
+				DF7EECF02D8997E500ADACAA /* LoginViewModel.swift in Sources */,
+				DF7EECEE2D8997CE00ADACAA /* LoginView.swift in Sources */,
 				DFE491542D8194EB00A9FA2C /* ContentView.swift in Sources */,
 				DF7EECD72D82E8B800ADACAA /* HomeView.swift in Sources */,
 				DF7EECD32D82E87600ADACAA /* APIService.swift in Sources */,
