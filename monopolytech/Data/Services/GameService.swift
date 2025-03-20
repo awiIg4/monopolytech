@@ -101,8 +101,11 @@ class GameService {
     /// - Returns: Array of deposited games
     /// - Throws: APIError if the request fails
     func depositGames(request: GameDepositRequest) async throws -> [Game] {
-        let data = try JSONEncoder().encode(request)
-        return try await apiService.request("jeux/deposer", httpMethod: "POST", requestBody: data)
+        return try await apiService.request(
+            "jeux/deposer",
+            httpMethod: "POST",
+            requestBody: try JSONEncoder().encode(request)
+        )
     }
 
     /// Convenience method to deposit a single game

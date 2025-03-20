@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Service for fetching and managing licenses
+/// Service pour récupérer et gérer les licences
 class LicenseService {
     static let shared = LicenseService()
     
@@ -16,65 +16,85 @@ class LicenseService {
     
     private init() {}
     
-    /// Get licenses with proper error handling and response transformation
+    /// Récupère toutes les licences
     func fetchLicenses() async throws -> [License] {
         do {
-            // Utiliser une structure qui correspond exactement à la réponse de l'API
+            // Use debugRawRequest to get the raw response data first
+            let (responseData, statusCode) = try await apiService.debugRawRequest(endpoint, httpMethod: "GET")
+            
+            // Print raw response for debugging
+            print("📋 LICENSE API STATUS CODE: \(statusCode)")
+            
+            // Check if we got a successful response
+            guard (200...299).contains(statusCode) else {
+                throw APIError.serverError(statusCode, "License fetch failed with status \(statusCode)")
+            }
+            
+            // Créer un DTO qui correspond à la structure exacte de l'API
             struct LicenseDTO: Decodable {
-                let id: String  // Utiliser "id" au lieu de "_id"
+                let id: Int
                 let nom: String
-                let editeur_id: String?
+                let editeur_id: Int
+                let editeur: EditorDTO?
                 
+                struct EditorDTO: Decodable {
+                    let id: Int
+                    let nom: String
+                }
+                
+                // Convertir DTO vers notre modèle
                 func toModel() -> License {
                     return License(
-                        id: id,  // Ici on utilise le champ "id" du DTO
+                        id: String(id),  // Convertir Int en String
                         nom: nom,
-                        editeur_id: editeur_id
+                        editeur_id: String(editeur_id)  // Convertir Int en String
                     )
                 }
             }
             
-            // Pour débugger, affichons la réponse brute
-            let (data, statusCode) = try await apiService.debugRawRequest(endpoint)
-            print("📝 Raw license data: \(String(data: data, encoding: .utf8) ?? "No data")")
-            
-            if !(200...299).contains(statusCode) {
-                throw APIError.serverError(statusCode, "License fetch failed with status \(statusCode)")
-            }
-            
+            // Décoder avec notre DTO
             let decoder = JSONDecoder()
-            let licenseDTOs = try decoder.decode([LicenseDTO].self, from: data)
-            return licenseDTOs.map { $0.toModel() }
+            do {
+                let licensesDTOs = try decoder.decode([LicenseDTO].self, from: responseData)
+                print("✅ Successfully decoded \(licensesDTOs.count) licenses")
+                
+                // Convertir nos DTOs en modèles domain
+                let licenses = licensesDTOs.map { $0.toModel() }
+                return licenses
+            } catch let decodingError {
+                print("❌ License decoding error details: \(decodingError)")
+                throw APIError.decodingError(decodingError)
+            }
         } catch {
             print("❌ License fetch error: \(error)")
             throw error
         }
     }
     
-    /// Fetch a specific license by ID
-    /// - Parameter id: The license ID
-    /// - Returns: A single License object
+    /// Récupère une licence spécifique par ID
     func fetchLicense(id: String) async throws -> License {
-        do {
-            struct LicenseDTO: Decodable {
-                let id: String  // Utiliser "id" au lieu de "_id"
+        // Même approche avec DTO pour une seule licence
+        struct LicenseDTO: Decodable {
+            let id: Int
+            let nom: String
+            let editeur_id: Int
+            let editeur: EditorDTO?
+            
+            struct EditorDTO: Decodable {
+                let id: Int
                 let nom: String
-                let editeur_id: String?
-                
-                func toModel() -> License {
-                    return License(
-                        id: id,
-                        nom: nom,
-                        editeur_id: editeur_id
-                    )
-                }
             }
             
-            let licenseDTO: LicenseDTO = try await apiService.request("\(endpoint)/\(id)")
-            return licenseDTO.toModel()
-        } catch {
-            print("❌ License fetch error: \(error)")
-            throw error
+            func toModel() -> License {
+                return License(
+                    id: String(id),
+                    nom: nom,
+                    editeur_id: String(editeur_id)
+                )
+            }
         }
+        
+        let licenseDTO: LicenseDTO = try await apiService.request("\(endpoint)/\(id)")
+        return licenseDTO.toModel()
     }
 }

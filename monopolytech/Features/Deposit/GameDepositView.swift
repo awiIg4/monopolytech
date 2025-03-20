@@ -7,48 +7,80 @@
 
 import SwiftUI
 
-/// View for depositing games to sell
+/// Vue pour déposer des jeux
 struct GameDepositView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel = GameDepositViewModel()
     @FocusState private var focusedField: FocusField?
     
     enum FocusField {
-        case price, promoCode
+        case sellerEmail, price, quantity, promoCode
     }
     
     var body: some View {
         NavigationView {
             ScrollView {
-                VStack(spacing: 25) {
-                    // Header
-                    VStack(spacing: 10) {
-                        Image(systemName: "gamecontroller.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 70, height: 70)
-                            .foregroundColor(.blue)
-                        
-                        Text("Dépôt de jeu")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                        
-                        Text("Déposez vos jeux pour les vendre sur MonoPolytech")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal)
-                    }
-                    .padding(.top, 30)
+                VStack(spacing: 20) {
+                    // Titre
+                    Text("Déposer un Jeu")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .padding(.top)
                     
-                    // Form
-                    VStack(spacing: 20) {
-                        // License picker
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text("Licence")
-                                .font(.headline)
+                    // FORMULAIRE PRINCIPAL
+                    VStack(alignment: .leading, spacing: 15) {
+                        Text("Informations sur le vendeur")
+                            .font(.headline)
+                            .padding(.bottom, 5)
+                        
+                        // Email du vendeur
+                        VStack(alignment: .leading) {
+                            Text("Email du vendeur")
+                                .font(.subheadline)
                             
-                            if viewModel.isLoading && viewModel.licenses.isEmpty {
+                            TextField("Entrez l'email du vendeur", text: $viewModel.sellerEmail)
+                                .focused($focusedField, equals: .sellerEmail)
+                                .keyboardType(.emailAddress)
+                                .autocapitalization(.none)
+                                .disableAutocorrection(true)
+                                .padding()
+                                .background(Color(.systemGray6))
+                                .cornerRadius(8)
+                        }
+                        
+                        // Code promo
+                        Toggle("J'ai un code promo", isOn: $viewModel.hasPromoCode)
+                            .padding(.vertical, 5)
+                        
+                        if viewModel.hasPromoCode {
+                            VStack(alignment: .leading) {
+                                Text("Code promo")
+                                    .font(.subheadline)
+                                
+                                TextField("Entrez votre code promo", text: $viewModel.promoCode)
+                                    .focused($focusedField, equals: .promoCode)
+                                    .padding()
+                                    .background(Color(.systemGray6))
+                                    .cornerRadius(8)
+                            }
+                        }
+                    }
+                    .padding()
+                    .background(Color(.systemGray6).opacity(0.3))
+                    .cornerRadius(10)
+                    
+                    // FORMULAIRE D'AJOUT DE JEU
+                    VStack(alignment: .leading, spacing: 15) {
+                        Text("Sélectionner un jeu")
+                            .font(.headline)
+                            .padding(.bottom, 5)
+                        
+                        // Licence
+                        VStack(alignment: .leading) {
+                            Text("Licence")
+                                .font(.subheadline)
+                            
+                            if viewModel.isLoadingLicenses {
                                 ProgressView()
                                     .progressViewStyle(CircularProgressViewStyle())
                                     .padding()
@@ -74,10 +106,10 @@ struct GameDepositView: View {
                             }
                         }
                         
-                        // Price field
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text("Prix (€)")
-                                .font(.headline)
+                        // Prix
+                        VStack(alignment: .leading) {
+                            Text("Prix")
+                                .font(.subheadline)
                             
                             TextField("Entrez le prix", text: $viewModel.price)
                                 .focused($focusedField, equals: .price)
@@ -87,10 +119,10 @@ struct GameDepositView: View {
                                 .cornerRadius(8)
                         }
                         
-                        // Quantity field
-                        VStack(alignment: .leading, spacing: 5) {
+                        // Quantité
+                        VStack(alignment: .leading) {
                             Text("Quantité")
-                                .font(.headline)
+                                .font(.subheadline)
                             
                             Stepper("Quantité: \(viewModel.quantity)", value: Binding(
                                 get: { Int(viewModel.quantity) ?? 1 },
@@ -101,45 +133,86 @@ struct GameDepositView: View {
                             .cornerRadius(8)
                         }
                         
-                        // Promo code field (optional)
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text("Code promo (optionnel)")
+                        // Bouton ajouter
+                        Button(action: {
+                            focusedField = nil
+                            viewModel.addGame()
+                        }) {
+                            Text("Ajouter le jeu")
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(8)
+                        }
+                    }
+                    .padding()
+                    .background(Color(.systemGray6).opacity(0.3))
+                    .cornerRadius(10)
+                    
+                    // LISTE DES JEUX À DÉPOSER
+                    if !viewModel.gamesToDeposit.isEmpty {
+                        VStack(alignment: .leading, spacing: 15) {
+                            Text("Jeux sélectionnés")
                                 .font(.headline)
+                                .padding(.bottom, 5)
                             
-                            TextField("Entrez un code promo", text: $viewModel.promoCode)
-                                .focused($focusedField, equals: .promoCode)
+                            ForEach(Array(viewModel.gamesToDeposit.enumerated()), id: \.element.id) { index, game in
+                                HStack {
+                                    VStack(alignment: .leading) {
+                                        Text(game.licenseName)
+                                            .fontWeight(.medium)
+                                        Text("Prix: \(String(format: "%.2f", game.price)) € | Quantité: \(game.quantity)")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    Button(action: {
+                                        viewModel.removeGame(at: index)
+                                    }) {
+                                        Image(systemName: "trash")
+                                            .foregroundColor(.red)
+                                    }
+                                }
                                 .padding()
                                 .background(Color(.systemGray6))
                                 .cornerRadius(8)
-                        }
-                        
-                        // Submit button
-                        Button(action: {
-                            focusedField = nil
-                            viewModel.submitDeposit()
-                        }) {
-                            HStack {
-                                if viewModel.isLoading {
-                                    ProgressView()
-                                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                        .padding(.trailing, 5)
-                                }
-                                Text("Déposer le jeu")
-                                    .fontWeight(.semibold)
                             }
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
                         }
-                        .disabled(viewModel.isLoading)
+                        .padding()
+                        .background(Color(.systemGray6).opacity(0.3))
+                        .cornerRadius(10)
                     }
-                    .padding(.horizontal, 30)
+                    
+                    // BOUTON SOUMETTRE
+                    Button(action: {
+                        focusedField = nil
+                        viewModel.submitDeposit()
+                    }) {
+                        HStack {
+                            if viewModel.isLoading {
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                    .padding(.trailing, 5)
+                            }
+                            Text("Déposer les jeux")
+                                .fontWeight(.semibold)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.green)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                    }
+                    .disabled(viewModel.isLoading || viewModel.gamesToDeposit.isEmpty)
+                    .padding(.vertical)
                 }
+                .padding()
             }
-            .navigationTitle("Dépôt de jeu")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitle("Dépôt de jeu", displayMode: .inline)
             .navigationBarItems(
                 leading: Button(action: {
                     presentationMode.wrappedValue.dismiss()

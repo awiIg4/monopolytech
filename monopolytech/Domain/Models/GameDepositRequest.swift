@@ -7,12 +7,17 @@
 
 import Foundation
 
-/// Model representing a game deposit request to the API
+/// Modèle représentant une requête de dépôt de jeu, correspondant à l'API
 struct GameDepositRequest: Codable {
+    /// Tableau des identifiants de licences
     let licence: [String]
+    /// Tableau des prix pour chaque jeu
     let prix: [Double]
+    /// Tableau des quantités pour chaque jeu
     let quantite: [Int]
+    /// Code promo optionnel
     let code_promo: String?
+    /// ID du vendeur
     let id_vendeur: String
     
     // Ensure these keys match API expectations

@@ -40,6 +40,8 @@
 		DFA9A55B2D8C473E00BCE8CA /* GameDepositView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA9A55A2D8C473E00BCE8CA /* GameDepositView.swift */; };
 		DFA9A55D2D8C474F00BCE8CA /* GameDepositViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA9A55C2D8C474F00BCE8CA /* GameDepositViewModel.swift */; };
 		DFA9A55F2D8C495400BCE8CA /* GameDepositRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA9A55E2D8C495400BCE8CA /* GameDepositRequest.swift */; };
+		DFA9A5612D8C551E00BCE8CA /* SellerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA9A5602D8C551E00BCE8CA /* SellerService.swift */; };
+		DFA9A5632D8C558300BCE8CA /* GameToDeposit.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA9A5622D8C558300BCE8CA /* GameToDeposit.swift */; };
 		DFE491522D8194EB00A9FA2C /* monopolytechApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE491512D8194EB00A9FA2C /* monopolytechApp.swift */; };
 		DFE491542D8194EB00A9FA2C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE491532D8194EB00A9FA2C /* ContentView.swift */; };
 		DFE491562D8194EC00A9FA2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFE491552D8194EC00A9FA2C /* Assets.xcassets */; };
@@ -101,6 +103,8 @@
 		DFA9A55A2D8C473E00BCE8CA /* GameDepositView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDepositView.swift; sourceTree = "<group>"; };
 		DFA9A55C2D8C474F00BCE8CA /* GameDepositViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDepositViewModel.swift; sourceTree = "<group>"; };
 		DFA9A55E2D8C495400BCE8CA /* GameDepositRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDepositRequest.swift; sourceTree = "<group>"; };
+		DFA9A5602D8C551E00BCE8CA /* SellerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellerService.swift; sourceTree = "<group>"; };
+		DFA9A5622D8C558300BCE8CA /* GameToDeposit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameToDeposit.swift; sourceTree = "<group>"; };
 		DFE4914E2D8194EB00A9FA2C /* monopolytech.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = monopolytech.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFE491512D8194EB00A9FA2C /* monopolytechApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = monopolytechApp.swift; sourceTree = "<group>"; };
 		DFE491532D8194EB00A9FA2C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -207,6 +211,7 @@
 				C591B8262D88674B00D3BB3B /* BuyerModel.swift */,
 				DF7EECD42D82E89100ADACAA /* GameModel.swift */,
 				DFA9A55E2D8C495400BCE8CA /* GameDepositRequest.swift */,
+				DFA9A5622D8C558300BCE8CA /* GameToDeposit.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -257,6 +262,7 @@
 				DF7EECE62D886E7200ADACAA /* NotificationService.swift */,
 				DFA9A5552D8C466D00BCE8CA /* LicenseService.swift */,
 				DFA9A5572D8C468800BCE8CA /* EditorService.swift */,
+				DFA9A5602D8C551E00BCE8CA /* SellerService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -499,11 +505,13 @@
 				DFE491542D8194EB00A9FA2C /* ContentView.swift in Sources */,
 				DF7EECD72D82E8B800ADACAA /* HomeView.swift in Sources */,
 				DF7EECD32D82E87600ADACAA /* APIService.swift in Sources */,
+				DFA9A5632D8C558300BCE8CA /* GameToDeposit.swift in Sources */,
 				DFE491522D8194EB00A9FA2C /* monopolytechApp.swift in Sources */,
 				C591B8292D88675700D3BB3B /* CodePromoModel.swift in Sources */,
 				C59DF8C12D8C2CB6001A8531 /* ManageViewModel.swift in Sources */,
 				C59DF8B12D89A92E001A8531 /* CatalogViewModel.swift in Sources */,
 				DFA9A55B2D8C473E00BCE8CA /* GameDepositView.swift in Sources */,
+				DFA9A5612D8C551E00BCE8CA /* SellerService.swift in Sources */,
 				C591B82D2D88676900D3BB3B /* LicenseModel.swift in Sources */,
 				C59DF8BF2D8C2CA7001A8531 /* ManageView.swift in Sources */,
 			);
