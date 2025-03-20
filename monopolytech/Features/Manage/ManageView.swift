@@ -87,6 +87,8 @@ struct ManageButton: View {
             Text("Game Deposit View")
         case "game/sale":
             Text("Game Sale View")
+        case "manager/create":
+            ManagerView()
         default:
             Text("View not implemented yet")
         }
