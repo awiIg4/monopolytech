@@ -2,7 +2,7 @@
 //  GameModel.swift
 //  monopolytech
 //
-//  Created by eugenio on 13/03/2025.
+//  Created by hugo on 18/03/2024.
 //
 
 import Foundation
@@ -12,10 +12,14 @@ struct Game: Identifiable, Codable, Hashable {
     let licence_id: String
     let licence_name: String?
     let prix: Double
+    let prix_max: Double
+    let quantite: Int
+    let editeur_nom: String
     let statut: String?
     let depot_id: Int?
     let createdAt: Date?
     let updatedAt: Date?
+    var category: Category?
     
 
     // For previews and tests
@@ -24,10 +28,13 @@ struct Game: Identifiable, Codable, Hashable {
         licence_id: "ac-valhalla",
         licence_name: "Assassin's Creed Valhalla",
         prix: 39.99,
+        prix_max: 49.99,
+        quantite: 5,
+        editeur_nom: "Ubisoft",
         statut: "available",
         depot_id: 123,
-        createdAt: Date(),
-        updatedAt: Date()
+        createdAt: nil,
+        updatedAt: nil
     )
     
     // For preview and testing purposes
@@ -37,50 +44,65 @@ struct Game: Identifiable, Codable, Hashable {
             licence_id: "ac-valhalla",
             licence_name: "Assassin's Creed Valhalla",
             prix: 39.99,
+            prix_max: 49.99,
+            quantite: 5,
+            editeur_nom: "Ubisoft",
             statut: "available",
             depot_id: 123,
-            createdAt: Date(),
-            updatedAt: Date()
+            createdAt: nil,
+            updatedAt: nil
         ),
         Game(
             id: "2",
             licence_id: "fifa2025",
             licence_name: "FIFA 2025",
-            prix: 59.99,
+            prix: 49.99,
+            prix_max: 59.99,
+            quantite: 3,
+            editeur_nom: "EA Sports",
             statut: "available",
             depot_id: 124,
-            createdAt: Date(),
-            updatedAt: Date()
+            createdAt: nil,
+            updatedAt: nil
         ),
         Game(
             id: "3",
             licence_id: "minecraft",
             licence_name: "Minecraft",
-            prix: 29.99,
+            prix: 19.99,
+            prix_max: 29.99,
+            quantite: 10,
+            editeur_nom: "Mojang",
             statut: "available",
             depot_id: 125,
-            createdAt: Date(),
-            updatedAt: Date()
+            createdAt: nil,
+            updatedAt: nil
         ),
         Game(
             id: "4",
             licence_id: "fortnite",
             licence_name: "Fortnite",
             prix: 0.00,
+            prix_max: 0.00,
+            quantite: 1,
+            editeur_nom: "Epic Games",
             statut: "available",
             depot_id: 126,
-            createdAt: Date(),
-            updatedAt: Date()
+            createdAt: nil,
+            updatedAt: nil
         ),
         Game(
             id: "5",
             licence_id: "gta-v",
             licence_name: "Grand Theft Auto V",
             prix: 29.99,
+            prix_max: 39.99,
+            quantite: 2,
+            editeur_nom: "Rockstar Games",
             statut: "sold",
             depot_id: 127,
-            createdAt: Date(),
-            updatedAt: Date()
+            createdAt: nil,
+            updatedAt: nil
         )
     ]
 }
