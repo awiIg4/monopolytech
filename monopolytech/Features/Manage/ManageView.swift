@@ -72,6 +72,7 @@ struct ManageView: View {
         default: return "questionmark.circle.fill"
         }
     }
+    
 }
 
 struct ManageItem: Identifiable {
