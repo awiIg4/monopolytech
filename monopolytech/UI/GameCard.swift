@@ -2,7 +2,7 @@
 //  GameCard.swift
 //  monopolytech
 //
-//  Created by eugenio on 13/03/2025.
+//  Created by hugo on 18/03/2024.
 //
 
 import SwiftUI
@@ -16,28 +16,36 @@ struct GameCard: View {
         Button(action: {
             onTap?(game)
         }) {
-            VStack(alignment: .leading, spacing: 8) {
-                // Game title
-                Text(game.licence_name ?? "Unknown Game")
-                    .font(.headline)
-                    .foregroundColor(.primary)
-                    .lineLimit(2)
+            VStack(alignment: .leading, spacing: 4) {
+                // Header avec titre et indicateur de statut
+                HStack(alignment: .top) {
+                    // Game title
+                    Text(game.licence_name ?? "Unknown Game")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                        .lineLimit(2)
+                        .frame(height: 45)
+                    
+                    Spacer()
+                    
+                    // Statut indicator
+                    Circle()
+                        .fill(game.statut == "available" ? Color.green : Color.red)
+                        .frame(width: 8, height: 8)
+                }
+                
+                Spacer()
+                    .frame(height: 4)
                 
                 // Price
                 Text("\(formatPrice(game.prix)) €")
                     .font(.title3)
                     .fontWeight(.bold)
                     .foregroundColor(.blue)
-                
-                // Status if available
-                if let status = game.statut {
-                    Text("Status: \(status)")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
             }
             .padding(12)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity)
+            .frame(height: 110)
             .background(
                 RoundedRectangle(cornerRadius: 8)
                     .fill(Color(UIColor.systemBackground))
