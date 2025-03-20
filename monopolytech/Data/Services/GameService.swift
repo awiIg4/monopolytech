@@ -82,19 +82,13 @@ class GameService {
         do {
             let requestData = try JSONEncoder().encode(request)
             
-            // Get raw response
+            // Make the request
             let (responseData, statusCode) = try await apiService.request(
                 "jeux/deposer",
                 httpMethod: "POST",
                 requestBody: requestData,
                 returnRawResponse: true
             )
-            
-            // SIMPLE RAW RESPONSE PRINT - guaranteed to show in console
-            print("====================== DEPOSIT RESPONSE START ======================")
-            print("STATUS CODE: \(statusCode)")
-            print("RAW DATA: \(String(data: responseData, encoding: .utf8) ?? "No data")")
-            print("====================== DEPOSIT RESPONSE END ======================")
             
             // Success handling
             if (200...299).contains(statusCode) {
@@ -106,6 +100,7 @@ class GameService {
                         let game = try JSONDecoder().decode(Game.self, from: responseData)
                         return [game]
                     } catch {
+                        // Even if we can't decode the response, return an empty array for success status
                         return []
                     }
                 }

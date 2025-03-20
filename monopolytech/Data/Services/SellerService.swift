@@ -46,7 +46,6 @@ class SellerService {
             let sellerDTO: SellerDTO = try await apiService.request("\(endpoint)/\(encodedEmail)")
             return sellerDTO.toModel()
         } catch {
-            print("❌ Seller fetch error: \(error)")
             throw error
         }
     }
