@@ -7,11 +7,13 @@
 
 import SwiftUI
 
+// TODO: Faire disparaitre la petite barre avec OK entre la toolbar et la vue
 /// Vue pour déposer des jeux
 struct GameDepositView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel = GameDepositViewModel()
     @FocusState private var focusedField: FocusField?
+    @State private var isKeyboardVisible: Bool = false
     
     enum FocusField {
         case sellerEmail, price, quantity, promoCode
@@ -225,11 +227,28 @@ struct GameDepositView: View {
             )
             .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {
-                    Spacer()
-                    Button("OK") {
-                        focusedField = nil
+                    if isKeyboardVisible {
+                        Spacer()
+                        Button("OK") {
+                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                            focusedField = nil
+                            isKeyboardVisible = false
+                        }
                     }
                 }
+            }
+            .onAppear {
+                // Surveillez les notifications de clavier
+                NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidShowNotification, object: nil, queue: .main) { _ in
+                    isKeyboardVisible = true
+                }
+                NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidHideNotification, object: nil, queue: .main) { _ in
+                    isKeyboardVisible = false
+                }
+            }
+            .onDisappear {
+                // Nettoyez les observateurs
+                NotificationCenter.default.removeObserver(self)
             }
             .alert(isPresented: $viewModel.showAlert) {
                 if !viewModel.errorMessage.isEmpty {
