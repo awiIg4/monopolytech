@@ -12,6 +12,7 @@ struct ManageView: View {
     @EnvironmentObject var authService: AuthService
     @State private var selectedItem: ManageItem? = nil
     @State private var showDepositView = false
+    @State private var showManagerCreationView = false
     
     var body: some View {
         NavigationView {
@@ -43,6 +44,9 @@ struct ManageView: View {
             .sheet(isPresented: $showDepositView) {
                 GameDepositView()
             }
+            .sheet(isPresented: $showManagerCreationView) {
+                ManagerView()
+            }
         }
     }
     
@@ -50,8 +54,9 @@ struct ManageView: View {
         switch item.route {
         case "game/deposit":
             showDepositView = true
+        case "manager/create":
+            showManagerCreationView = true
         default:
-            // Handle other routes
             break
         }
     }
@@ -72,7 +77,6 @@ struct ManageView: View {
         default: return "questionmark.circle.fill"
         }
     }
-    
 }
 
 struct ManageItem: Identifiable {

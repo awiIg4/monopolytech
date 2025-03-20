@@ -13,6 +13,7 @@ class ManagerViewModel: ObservableObject {
     @Published var telephone = ""
     @Published var adresse = ""
     @Published var motdepasse = ""
+    @Published var response = ""
     
     private let managerService = ManagerService.shared
     
@@ -25,7 +26,7 @@ class ManagerViewModel: ObservableObject {
         motdepasse.count >= 6
     }
     
-    func createManager() async throws {
+    func createManager() async throws -> String {
         let request = ManagerService.CreateManagerRequest(
             nom: nom,
             email: email,
@@ -35,7 +36,23 @@ class ManagerViewModel: ObservableObject {
         )
         
         print("Création d'un gestionnaire avec les données: \(nom), \(email)")
-        try await managerService.createManager(request)
+        var responseString = try await managerService.createManager(request)
+        
+        // Assurons-nous que nous avons un message de succès cohérent
+        if responseString.isEmpty || !responseString.contains("succès") {
+            responseString = "Compte gestionnaire créé avec succès."
+        }
+        
+        self.response = responseString
+        
+        // En cas de succès, effaçons les champs
+        if responseString.contains("succès") {
+            await MainActor.run {
+                self.clearForm()
+            }
+        }
+        
+        return responseString
     }
     
     func clearForm() {
@@ -44,6 +61,7 @@ class ManagerViewModel: ObservableObject {
         telephone = ""
         adresse = ""
         motdepasse = ""
+        response = ""
     }
 }
 
