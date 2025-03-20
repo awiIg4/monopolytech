@@ -45,6 +45,38 @@ class APITester {
         }
     }
     
+    func testGetUsers() async {
+        print("📱 Testing getUsers endpoint '/utilisateurs'...")
+        
+        do {
+            // Try to access the users endpoint (authentication token will be used if present in APIService)
+            let (responseData, statusCode, _) = try await APIService.shared.debugRawRequestWithHeaders(
+                "utilisateurs", 
+                httpMethod: "GET"
+            )
+            
+            if (200...299).contains(statusCode) {
+                print("✅ Successfully accessed users endpoint with status: \(statusCode)")
+                let responseString = String(data: responseData, encoding: .utf8) ?? "No data"
+                print("Response preview: \(responseString.prefix(200))...")
+                
+                // Try to parse the users data
+                do {
+                    let decoder = JSONDecoder()
+                    let users = try decoder.decode([User].self, from: responseData)
+                    print("✅ Successfully parsed \(users.count) users")
+                } catch {
+                    print("⚠️ Could not parse users data: \(error.localizedDescription)")
+                    print("Raw response: \(responseString)")
+                }
+            } else {
+                print("❌ Failed to access users endpoint. Status: \(statusCode)")
+            }
+        } catch {
+            print("❌ Error fetching users: \(error.localizedDescription)")
+        }
+    }
+    
     // This method can be uncommented once you have a CategoryService
     /*
     func testFetchCategories() async {
@@ -63,6 +95,8 @@ class APITester {
         await testFetchGames()
         print("\n-------------------\n")
         await testFetchGameDetails()
+        print("\n-------------------\n")
+        await testGetUsers()
         // Uncomment when CategoryService is implemented
         // print("\n-------------------\n")
         // await testFetchCategories()
