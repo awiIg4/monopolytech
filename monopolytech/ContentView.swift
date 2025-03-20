@@ -62,3 +62,10 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
+// In ManageViewModel.swift, update the setupActions method
+
+private func setupActions() {
+    // Add navigation to game deposit
+    // This will be called when the user taps on the "Deposit Game" item
+}

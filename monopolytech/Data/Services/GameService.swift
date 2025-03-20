@@ -86,4 +86,43 @@ class GameService {
             throw APIError.networkError(error)
         }
     }
+    
+    /// Deposit a new game
+    func depositGame(requestData: Data) async throws -> Game {
+        return try await apiService.request(
+            "jeux/depot",
+            httpMethod: "POST",
+            requestBody: requestData
+        )
+    }
+    
+    /// Deposit one or more games for sale
+    /// - Parameter request: Structured request containing game details
+    /// - Returns: Array of deposited games
+    /// - Throws: APIError if the request fails
+    func depositGames(request: GameDepositRequest) async throws -> [Game] {
+        let data = try JSONEncoder().encode(request)
+        return try await apiService.request("jeux/deposer", httpMethod: "POST", requestBody: data)
+    }
+
+    /// Convenience method to deposit a single game
+    /// - Parameters:
+    ///   - licenseId: ID of the game license
+    ///   - price: Price of the game
+    ///   - quantity: Number of copies to deposit
+    ///   - sellerId: ID of the seller
+    ///   - promoCode: Optional promotional code
+    /// - Returns: Array of deposited games
+    /// - Throws: APIError if the request fails
+    func depositGame(licenseId: String, price: Double, quantity: Int, sellerId: String, promoCode: String? = nil) async throws -> [Game] {
+        let request = GameDepositRequest(
+            licence: [licenseId],
+            prix: [price],
+            quantite: [quantity],
+            code_promo: promoCode,
+            id_vendeur: sellerId
+        )
+        
+        return try await depositGames(request: request)
+    }
 }
