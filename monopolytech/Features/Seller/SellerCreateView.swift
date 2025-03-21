@@ -1,21 +1,20 @@
 //
-//  ManagerView.swift
+//  SellerCreateView.swift
 //  monopolytech
 //
-//  Created by Hugo Brun on 20/03/2025.
+//  Created by eugenio on 21/03/2025.
 //
 
 import SwiftUI
 
-struct ManagerView: View {
-    @StateObject private var viewModel = ManagerViewModel()
-    @State private var showAlert = false
-    @State private var alertMessage = ""
+struct SellerCreateView: View {
+    @StateObject private var viewModel = SellerCreateViewModel()
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                Text("Créer un Gestionnaire")
+                Text("Créer un Vendeur")
                     .font(.title)
                     .fontWeight(.bold)
                     .padding(.top, 30)
@@ -34,6 +33,7 @@ struct ManagerView: View {
                         icon: "envelope.fill",
                         keyboardType: .emailAddress
                     )
+                    .autocapitalization(.none)
                     
                     CustomTextField(
                         text: $viewModel.telephone,
@@ -44,15 +44,8 @@ struct ManagerView: View {
                     
                     CustomTextField(
                         text: $viewModel.adresse,
-                        placeholder: "Adresse",
+                        placeholder: "Adresse (optionnel)",
                         icon: "location.fill"
-                    )
-                    
-                    // Champ mot de passe amélioré
-                    CustomSecureField(
-                        text: $viewModel.motdepasse,
-                        placeholder: "Mot de passe",
-                        icon: "lock.fill"
                     )
                 }
                 .padding()
@@ -60,20 +53,17 @@ struct ManagerView: View {
                 // Bouton de création
                 Button(action: {
                     Task {
-                        do {
-                            try await viewModel.createManager()
-                            alertMessage = "Gestionnaire créé avec succès"
-                            showAlert = true
-                            viewModel.clearForm()
-                        } catch {
-                            alertMessage = "Erreur: \(error.localizedDescription)"
-                            showAlert = true
-                        }
+                        await viewModel.createSeller()
                     }
                 }) {
                     HStack {
+                        if viewModel.isLoading {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .padding(.trailing, 5)
+                        }
                         Image(systemName: "person.badge.plus")
-                        Text("Créer le gestionnaire")
+                        Text("Créer le vendeur")
                     }
                     .frame(minWidth: 200)
                     .padding()
@@ -87,25 +77,32 @@ struct ManagerView: View {
                     .foregroundColor(.white)
                     .cornerRadius(10)
                 }
-                .disabled(!viewModel.isFormValid)
+                .disabled(viewModel.isLoading || !viewModel.isFormValid)
                 .opacity(viewModel.isFormValid ? 1 : 0.6)
             }
             .padding()
         }
-        .ignoresSafeArea(.keyboard, edges: .bottom) // Aide à éviter les conflits de contraintes
-        .alert(isPresented: $showAlert) {
-            Alert(
-                title: Text("Information"),
-                message: Text(alertMessage),
-                dismissButton: .default(Text("OK"))
-            )
+        .alert(isPresented: $viewModel.showAlert) {
+            if !viewModel.errorMessage.isEmpty {
+                return Alert(
+                    title: Text("Erreur"),
+                    message: Text(viewModel.errorMessage),
+                    dismissButton: .default(Text("OK"))
+                )
+            } else {
+                return Alert(
+                    title: Text("Succès"),
+                    message: Text(viewModel.successMessage),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
         }
+        .navigationBarTitle("Créer un vendeur", displayMode: .inline)
     }
 }
 
-struct ManagerView_Previews: PreviewProvider {
+struct SellerCreateView_Previews: PreviewProvider {
     static var previews: some View {
-        ManagerView()
+        SellerCreateView()
     }
 }
-
