@@ -150,56 +150,52 @@ class GameService {
             
             // Vérifier le code de statut
             if (200...299).contains(statusCode) {
-                // Tenter premier format: tableau d'objets complets
+                // Structure DTO adaptée au format de réponse réel
                 struct GameDTO: Decodable {
                     let id: Int
                     let licence_id: Int
-                    let licence_name: String?
-                    let prix: Double
+                    let prix: String // <- Modifié: prix en String au lieu de Double
                     let statut: String?
                     let depot_id: Int?
+                    let depot: DepotDTO?
+                    
+                    struct DepotDTO: Decodable {
+                        let id: Int
+                        let vendeur_id: Int?
+                        let session_id: Int?
+                    }
                     
                     func toGame() -> Game {
+                        // Convertir le prix String en Double
+                        let priceDouble = Double(prix.replacingOccurrences(of: ",", with: ".")) ?? 0.0
+                        
                         return Game(
                             id: String(id),
                             licence_id: String(licence_id),
-                            licence_name: licence_name,
-                            prix: prix,
-                            prix_max: prix,
+                            licence_name: nil, // À récupérer séparément via LicenseService
+                            prix: priceDouble,
+                            prix_max: priceDouble,
                             quantite: 1,
                             editeur_nom: "",
                             statut: statut,
-                            depot_id: 0,
+                            depot_id: depot_id != nil ? depot_id! : 0,
                             createdAt: nil,
                             updatedAt: nil
                         )
                     }
                 }
                 
+                // Décodage direct en tableau
                 do {
-                    // Premier essai: décoder en tant que tableau de GameDTO
-                    let gamesDTO = try JSONDecoder().decode([GameDTO].self, from: responseData)
+                    let decoder = JSONDecoder()
+                    let gamesDTO = try decoder.decode([GameDTO].self, from: responseData)
                     return gamesDTO.map { $0.toGame() }
                 } catch {
-                    print("⚠️ Premier format échoué: \(error)")
-                    
-                    do {
-                        // Deuxième essai: structure imbriquée
-                        struct ResponseWrapper: Decodable {
-                            let games: [GameDTO]
-                        }
-                        
-                        let responseWrapper = try JSONDecoder().decode(ResponseWrapper.self, from: responseData)
-                        return responseWrapper.games.map { $0.toGame() }
-                    } catch {
-                        print("⚠️ Deuxième format échoué: \(error)")
-                        // En dernier recours, retourner un tableau vide
-                        return []
-                    }
+                    print("❌ Erreur de décodage: \(error)")
+                    return []
                 }
             } else {
-                // Si la requête a échoué, lancer une erreur
-                throw APIError.serverError(statusCode, responseString)
+                throw APIError.serverError(statusCode, "Récupération des jeux échouée")
             }
         } catch {
             print("❌ Erreur lors de la récupération des jeux non mis en rayon: \(error)")
@@ -225,7 +221,7 @@ class GameService {
             // Encoder le payload
             let jsonData = try JSONSerialization.data(withJSONObject: payload)
             
-            // Effectuer la requête
+            // Effectuer la requête avec le status code pour debug
             let (responseData, statusCode) = try await apiService.request(
                 "\(gameEndpoint)updateStatus",
                 httpMethod: "PUT",
@@ -233,41 +229,38 @@ class GameService {
                 returnRawResponse: true
             )
             
+            // Debug - afficher la réponse brute
+            let responseString = String(data: responseData, encoding: .utf8) ?? "No response data"
+            print("📄 PUT GAMES FOR SALE RESPONSE [Status: \(statusCode)]:\n\(responseString)")
+            
             // Vérifier le code de statut
             if (200...299).contains(statusCode) {
-                struct GameDTO: Decodable {
-                    let id: Int
-                    let licence_id: Int
-                    let licence_name: String?
-                    let prix: Double
-                    let statut: String?
-                    
-                    func toGame() -> Game {
-                        return Game(
-                            id: String(id),
-                            licence_id: String(licence_id),
-                            licence_name: licence_name,
-                            prix: prix,
-                            prix_max: prix,
-                            quantite: 1,
-                            editeur_nom: "",
-                            statut: statut,
-                            depot_id: nil,
-                            createdAt: nil,
-                            updatedAt: nil
-                        )
-                    }
+                // La réponse est un succès, mais pas forcément au format attendu
+                // Créer un jeu factice basé sur les IDs envoyés pour indiquer le succès
+                return gameIds.map { id in
+                    Game(
+                        id: id,
+                        licence_id: "",
+                        licence_name: "Mis en rayon avec succès",
+                        prix: 0,
+                        prix_max: 0,
+                        quantite: 1,
+                        editeur_nom: "",
+                        statut: "en vente",
+                        depot_id: nil,
+                        createdAt: nil,
+                        updatedAt: nil
+                    )
                 }
-                
-                let gamesDTO = try JSONDecoder().decode([GameDTO].self, from: responseData)
-                return gamesDTO.map { $0.toGame() }
             } else {
                 // Si la requête a échoué, lancer une erreur
-                let responseString = String(data: responseData, encoding: .utf8) ?? "Unknown error"
                 throw APIError.serverError(statusCode, responseString)
             }
-        } catch {
+        } catch let error as APIError {
             throw error
+        } catch {
+            print("❌ Erreur lors de la mise en rayon: \(error.localizedDescription)")
+            throw APIError.networkError(error)
         }
     }
 }

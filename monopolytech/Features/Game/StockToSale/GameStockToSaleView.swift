@@ -94,11 +94,16 @@ struct GameRow: View {
         VStack(alignment: .leading) {
             HStack {
                 VStack(alignment: .leading, spacing: 8) {
-                    // ID et licence
+                    // ID et licence avec format amélioré
                     HStack {
-                        Text("#\(game.id ?? "")")
+                        Text("Étiquette #\(game.id ?? "")")
                             .font(.caption)
-                            .foregroundColor(.gray)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.blue)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color.blue.opacity(0.1))
+                            .cornerRadius(4)
                         
                         Spacer()
                         
