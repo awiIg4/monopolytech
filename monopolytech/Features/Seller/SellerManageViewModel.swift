@@ -7,6 +7,7 @@
 
 import Foundation
 
+// TODO: Add updating manager instead of just viewing info.
 class SellerManageViewModel: ObservableObject {
     @Published var searchEmail = ""
     @Published var currentSeller: User?
