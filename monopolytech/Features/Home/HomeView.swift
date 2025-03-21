@@ -66,7 +66,7 @@ struct HomeView: View {
                 .padding(.horizontal, 20)
                 .background(
                     RoundedRectangle(cornerRadius: 20)
-                        .fill(.ultraThinMaterial)
+                        .fill(Color.white)
                         .shadow(color: .black.opacity(0.1), radius: 5)
                 )
                 .padding(.horizontal)

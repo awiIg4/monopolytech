@@ -35,17 +35,38 @@ class ManagerService {
     
     /// Créer un nouveau gestionnaire
     /// - Parameter manager: Les données du gestionnaire à créer
-    /// - Returns: Void - ne retourne rien
+    /// - Returns: La réponse du serveur sous forme de chaîne de texte
     /// - Throws: APIError si la requête échoue
-    func createManager(_ manager: CreateManagerRequest) async throws {
+    func createManager(_ manager: CreateManagerRequest) async throws -> String {
         do {
             let jsonData = try manager.toJSONData()
 
-            let _: String = try await apiService.request(endpoint,
-                                                         httpMethod: "POST",
-                                                         requestBody: jsonData)
+            // Utiliser requestWithHeaders pour obtenir les données brutes
+            let (data, statusCode, _) = try await apiService.requestWithHeaders(
+                endpoint,
+                httpMethod: "POST",
+                requestBody: jsonData
+            )
             
-            print("Gestionnaire créé avec succès")
+            // Gérer les erreurs potentielles
+            if !(200...299).contains(statusCode) {
+                let errorMessage = String(data: data, encoding: .utf8) ?? "Erreur inconnue"
+                throw APIError.serverError(statusCode, errorMessage)
+            }
+            
+            // Convertir les données en chaîne de texte
+            if let responseString = String(data: data, encoding: .utf8) {
+                print("Réponse du serveur: \(responseString)")
+                
+                // Assurons-nous que la réponse contient "succès" si elle est vide ou peu claire
+                if responseString.isEmpty || !responseString.contains("succès") {
+                    return "Compte gestionnaire créé avec succès."
+                }
+                
+                return responseString
+            } else {
+                return "Compte gestionnaire créé avec succès."
+            }
         } catch {
             print("❌ Erreur de création: \(error)")
             throw error
