@@ -37,7 +37,7 @@ class SellerService {
             let id: Int
             let nom: String
             let email: String
-            let telephone: String
+            let telephone: String?
             let adresse: String?
             
             func toModel() -> User {
@@ -45,7 +45,7 @@ class SellerService {
                     id: String(id),
                     nom: nom,
                     email: email,
-                    telephone: telephone,
+                    telephone: telephone ?? "",
                     adresse: adresse,
                     type_utilisateur: "vendeur"
                 )
@@ -54,13 +54,58 @@ class SellerService {
         
         do {
             let jsonData = try seller.toJSONData()
-            let sellerDTO: SellerDTO = try await apiService.request(
+            
+            // Utiliser returnRawResponse pour accéder aux données brutes et au code de statut
+            let (responseData, statusCode) = try await apiService.request(
                 "\(endpoint)/register",
                 httpMethod: "POST",
-                requestBody: jsonData
+                requestBody: jsonData,
+                returnRawResponse: true
             )
-            return sellerDTO.toModel()
+            
+            // Pour debug: afficher la réponse brute
+            let responseString = String(data: responseData, encoding: .utf8) ?? "No response data"
+            print("📩 CREATE SELLER RESPONSE [Status: \(statusCode)]:\n\(responseString)")
+            
+            // Si le statut est OK mais les données sont vides ou invalides
+            if (200...299).contains(statusCode) {
+                // Essayer de décoder la réponse complète
+                do {
+                    let sellerDTO = try JSONDecoder().decode(SellerDTO.self, from: responseData)
+                    return sellerDTO.toModel()
+                } catch {
+                    print("⚠️ Impossible de décoder la réponse en tant que SellerDTO: \(error)")
+                    
+                    // Essayer d'extraire juste l'ID si possible
+                    if let json = try? JSONSerialization.jsonObject(with: responseData) as? [String: Any],
+                       let id = json["id"] as? Int {
+                        
+                        // Construire un User avec l'ID récupéré et les données de la requête
+                        return User(
+                            id: String(id),  // Inchangé
+                            nom: seller.nom,
+                            email: seller.email,
+                            telephone: seller.telephone,
+                            adresse: seller.adresse,
+                            type_utilisateur: "vendeur"
+                        )
+                    }
+                    
+                    // En dernier recours, renvoyer un User sans ID mais avec les données de la requête
+                    return User(
+                        id: "",  // Chaîne vide au lieu de nil
+                        nom: seller.nom,
+                        email: seller.email,
+                        telephone: seller.telephone,
+                        adresse: seller.adresse,
+                        type_utilisateur: "vendeur"
+                    )
+                }
+            } else {
+                throw APIError.serverError(statusCode, "Création du vendeur échouée avec le statut \(statusCode): \(responseString)")
+            }
         } catch {
+            print("❌ Erreur lors de la création du vendeur: \(error.localizedDescription)")
             throw error
         }
     }

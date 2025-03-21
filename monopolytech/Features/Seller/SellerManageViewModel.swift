@@ -37,13 +37,10 @@ class SellerManageViewModel: ObservableObject {
             // Récupérer le vendeur
             let seller = try await sellerService.getSellerByEmail(email: email)
             
-            // Si trouvé, récupérer aussi ses statistiques
-            // CORRECTION ICI: seller.id est déjà optionnel, donc on vérifie simplement s'il existe 
-            // et n'est pas vide avant de l'utiliser
-            let sellerId = seller.id
-            if !sellerId.isEmpty {
+            // Si trouvé et a un ID, récupérer aussi ses statistiques
+            if !seller.id.isEmpty {
                 do {
-                    let stats = try await sellerService.getSellerStats(sellerId: sellerId)
+                    let stats = try await sellerService.getSellerStats(sellerId: seller.id)
                     
                     await MainActor.run {
                         self.currentSeller = seller

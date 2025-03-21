@@ -108,11 +108,11 @@ struct SellerDetailCard: View {
                     if let adresse = seller.adresse {
                         InfoRow(title: "Adresse", value: adresse, icon: "location.fill")
                     }
-                    if let id = seller.id {
-                        InfoRow(title: "ID", value: id, icon: "person.badge.key.fill")
-                    } else {
-                        InfoRow(title: "ID", value: "N/A", icon: "person.badge.key.fill")
-                    }
+                    InfoRow(
+                        title: "ID", 
+                        value: seller.id.isEmpty ? "N/A" : seller.id, 
+                        icon: "person.badge.key.fill"
+                    )
                 }
                 Spacer()
             }
