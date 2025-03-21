@@ -21,7 +21,7 @@ class SellerService {
         let nom: String
         let email: String
         let telephone: String
-        let adresse: String?
+        let adresse: String // Adresse non optionnelle
         
         func toJSONData() throws -> Data {
             return try JSONEncoder().encode(self)

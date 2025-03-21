@@ -44,7 +44,7 @@ struct SellerCreateView: View {
                     
                     CustomTextField(
                         text: $viewModel.adresse,
-                        placeholder: "Adresse (optionnel)",
+                        placeholder: "Adresse",
                         icon: "location.fill"
                     )
                 }
