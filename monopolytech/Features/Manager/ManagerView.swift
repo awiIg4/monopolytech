@@ -150,47 +150,9 @@ struct ManagerView: View {
     }
 }
 
-struct CustomTextField: View {
-    @Binding var text: String
-    let placeholder: String
-    let icon: String
-    var keyboardType: UIKeyboardType = .default
-    
-    var body: some View {
-        HStack {
-            Image(systemName: icon)
-                .foregroundColor(.gray)
-                .frame(width: 24)
-            
-            TextField(placeholder, text: $text)
-                .keyboardType(keyboardType)
-                .autocapitalization(.none)
-                .disableAutocorrection(true)
-        }
-        .padding()
-        .background(Color.gray.opacity(0.1))
-        .cornerRadius(8)
-    }
-}
-
-struct CustomSecureField: View {
-    @Binding var text: String
-    let placeholder: String
-    let icon: String
-    
-    var body: some View {
-        HStack {
-            Image(systemName: icon)
-                .foregroundColor(.gray)
-                .frame(width: 24)
-            
-            SecureField(placeholder, text: $text)
-                .autocapitalization(.none)
-                .disableAutocorrection(true)
-        }
-        .padding()
-        .background(Color.gray.opacity(0.1))
-        .cornerRadius(8)
+struct ManagerView_Previews: PreviewProvider {
+    static var previews: some View {
+        ManagerView()
     }
 }
 

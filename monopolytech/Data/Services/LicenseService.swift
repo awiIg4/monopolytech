@@ -41,16 +41,8 @@ class LicenseService {
                 }
             }
             
-            // Faire la requête et décoder directement
-            let (responseData, statusCode) = try await apiService.request(endpoint, returnRawResponse: true)
-            
-            if !(200...299).contains(statusCode) {
-                throw APIError.serverError(statusCode, "License fetch failed with status \(statusCode)")
-            }
-            
-            // Décoder avec notre DTO
-            let decoder = JSONDecoder()
-            let licensesDTOs = try decoder.decode([LicenseDTO].self, from: responseData)
+            // Utiliser l'approche standard qui propagera les erreurs spécifiques comme unauthorized
+            let licensesDTOs: [LicenseDTO] = try await apiService.request(endpoint)
             
             // Convertir nos DTOs en modèles domain
             return licensesDTOs.map { $0.toModel() }

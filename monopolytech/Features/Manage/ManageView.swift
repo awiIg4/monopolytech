@@ -12,6 +12,7 @@ struct ManageView: View {
     @EnvironmentObject var authService: AuthService
     @State private var selectedItem: ManageItem? = nil
     @State private var showDepositView = false
+    @State private var showSellerView = false
     @State private var showManagerCreationView = false
     
     var body: some View {
@@ -44,6 +45,9 @@ struct ManageView: View {
             .sheet(isPresented: $showDepositView) {
                 GameDepositView()
             }
+            .sheet(isPresented: $showSellerView) {
+                SellerMainView()
+            }
             .sheet(isPresented: $showManagerCreationView) {
                 ManagerView()
             }
@@ -54,6 +58,8 @@ struct ManageView: View {
         switch item.route {
         case "game/deposit":
             showDepositView = true
+        case "seller":
+            showSellerView = true
         case "manager/create":
             showManagerCreationView = true
         default:
@@ -79,6 +85,7 @@ struct ManageView: View {
     }
 }
 
+// Maintenir cette définition ici uniquement
 struct ManageItem: Identifiable {
     let id = UUID()
     let label: String
