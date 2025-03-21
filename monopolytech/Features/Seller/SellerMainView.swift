@@ -9,26 +9,43 @@ import SwiftUI
 
 struct SellerMainView: View {
     @State private var selectedTab = 0
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
-        VStack {
-            // Segment control pour basculer entre les vues
-            Picker("", selection: $selectedTab) {
-                Text("Créer").tag(0)
-                Text("Gérer").tag(1)
+        NavigationView {
+            VStack {
+                // Segment control pour basculer entre les vues
+                Picker("", selection: $selectedTab) {
+                    Text("Créer").tag(0)
+                    Text("Gérer").tag(1)
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .padding(.horizontal)
+                .padding(.top)
+                
+                // Contenu basé sur l'onglet sélectionné
+                if selectedTab == 0 {
+                    SellerCreateView()
+                } else {
+                    SellerManageView()
+                }
+                
+                Spacer()
             }
-            .pickerStyle(SegmentedPickerStyle())
-            .padding(.horizontal)
-            .padding(.top)
-            
-            // Contenu basé sur l'onglet sélectionné
-            if selectedTab == 0 {
-                SellerCreateView()
-            } else {
-                SellerManageView()
-            }
+            .navigationBarTitle("Gestion des Vendeurs", displayMode: .inline)
+            .navigationBarItems(
+                leading: Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    HStack {
+                        Image(systemName: "chevron.left")
+                        Text("Retour")
+                    }
+                }
+            )
         }
-        .navigationTitle("Vendeurs")
+        // Suppression du NavigationView imbriqué si présenté dans une sheet
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 

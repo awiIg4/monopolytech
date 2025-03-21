@@ -12,49 +12,30 @@ struct ManageView: View {
     @EnvironmentObject var authService: AuthService
     @State private var selectedItem: ManageItem? = nil
     @State private var showDepositView = false
+    @State private var showSellerView = false
     
     var body: some View {
         NavigationView {
             List {
                 ForEach(viewModel.manageItems) { item in
-                    if item.route == "seller" {
-                        NavigationLink(destination: SellerMainView()) {
-                            // Utiliser HStack au lieu de ManageItemCard
-                            HStack {
-                                Image(systemName: getIconName(for: item))
-                                    .foregroundColor(.blue)
-                                    .frame(width: 24, height: 24)
-                                
-                                Text(item.label)
-                                    .padding(.leading, 8)
-                                
-                                Spacer()
-                                
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(.gray)
-                            }
-                            .padding(.vertical, 8)
+                    Button(action: {
+                        selectedItem = item
+                        handleAction(for: item)
+                    }) {
+                        HStack {
+                            Image(systemName: getIconName(for: item))
+                                .foregroundColor(.blue)
+                                .frame(width: 24, height: 24)
+                            
+                            Text(item.label)
+                                .padding(.leading, 8)
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.gray)
                         }
-                    } else {
-                        Button(action: {
-                            selectedItem = item
-                            handleAction(for: item)
-                        }) {
-                            HStack {
-                                Image(systemName: getIconName(for: item))
-                                    .foregroundColor(.blue)
-                                    .frame(width: 24, height: 24)
-                                
-                                Text(item.label)
-                                    .padding(.leading, 8)
-                                
-                                Spacer()
-                                
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(.gray)
-                            }
-                            .padding(.vertical, 8)
-                        }
+                        .padding(.vertical, 8)
                     }
                 }
             }
@@ -62,6 +43,9 @@ struct ManageView: View {
             .navigationTitle("Management")
             .sheet(isPresented: $showDepositView) {
                 GameDepositView()
+            }
+            .sheet(isPresented: $showSellerView) {
+                SellerMainView()
             }
         }
     }
@@ -71,8 +55,7 @@ struct ManageView: View {
         case "game/deposit":
             showDepositView = true
         case "seller":
-            // Navigation vers SellerMainView sera gérée via NavigationLink
-            break
+            showSellerView = true
         default:
             // Handle other routes
             break
