@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// TODO: add buyer details to invoice
 struct GameStockToSaleView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel = GameStockToSaleViewModel()
