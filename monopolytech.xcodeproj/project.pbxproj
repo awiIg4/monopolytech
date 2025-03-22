@@ -220,7 +220,6 @@
 			isa = PBXGroup;
 			children = (
 				C59DF8C92D8C78DA001A8531 /* Session */,
-				DFA9A5592D8C470E00BCE8CA /* Deposit */,
 				DFA9A5712D8DC0B800BCE8CA /* Game */,
 				DFA9A5642D8C803500BCE8CA /* Seller */,
 				C59DF8C42D8C46C8001A8531 /* Manager */,
