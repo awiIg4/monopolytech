@@ -340,15 +340,14 @@ class GameService {
                                 
                                 purchasedGames.append(purchasedGame)
                                 
-                                // Essayer de récupérer plus d'informations en arrière-plan (facultatif)
+                                // Utiliser try au lieu de try? pour permettre la propagation d'erreur au catch
                                 Task {
                                     do {
-                                        if try? await getGameById(id: String(jeuId)) != nil {
-                                            // Mise à jour des informations si disponibles
-                                            print("✅ Informations supplémentaires récupérées pour le jeu \(jeuId)")
-                                        }
+                                        let _ = try await getGameById(id: String(jeuId))
+                                        // Si on arrive ici, c'est que la requête a réussi
+                                        print("✅ Informations supplémentaires récupérées pour le jeu \(jeuId)")
                                     } catch {
-                                        print("ℹ️ Impossible de récupérer des détails supplémentaires pour le jeu \(jeuId)")
+                                        print("ℹ️ Impossible de récupérer des détails supplémentaires pour le jeu \(jeuId): \(error.localizedDescription)")
                                     }
                                 }
                             }
