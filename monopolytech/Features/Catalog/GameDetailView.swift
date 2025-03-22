@@ -76,12 +76,12 @@ struct GameDetailView: View {
                         Divider()
                         
                         // Informations détaillées
-                        InfoRow(title: "Licence", value: game.licence_id)
+                        InfoRow(title: "Licence", value: game.licence_id, icon: "doc.fill")
                         
-                        InfoRow(title: "Éditeur", value: game.editeur_nom)
+                        InfoRow(title: "Éditeur", value: game.editeur_nom, icon: "building.fill")
                         
                         if let depotId = game.depot_id {
-                            InfoRow(title: "Dépôt", value: "\(depotId)")
+                            InfoRow(title: "Dépôt", value: "\(depotId)", icon: "archivebox.fill")
                         }
                         
                         // Statut
@@ -152,33 +152,6 @@ struct StatusView: View {
             RoundedRectangle(cornerRadius: 20)
                 .fill(status == "available" ? Color.green.opacity(0.1) : Color.orange.opacity(0.1))
         )
-    }
-}
-
-struct InfoRow: View {
-    let title: String
-    let value: String
-    var icon: String? = nil
-    
-    var body: some View {
-        HStack(spacing: 12) {
-            if let icon = icon {
-                Image(systemName: icon)
-                    .foregroundColor(.gray)
-                    .frame(width: 20)
-            }
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title)
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-                
-                Text(value)
-                    .font(.body)
-            }
-            
-            Spacer()
-        }
     }
 }
 

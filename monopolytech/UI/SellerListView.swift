@@ -32,12 +32,12 @@ struct SellerListView: View {
             .navigationTitle("Vendeurs")
         }
         .fullScreenCover(item: $selectedSeller) { seller in
-            SellerDetailView(seller: seller)
+            SellerFullDetailView(seller: seller)
         }
     }
 }
 
-struct SellerDetailView: View {
+struct SellerFullDetailView: View {
     let seller: Seller
     @Environment(\.dismiss) private var dismiss
     
