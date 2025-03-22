@@ -13,6 +13,7 @@ struct ManageView: View {
     @State private var selectedItem: ManageItem? = nil
     @State private var showDepositView = false
     @State private var showManagerCreationView = false
+    @State private var showSessionView = false
     
     var body: some View {
         NavigationView {
@@ -47,6 +48,9 @@ struct ManageView: View {
             .sheet(isPresented: $showManagerCreationView) {
                 ManagerView()
             }
+            .sheet(isPresented: $showSessionView) {
+                SessionView()
+            }
         }
     }
     
@@ -56,6 +60,8 @@ struct ManageView: View {
             showDepositView = true
         case "manager/create":
             showManagerCreationView = true
+        case "session/create":
+            showSessionView = true
         default:
             break
         }

@@ -26,6 +26,9 @@
 		C59DF8C32D8C46C1001A8531 /* ManagerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59DF8C22D8C46BB001A8531 /* ManagerService.swift */; };
 		C59DF8C62D8C46D7001A8531 /* ManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59DF8C52D8C46D0001A8531 /* ManagerViewModel.swift */; };
 		C59DF8C82D8C46E3001A8531 /* ManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59DF8C72D8C46DF001A8531 /* ManagerView.swift */; };
+		C59DF8CB2D8C78E4001A8531 /* SessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59DF8CA2D8C78E1001A8531 /* SessionView.swift */; };
+		C59DF8CD2D8C78EC001A8531 /* SessionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59DF8CC2D8C78E7001A8531 /* SessionViewModel.swift */; };
+		C59DF8CF2D8C78FB001A8531 /* SessionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59DF8CE2D8C78F6001A8531 /* SessionService.swift */; };
 		DF7EECD12D82E85700ADACAA /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECD02D82E85700ADACAA /* AuthService.swift */; };
 		DF7EECD32D82E87600ADACAA /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECD22D82E87600ADACAA /* APIService.swift */; };
 		DF7EECD52D82E89100ADACAA /* GameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECD42D82E89100ADACAA /* GameModel.swift */; };
@@ -91,6 +94,9 @@
 		C59DF8C22D8C46BB001A8531 /* ManagerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerService.swift; sourceTree = "<group>"; };
 		C59DF8C52D8C46D0001A8531 /* ManagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerViewModel.swift; sourceTree = "<group>"; };
 		C59DF8C72D8C46DF001A8531 /* ManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerView.swift; sourceTree = "<group>"; };
+		C59DF8CA2D8C78E1001A8531 /* SessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionView.swift; sourceTree = "<group>"; };
+		C59DF8CC2D8C78E7001A8531 /* SessionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionViewModel.swift; sourceTree = "<group>"; };
+		C59DF8CE2D8C78F6001A8531 /* SessionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionService.swift; sourceTree = "<group>"; };
 		DF7EECD02D82E85700ADACAA /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		DF7EECD22D82E87600ADACAA /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		DF7EECD42D82E89100ADACAA /* GameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModel.swift; sourceTree = "<group>"; };
@@ -185,9 +191,19 @@
 			path = Manager;
 			sourceTree = "<group>";
 		};
+		C59DF8C92D8C78DA001A8531 /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				C59DF8CC2D8C78E7001A8531 /* SessionViewModel.swift */,
+				C59DF8CA2D8C78E1001A8531 /* SessionView.swift */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
 		DF7EECC82D82E64900ADACAA /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				C59DF8C92D8C78DA001A8531 /* Session */,
 				DFA9A5592D8C470E00BCE8CA /* Deposit */,
 				C59DF8C42D8C46C8001A8531 /* Manager */,
 				C59DF8BD2D8C2C99001A8531 /* Manage */,
@@ -274,6 +290,7 @@
 		DF7EECE52D886DDE00ADACAA /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				C59DF8CE2D8C78F6001A8531 /* SessionService.swift */,
 				C59DF8C22D8C46BB001A8531 /* ManagerService.swift */,
 				DF7EECE32D886DD100ADACAA /* GameService.swift */,
 				DF7EECE62D886E7200ADACAA /* NotificationService.swift */,
@@ -506,11 +523,13 @@
 				C591B83C2D886C5200D3BB3B /* SellerListView.swift in Sources */,
 				C591B8312D88677400D3BB3B /* SellerModel.swift in Sources */,
 				DFA9A55D2D8C474F00BCE8CA /* GameDepositViewModel.swift in Sources */,
+				C59DF8CB2D8C78E4001A8531 /* SessionView.swift in Sources */,
 				DF7EECE12D88583F00ADACAA /* APITestView.swift in Sources */,
 				DF7EECE72D886E7200ADACAA /* NotificationService.swift in Sources */,
 				DF7EECDD2D82E99D00ADACAA /* GameCard.swift in Sources */,
 				DFA9A5562D8C466D00BCE8CA /* LicenseService.swift in Sources */,
 				C59DF8AF2D89A923001A8531 /* CatalogView.swift in Sources */,
+				C59DF8CD2D8C78EC001A8531 /* SessionViewModel.swift in Sources */,
 				C59DF8B72D8AC137001A8531 /* Navbar.swift in Sources */,
 				DF7EECE42D886DD100ADACAA /* GameService.swift in Sources */,
 				DF7EECD12D82E85700ADACAA /* AuthService.swift in Sources */,
@@ -523,6 +542,7 @@
 				DF7EECEE2D8997CE00ADACAA /* LoginView.swift in Sources */,
 				DFE491542D8194EB00A9FA2C /* ContentView.swift in Sources */,
 				DF7EECD72D82E8B800ADACAA /* HomeView.swift in Sources */,
+				C59DF8CF2D8C78FB001A8531 /* SessionService.swift in Sources */,
 				DF7EECD32D82E87600ADACAA /* APIService.swift in Sources */,
 				DFA9A5632D8C558300BCE8CA /* GameToDeposit.swift in Sources */,
 				DFE491522D8194EB00A9FA2C /* monopolytechApp.swift in Sources */,
