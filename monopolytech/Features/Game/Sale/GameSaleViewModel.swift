@@ -102,7 +102,7 @@ class GameSaleViewModel: ObservableObject {
             let result = try await gameService.buyGames(
                 gameIds: ids,
                 promoCode: promoString,
-                buyerId: buyer?.id
+                buyerId: buyer?.id != nil ? String(buyer!.id) : nil
             )
             
             await MainActor.run {

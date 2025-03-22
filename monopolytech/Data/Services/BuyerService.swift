@@ -22,19 +22,19 @@ class BuyerService {
     /// - Throws: APIError si la requête échoue
     func getBuyerByEmail(email: String) async throws -> Buyer {
         struct BuyerDTO: Decodable {
-            let id: Int
+            let id: Int  // Gardons le type Int comme dans le modèle original
             let nom: String
             let email: String
-            let telephone: String?
+            let telephone: String
             let adresse: String?
             
             func toModel() -> Buyer {
                 return Buyer(
-                    id: String(id),
+                    id: id,  // Convertir l'ID Int en String pour correspondre au modèle Buyer
                     nom: nom,
                     email: email,
-                    telephone: telephone,
-                    adresse: adresse
+                    telephone: telephone ?? "",  // Fournir une valeur par défaut si telephone est nil
+                    adresse: adresse  // adresse est déjà optionnel, donc on peut le passer directement
                 )
             }
         }

@@ -381,4 +381,20 @@ class GameService {
         let params = ["statut": "en vente"]
         return try await searchGames(params: params)
     }
+
+    // Ajouter cette fonction searchGames qui est référencée mais manquante:
+    /// Rechercher des jeux avec des paramètres spécifiques
+    /// - Parameter params: Paramètres de recherche (dictionnaire clé-valeur)
+    /// - Returns: Liste des jeux correspondant aux critères
+    /// - Throws: APIError si la requête échoue
+    func searchGames(params: [String: String]) async throws -> [Game] {
+        // Construire la chaîne de requête à partir des paramètres
+        let queryItems = params.map { key, value in 
+            "\(key)=\(value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? value)" 
+        }
+        let queryString = queryItems.joined(separator: "&")
+        
+        // Utiliser la méthode fetchGames existante avec la requête construite
+        return try await fetchGames(query: queryString)
+    }
 }
