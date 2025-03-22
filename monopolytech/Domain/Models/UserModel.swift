@@ -2,57 +2,36 @@
 //  UserModel.swift
 //  monopolytech
 //
-//  Created by Hugo Brun on 17/03/2025.
+//  Created by eugenio on 17/03/2025.
 //
 
 import Foundation
 
 struct User: Identifiable, Codable, Hashable {
-    let id: String
+    let id: String  // Non-optionnel, utilisera une chaîne vide si absent
     let nom: String
     let email: String
     let telephone: String
     let adresse: String?
-    let type_utilisateur: String?
+    let type_utilisateur: String
     
-    // For preview and testing purposes
+    // Pour la prévisualisation et les tests
     static let placeholder = User(
         id: "USR1",
-        nom: "Hugo Brun",
-        email: "hugo.user@example.com",
+        nom: "Jean Dupont",
+        email: "jean.dupont@example.com",
         telephone: "0123456789",
-        adresse: "321 rue User",
-        type_utilisateur: "client"
+        adresse: "123 rue Example",
+        type_utilisateur: "vendeur"
     )
     
-    // Empty state placeholders
+    // État vide pour les placeholders
     static let empty = User(
-        id: "NONE",
-        nom: "No name found",
-        email: "No email found",
-        telephone: "No phone number",
-        adresse: "No address found",
-        type_utilisateur: "No user type"
+        id: "",  // Chaîne vide au lieu de nil
+        nom: "Aucun nom trouvé",
+        email: "Aucun email trouvé",
+        telephone: "Aucun téléphone trouvé",
+        adresse: nil,
+        type_utilisateur: "inconnu"
     )
-    
-    // Helper computed properties for empty state handling
-    var displayName: String {
-        return nom.isEmpty ? "No name found" : nom
-    }
-    
-    var displayEmail: String {
-        return email.isEmpty ? "No email found" : email
-    }
-    
-    var displayPhone: String {
-        return telephone.isEmpty ? "No phone number" : telephone
-    }
-    
-    var displayAddress: String {
-        return adresse ?? "No address found"
-    }
-    
-    var displayType: String {
-        return type_utilisateur ?? "No user type"
-    }
-} 
+}

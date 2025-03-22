@@ -9,90 +9,94 @@ import SwiftUI
 
 struct ManageView: View {
     @StateObject private var viewModel = ManageViewModel()
+    @EnvironmentObject var authService: AuthService
+    @State private var selectedItem: ManageItem? = nil
+    @State private var showDepositView = false
+    @State private var showSellerView = false
+    @State private var showManagerCreationView = false
+    @State private var showSessionView = false
+    @State private var showStockToSaleView = false
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                Text("Gestion")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                    .padding(.top)
-                
-                // Grille de boutons
-                LazyVGrid(
-                    columns: [GridItem(.flexible())],
-                    spacing: 15
-                ) {
-                    ForEach(viewModel.manageItems) { item in
-                        ManageButton(item: item)
+        NavigationView {
+            List {
+                ForEach(viewModel.manageItems) { item in
+                    Button(action: {
+                        selectedItem = item
+                        handleAction(for: item)
+                    }) {
+                        HStack {
+                            Image(systemName: getIconName(for: item))
+                                .foregroundColor(.blue)
+                                .frame(width: 24, height: 24)
+                            
+                            Text(item.label)
+                                .padding(.leading, 8)
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.gray)
+                        }
+                        .padding(.vertical, 8)
                     }
                 }
-                .padding(.horizontal)
             }
-            .padding(.bottom, 20)
-        }
-    }
-}
-
-struct ManageButton: View {
-    let item: ManageItem
-    
-    var body: some View {
-        NavigationLink(destination: destinationView) {
-            HStack {
-                Image(systemName: iconForRoute(item.route))
-                    .font(.title2)
-                
-                Text(item.label)
-                    .fontWeight(.semibold)
-                
-                Spacer()
-                
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 14, weight: .bold))
+            .listStyle(InsetGroupedListStyle())
+            .navigationTitle("Management")
+            .sheet(isPresented: $showDepositView) {
+                GameDepositView()
             }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(Color.blue)
-            .foregroundColor(.white)
-            .cornerRadius(10)
+            .sheet(isPresented: $showSellerView) {
+                SellerMainView()
+            }
+            .sheet(isPresented: $showManagerCreationView) {
+                ManagerView()
+            }
+            .sheet(isPresented: $showSessionView) {
+                SessionView()
+            .sheet(isPresented: $showStockToSaleView) {
+                GameStockToSaleView()
+            }
         }
     }
     
-    func iconForRoute(_ route: String) -> String {
-        switch route {
-        case "seller": return "person.2.fill"
-        case "game/deposit": return "plus.app.fill"
+    private func handleAction(for item: ManageItem) {
+        switch item.route {
+        case "game/deposit":
+            showDepositView = true
+        case "seller":
+            showSellerView = true
+        case "manager/create":
+            showManagerCreationView = true
+        case "session/create":
+            showSessionView = true
+        case "game/stockToSale":
+            showStockToSaleView = true
+        default:
+            break
+        }
+    }
+    
+    private func getIconName(for item: ManageItem) -> String {
+        switch item.route {
+        case "seller": return "person.fill"
+        case "game/deposit": return "gamecontroller.fill"
         case "game/sale": return "cart.fill"
         case "buyer/create": return "person.badge.plus"
-        case "manager/create": return "person.fill.checkmark"
+        case "manager/create": return "person.2.fill"
         case "session/create": return "calendar.badge.plus"
         case "license/create": return "doc.badge.plus"
-        case "editor/create": return "pencil.and.outline"
-        case "game/stockToSale": return "tag.fill"
-        case "code-promo": return "ticket.fill"
+        case "editor/create": return "building.2.fill"
+        case "game/stockToSale": return "arrow.right.square.fill"
+        case "code-promo": return "tag.fill"
         case "bilan": return "chart.bar.fill"
         default: return "questionmark.circle.fill"
         }
     }
-    
-    @ViewBuilder
-    var destinationView: some View {
-        switch item.route {
-        case "seller":
-            Text("Manage Seller View")
-        case "game/deposit":
-            Text("Game Deposit View")
-        case "game/sale":
-            Text("Game Sale View")
-        default:
-            Text("View not implemented yet")
-        }
-    }
 }
 
+// Maintenir cette définition ici uniquement
 struct ManageItem: Identifiable {
     let id = UUID()
     let label: String

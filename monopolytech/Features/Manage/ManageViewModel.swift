@@ -12,11 +12,11 @@ import SwiftUI
 class ManageViewModel: ObservableObject {
     @Published var manageItems: [ManageItem] = [
         ManageItem(label: "Manage Seller", route: "seller"),
-        ManageItem(label: "Game Deposit", route: "game/deposit"),
+        ManageItem(label: "Déposer un jeu", route: "game/deposit"),
         ManageItem(label: "Game Sale", route: "game/sale"),
         ManageItem(label: "Create Buyer", route: "buyer/create"),
-        ManageItem(label: "Create Manager", route: "manager/create"),
-        ManageItem(label: "Create Session", route: "session/create"),
+        ManageItem(label: "Créer un gestionnaire", route: "manager/create"),
+        ManageItem(label: "Créer une session", route: "session/create"),
         ManageItem(label: "Create License", route: "license/create"),
         ManageItem(label: "Create Editor", route: "editor/create"),
         ManageItem(label: "Put games for sale", route: "game/stockToSale"),
@@ -32,6 +32,7 @@ class ManageViewModel: ObservableObject {
     }
     
     private func setupActions() {
-        // À implémenter
+        // Handle navigation to GameDepositView when needed
+        // This could be through a NavigationLink or sheet presentation
     }
 }

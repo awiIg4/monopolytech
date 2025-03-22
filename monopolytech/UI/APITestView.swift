@@ -81,7 +81,7 @@ struct APITestView: View {
                 usersTestResult += "📱 Testing getUsers endpoint...\n"
                 
                 // Call the API tester method for users
-                let (responseData, statusCode, _) = try await APIService.shared.debugRawRequestWithHeaders(
+                let (responseData, statusCode, _) = try await APIService.shared.requestWithHeaders(
                     "utilisateurs", 
                     httpMethod: "GET"
                 )

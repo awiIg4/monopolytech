@@ -50,7 +50,7 @@ class APITester {
         
         do {
             // Try to access the users endpoint (authentication token will be used if present in APIService)
-            let (responseData, statusCode, _) = try await APIService.shared.debugRawRequestWithHeaders(
+            let (responseData, statusCode, _) = try await APIService.shared.requestWithHeaders(
                 "utilisateurs", 
                 httpMethod: "GET"
             )
