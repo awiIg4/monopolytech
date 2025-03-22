@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ManageView: View {
-    @StateObject private var viewModel = ManageViewModel()
+    @ObservedObject private var viewModel: ManageViewModel
     @EnvironmentObject var authService: AuthService
     @State private var selectedItem: ManageItem? = nil
     @State private var showDepositView = false
@@ -17,10 +17,15 @@ struct ManageView: View {
     @State private var showSessionView = false
     @State private var showStockToSaleView = false
     
+    init() {
+        self.viewModel = ManageViewModel()
+    }
+    
     var body: some View {
         NavigationView {
             List {
-                ForEach(viewModel.manageItems) { item in
+                let items = viewModel.manageItems
+                ForEach(items) { item in
                     Button(action: {
                         selectedItem = item
                         handleAction(for: item)
@@ -55,6 +60,7 @@ struct ManageView: View {
             }
             .sheet(isPresented: $showSessionView) {
                 SessionView()
+            }
             .sheet(isPresented: $showStockToSaleView) {
                 GameStockToSaleView()
             }
@@ -94,11 +100,4 @@ struct ManageView: View {
         default: return "questionmark.circle.fill"
         }
     }
-}
-
-// Maintenir cette définition ici uniquement
-struct ManageItem: Identifiable {
-    let id = UUID()
-    let label: String
-    let route: String
 }

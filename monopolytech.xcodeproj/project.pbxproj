@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C55830E22D8F19A900C70A36 /* ManageItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55830E12D8F19A500C70A36 /* ManageItem.swift */; };
 		C591B8272D88674F00D3BB3B /* BuyerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C591B8262D88674B00D3BB3B /* BuyerModel.swift */; };
 		C591B8292D88675700D3BB3B /* CodePromoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C591B8282D88675200D3BB3B /* CodePromoModel.swift */; };
 		C591B82B2D88676000D3BB3B /* EditorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C591B82A2D88675D00D3BB3B /* EditorModel.swift */; };
@@ -83,6 +84,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C55830E12D8F19A500C70A36 /* ManageItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageItem.swift; sourceTree = "<group>"; };
 		C591B8262D88674B00D3BB3B /* BuyerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyerModel.swift; sourceTree = "<group>"; };
 		C591B8282D88675200D3BB3B /* CodePromoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodePromoModel.swift; sourceTree = "<group>"; };
 		C591B82A2D88675D00D3BB3B /* EditorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorModel.swift; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 		C59DF8BD2D8C2C99001A8531 /* Manage */ = {
 			isa = PBXGroup;
 			children = (
+				C55830E12D8F19A500C70A36 /* ManageItem.swift */,
 				C59DF8C02D8C2CAF001A8531 /* ManageViewModel.swift */,
 				C59DF8BE2D8C2CA3001A8531 /* ManageView.swift */,
 			);
@@ -586,6 +589,7 @@
 				C59DF8C32D8C46C1001A8531 /* ManagerService.swift in Sources */,
 				C591B82F2D88676F00D3BB3B /* ManagerModel.swift in Sources */,
 				DFA9A5762D8DC70600BCE8CA /* GameStockToSaleView.swift in Sources */,
+				C55830E22D8F19A900C70A36 /* ManageItem.swift in Sources */,
 				C591B8352D88677F00D3BB3B /* UserModel.swift in Sources */,
 				DF7EECDF2D88581200ADACAA /* APITester.swift in Sources */,
 				DF7EECF02D8997E500ADACAA /* LoginViewModel.swift in Sources */,
