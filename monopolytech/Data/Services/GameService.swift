@@ -300,17 +300,11 @@ class GameService {
                 returnRawResponse: true
             )
             
-            // Debug - afficher la réponse brute
-            let responseString = String(data: responseData, encoding: .utf8) ?? "No response data"
-            print("📄 BUY GAMES RESPONSE [Status: \(statusCode)]:\n\(responseString)")
-            
             // Vérifier le code de statut
             if (200...299).contains(statusCode) {
-                // Au lieu d'essayer de décoder directement, utilisons une approche plus flexible
                 do {
                     if let json = try? JSONSerialization.jsonObject(with: responseData) as? [String: Any] {
                         // Extraire les informations de base
-                        _ = json["message"] as? String ?? "Achat effectué avec succès"
                         let totalAmount = json["montant_total"] as? Double ?? 0.0
                         let reduction = json["reduction"] as? Double ?? 0.0
                         
@@ -324,9 +318,8 @@ class GameService {
                                 let commissionStr = achat["commission"] as? String ?? "0"
                                 let commission = Double(commissionStr.replacingOccurrences(of: ",", with: ".")) ?? 0.0
                                 
-                                // Prix fixe estimé - à partir de l'observation que la commission est environ 10-20% du prix
-                                // On peut estimer un prix raisonnable basé sur la commission
-                                let estimatedPrice = max(commission * 5, 10.0) // Prix estimé ou minimum 10€
+                                // Prix estimé basé sur la commission
+                                let estimatedPrice = max(commission * 5, 10.0)
                                 
                                 // Créer un objet PurchasedGame avec les informations disponibles
                                 let purchasedGame = PurchasedGame(
@@ -339,17 +332,6 @@ class GameService {
                                 )
                                 
                                 purchasedGames.append(purchasedGame)
-                                
-                                // Utiliser try au lieu de try? pour permettre la propagation d'erreur au catch
-                                Task {
-                                    do {
-                                        let _ = try await getGameById(id: String(jeuId))
-                                        // Si on arrive ici, c'est que la requête a réussi
-                                        print("✅ Informations supplémentaires récupérées pour le jeu \(jeuId)")
-                                    } catch {
-                                        print("ℹ️ Impossible de récupérer des détails supplémentaires pour le jeu \(jeuId): \(error.localizedDescription)")
-                                    }
-                                }
                             }
                         }
                         
@@ -364,23 +346,27 @@ class GameService {
                         )
                     }
                     
-                    // Reste du code...
+                    // Si on ne peut pas traiter le JSON, retourner un résultat minimal
+                    return GamePurchaseResult(
+                        totalAmount: 0,
+                        discount: 0,
+                        purchasedGames: []
+                    )
+                } catch {
+                    return GamePurchaseResult(
+                        totalAmount: 0,
+                        discount: 0,
+                        purchasedGames: []
+                    )
                 }
             } else {
-                throw APIError.serverError(statusCode, responseString)
+                throw APIError.serverError(statusCode, String(data: responseData, encoding: .utf8) ?? "Erreur inconnue")
             }
         } catch let error as APIError {
             throw error
         } catch {
-            print("❌ Erreur lors de l'achat: \(error.localizedDescription)")
             throw APIError.networkError(error)
         }
-        // This is a fallback that should never be reached if all code paths are properly handled
-        return GamePurchaseResult(
-            totalAmount: 0,
-            discount: 0,
-            purchasedGames: []
-        )
     }
 
     /// Récupère un jeu par son ID
