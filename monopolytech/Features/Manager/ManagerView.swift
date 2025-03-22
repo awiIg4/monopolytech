@@ -121,8 +121,13 @@ struct ManagerView: View {
             }
             .navigationBarTitle("", displayMode: .inline)
             .navigationBarItems(
-                leading: Button("Annuler") {
+                leading: Button(action: {
                     dismiss()
+                }) {
+                    HStack {
+                        Image(systemName: "chevron.left")
+                        Text("Retour")
+                    }
                 },
                 trailing: EmptyView()
             )
