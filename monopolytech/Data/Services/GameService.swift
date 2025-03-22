@@ -263,4 +263,122 @@ class GameService {
             throw APIError.networkError(error)
         }
     }
+
+    /// Achète des jeux
+    /// - Parameters:
+    ///   - gameIds: Liste d'IDs des jeux à acheter
+    ///   - promoCode: Code promotionnel optionnel
+    ///   - buyerId: ID de l'acheteur optionnel
+    /// - Returns: Résultat de l'achat
+    /// - Throws: APIError si la requête échoue
+    func buyGames(gameIds: [String], promoCode: String? = nil, buyerId: String? = nil) async throws -> GamePurchaseResult {
+        // Convertir les IDs de String à Int
+        let intIds = gameIds.compactMap { Int($0) }
+        
+        // Préparer la requête
+        var payload: [String: Any] = [
+            "jeux_a_acheter": intIds
+        ]
+        
+        if let promoCode = promoCode, !promoCode.isEmpty {
+            payload["code_promo"] = promoCode
+        }
+        
+        if let buyerId = buyerId, !buyerId.isEmpty {
+            payload["acheteur"] = Int(buyerId)
+        }
+        
+        do {
+            // Encoder le payload
+            let jsonData = try JSONSerialization.data(withJSONObject: payload)
+            
+            // Effectuer la requête
+            let (responseData, statusCode) = try await apiService.request(
+                "\(gameEndpoint)acheter",
+                httpMethod: "POST",
+                requestBody: jsonData,
+                returnRawResponse: true
+            )
+            
+            // Debug - afficher la réponse brute
+            let responseString = String(data: responseData, encoding: .utf8) ?? "No response data"
+            print("📄 BUY GAMES RESPONSE [Status: \(statusCode)]:\n\(responseString)")
+            
+            // Vérifier le code de statut
+            if (200...299).contains(statusCode) {
+                do {
+                    // Décoder la structure de réponse
+                    struct PurchaseResponse: Decodable {
+                        let montant_total: Double
+                        let reduction: Double?
+                        let achats: [PurchaseItemDTO]
+                        
+                        struct PurchaseItemDTO: Decodable {
+                            let jeu_id: Int
+                            let commission: String?
+                        }
+                    }
+                    
+                    // Premier décodage pour obtenir les IDs des jeux et commissions
+                    let purchaseResponse = try JSONDecoder().decode(PurchaseResponse.self, from: responseData)
+                    
+                    // Récupérer les infos de chaque jeu acheté
+                    var purchasedGames: [PurchasedGame] = []
+                    for achat in purchaseResponse.achats {
+                        do {
+                            let game = try await getGameById(id: String(achat.jeu_id))
+                            let commission = Double(achat.commission?.replacingOccurrences(of: ",", with: ".") ?? "0") ?? 0.0
+                            
+                            purchasedGames.append(PurchasedGame(
+                                id: game.id ?? "",
+                                name: game.licence_name ?? "Jeu inconnu",
+                                price: game.prix,
+                                commission: commission,
+                                vendorName: nil, // Ces infos ne sont pas retournées par l'API
+                                editorName: game.editeur_nom
+                            ))
+                        } catch {
+                            print("⚠️ Erreur lors de la récupération du jeu \(achat.jeu_id): \(error)")
+                        }
+                    }
+                    
+                    return GamePurchaseResult(
+                        totalAmount: purchaseResponse.montant_total,
+                        discount: purchaseResponse.reduction ?? 0.0,
+                        purchasedGames: purchasedGames
+                    )
+                } catch {
+                    print("⚠️ Erreur de décodage: \(error)")
+                    throw error
+                }
+            } else {
+                throw APIError.serverError(statusCode, responseString)
+            }
+        } catch {
+            print("❌ Erreur lors de l'achat: \(error.localizedDescription)")
+            throw error
+        }
+    }
+
+    /// Récupère un jeu par son ID
+    /// - Parameter id: ID du jeu
+    /// - Returns: Le jeu correspondant
+    /// - Throws: APIError si la requête échoue
+    func getGameById(id: String) async throws -> Game {
+        do {
+            let game: Game = try await apiService.request("\(gameEndpoint)search/\(id)")
+            return game
+        } catch {
+            throw error
+        }
+    }
+
+    /// Récupère les jeux en vente
+    /// - Returns: Liste des jeux en vente
+    /// - Throws: APIError si la requête échoue
+    func fetchGamesInSale() async throws -> [Game] {
+        // Utiliser la fonction de recherche avec le statut "en vente"
+        let params = ["statut": "en vente"]
+        return try await searchGames(params: params)
+    }
 }
