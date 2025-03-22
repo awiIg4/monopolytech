@@ -203,23 +203,7 @@ struct InvoiceView: View {
                         .background(Color(.systemGray6))
                         .cornerRadius(8)
                     
-                    Button(action: {
-                        // Imprimer ou partager la facture
-                        // Cette partie pourrait utiliser UIActivityViewController
-                        // pour permettre le partage du texte
-                    }) {
-                        HStack {
-                            Image(systemName: "square.and.arrow.up")
-                            Text("Partager la facture")
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-                    }
-                    .padding(.top)
-                    
+                    // Bouton pour terminer - le bouton de partage a été supprimé
                     Button(action: {
                         onDismiss()
                     }) {
