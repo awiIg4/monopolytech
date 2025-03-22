@@ -306,57 +306,89 @@ class GameService {
             
             // Vérifier le code de statut
             if (200...299).contains(statusCode) {
+                // Au lieu d'essayer de décoder directement, utilisons une approche plus flexible
                 do {
-                    // Décoder la structure de réponse
-                    struct PurchaseResponse: Decodable {
-                        let montant_total: Double
-                        let reduction: Double?
-                        let achats: [PurchaseItemDTO]
+                    // 1. Essayons d'abord de décoder la réponse comme un dictionnaire
+                    if let json = try? JSONSerialization.jsonObject(with: responseData) as? [String: Any] {
+                        // Extraire les informations de base
+                        let totalAmount = json["montant_total"] as? Double ?? 0.0
+                        let reduction = json["reduction"] as? Double ?? 0.0
                         
-                        struct PurchaseItemDTO: Decodable {
-                            let jeu_id: Int
-                            let commission: String?
+                        var purchasedGames: [PurchasedGame] = []
+                        
+                        // 2. Essayer d'extraire les achats
+                        if let achats = json["achats"] as? [[String: Any]] {
+                            for achat in achats {
+                                if let jeuId = achat["jeu_id"] as? Int {
+                                    let commissionStr = achat["commission"] as? String ?? "0"
+                                    let commission = Double(commissionStr.replacingOccurrences(of: ",", with: ".")) ?? 0.0
+                                    
+                                    do {
+                                        let game = try await getGameById(id: String(jeuId))
+                                        purchasedGames.append(PurchasedGame(
+                                            id: game.id ?? "",
+                                            name: game.licence_name ?? "Jeu inconnu",
+                                            price: game.prix,
+                                            commission: commission,
+                                            vendorName: nil,
+                                            editorName: game.editeur_nom
+                                        ))
+                                    } catch {
+                                        print("⚠️ Erreur lors de la récupération du jeu \(jeuId): \(error)")
+                                        // Ajouter un jeu minimal quand même
+                                        purchasedGames.append(PurchasedGame(
+                                            id: String(jeuId),
+                                            name: "Jeu #\(jeuId)",
+                                            price: 0,
+                                            commission: commission,
+                                            vendorName: nil,
+                                            editorName: nil
+                                        ))
+                                    }
+                                }
+                            }
                         }
+                        
+                        return GamePurchaseResult(
+                            totalAmount: totalAmount,
+                            discount: reduction,
+                            purchasedGames: purchasedGames
+                        )
+                    } else {
+                        // Fallback: créer un résultat simple basé sur les IDs envoyés
+                        print("⚠️ Impossible de parser la réponse d'achat comme un JSON")
+                        return GamePurchaseResult(
+                            totalAmount: 0,
+                            discount: 0,
+                            purchasedGames: gameIds.map { id in
+                                PurchasedGame(
+                                    id: id,
+                                    name: "Jeu #\(id)",
+                                    price: 0,
+                                    commission: 0,
+                                    vendorName: nil,
+                                    editorName: nil
+                                )
+                            }
+                        )
                     }
-                    
-                    // Premier décodage pour obtenir les IDs des jeux et commissions
-                    let purchaseResponse = try JSONDecoder().decode(PurchaseResponse.self, from: responseData)
-                    
-                    // Récupérer les infos de chaque jeu acheté
-                    var purchasedGames: [PurchasedGame] = []
-                    for achat in purchaseResponse.achats {
-                        do {
-                            let game = try await getGameById(id: String(achat.jeu_id))
-                            let commission = Double(achat.commission?.replacingOccurrences(of: ",", with: ".") ?? "0") ?? 0.0
-                            
-                            purchasedGames.append(PurchasedGame(
-                                id: game.id ?? "",
-                                name: game.licence_name ?? "Jeu inconnu",
-                                price: game.prix,
-                                commission: commission,
-                                vendorName: nil, // Ces infos ne sont pas retournées par l'API
-                                editorName: game.editeur_nom
-                            ))
-                        } catch {
-                            print("⚠️ Erreur lors de la récupération du jeu \(achat.jeu_id): \(error)")
-                        }
-                    }
-                    
-                    return GamePurchaseResult(
-                        totalAmount: purchaseResponse.montant_total,
-                        discount: purchaseResponse.reduction ?? 0.0,
-                        purchasedGames: purchasedGames
-                    )
                 } catch {
-                    print("⚠️ Erreur de décodage: \(error)")
-                    throw error
+                    print("⚠️ Erreur lors du traitement de la réponse d'achat: \(error)")
+                    // Renvoyer un résultat minimal plutôt que de planter
+                    return GamePurchaseResult(
+                        totalAmount: 0,
+                        discount: 0,
+                        purchasedGames: []
+                    )
                 }
             } else {
                 throw APIError.serverError(statusCode, responseString)
             }
+        } catch let error as APIError {
+            throw error
         } catch {
             print("❌ Erreur lors de l'achat: \(error.localizedDescription)")
-            throw error
+            throw APIError.networkError(error)
         }
     }
 
