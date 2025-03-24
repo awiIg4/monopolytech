@@ -16,6 +16,7 @@ struct ManageView: View {
     @State private var showManagerCreationView = false
     @State private var showSessionView = false
     @State private var showStockToSaleView = false
+    @State private var showGameSaleView = false
     
     init() {
         self.viewModel = ManageViewModel()
@@ -64,6 +65,9 @@ struct ManageView: View {
             .sheet(isPresented: $showStockToSaleView) {
                 GameStockToSaleView()
             }
+            .sheet(isPresented: $showGameSaleView) {
+                GameSaleView()
+            }
         }
     }
     
@@ -79,6 +83,8 @@ struct ManageView: View {
             showSessionView = true
         case "game/stockToSale":
             showStockToSaleView = true
+        case "game/sale":
+            showGameSaleView = true
         default:
             break
         }

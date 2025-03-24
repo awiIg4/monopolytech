@@ -7,6 +7,7 @@
 
 import Foundation
 
+// TODO: create and move to new DTO group
 /// Modèle représentant une requête de dépôt de jeu, correspondant à l'API
 struct GameDepositRequest: Codable {
     /// Tableau des identifiants de licences (doit être des entiers pour l'API)

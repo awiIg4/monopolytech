@@ -263,4 +263,147 @@ class GameService {
             throw APIError.networkError(error)
         }
     }
+
+    /// Achète des jeux
+    /// - Parameters:
+    ///   - gameIds: Liste d'IDs des jeux à acheter
+    ///   - promoCode: Code promotionnel optionnel
+    ///   - buyerId: ID de l'acheteur optionnel
+    /// - Returns: Résultat de l'achat
+    /// - Throws: APIError si la requête échoue
+    func buyGames(gameIds: [String], promoCode: String? = nil, buyerId: String? = nil) async throws -> GamePurchaseResult {
+        // Convertir les IDs de String à Int
+        let intIds = gameIds.compactMap { Int($0) }
+        
+        // Préparer la requête
+        var payload: [String: Any] = [
+            "jeux_a_acheter": intIds
+        ]
+        
+        if let promoCode = promoCode, !promoCode.isEmpty {
+            payload["code_promo"] = promoCode
+        }
+        
+        if let buyerId = buyerId, !buyerId.isEmpty {
+            payload["acheteur"] = Int(buyerId)
+        }
+        
+        do {
+            // Encoder le payload
+            let jsonData = try JSONSerialization.data(withJSONObject: payload)
+            
+            // Effectuer la requête
+            let (responseData, statusCode) = try await apiService.request(
+                "\(gameEndpoint)acheter",
+                httpMethod: "POST",
+                requestBody: jsonData,
+                returnRawResponse: true
+            )
+            
+            // Vérifier le code de statut
+            if (200...299).contains(statusCode) {
+                do {
+                    if let json = try? JSONSerialization.jsonObject(with: responseData) as? [String: Any] {
+                        // Extraire les informations de base
+                        let totalAmount = json["montant_total"] as? Double ?? 0.0
+                        let reduction = json["reduction"] as? Double ?? 0.0
+                        
+                        var purchasedGames: [PurchasedGame] = []
+                        
+                        // Extraire les achats
+                        if let achats = json["achats"] as? [[String: Any]] {
+                            for achat in achats {
+                                let jeuId = achat["jeu_id"] as? Int ?? 0
+                                let achatId = achat["id"] as? Int ?? 0
+                                let commissionStr = achat["commission"] as? String ?? "0"
+                                let commission = Double(commissionStr.replacingOccurrences(of: ",", with: ".")) ?? 0.0
+                                
+                                // Prix estimé basé sur la commission
+                                let estimatedPrice = max(commission * 5, 10.0)
+                                
+                                // Créer un objet PurchasedGame avec les informations disponibles
+                                let purchasedGame = PurchasedGame(
+                                    id: String(jeuId),
+                                    name: "Jeu #\(jeuId) (Achat #\(achatId))", 
+                                    price: estimatedPrice,
+                                    commission: commission,
+                                    vendorName: nil,
+                                    editorName: nil
+                                )
+                                
+                                purchasedGames.append(purchasedGame)
+                            }
+                        }
+                        
+                        // Calculer un montant total si non fourni
+                        let calculatedTotal = purchasedGames.reduce(0) { $0 + $1.total }
+                        let finalTotal = totalAmount > 0 ? totalAmount : calculatedTotal
+                        
+                        return GamePurchaseResult(
+                            totalAmount: finalTotal,
+                            discount: reduction,
+                            purchasedGames: purchasedGames
+                        )
+                    }
+                    
+                    // Si on ne peut pas traiter le JSON, retourner un résultat minimal
+                    return GamePurchaseResult(
+                        totalAmount: 0,
+                        discount: 0,
+                        purchasedGames: []
+                    )
+                } catch {
+                    return GamePurchaseResult(
+                        totalAmount: 0,
+                        discount: 0,
+                        purchasedGames: []
+                    )
+                }
+            } else {
+                throw APIError.serverError(statusCode, String(data: responseData, encoding: .utf8) ?? "Erreur inconnue")
+            }
+        } catch let error as APIError {
+            throw error
+        } catch {
+            throw APIError.networkError(error)
+        }
+    }
+
+    /// Récupère un jeu par son ID
+    /// - Parameter id: ID du jeu
+    /// - Returns: Le jeu correspondant
+    /// - Throws: APIError si la requête échoue
+    func getGameById(id: String) async throws -> Game {
+        do {
+            let game: Game = try await apiService.request("\(gameEndpoint)search/\(id)")
+            return game
+        } catch {
+            throw error
+        }
+    }
+
+    /// Récupère les jeux en vente
+    /// - Returns: Liste des jeux en vente
+    /// - Throws: APIError si la requête échoue
+    func fetchGamesInSale() async throws -> [Game] {
+        // Utiliser la fonction de recherche avec le statut "en vente"
+        let params = ["statut": "en vente"]
+        return try await searchGames(params: params)
+    }
+
+    // Ajouter cette fonction searchGames qui est référencée mais manquante:
+    /// Rechercher des jeux avec des paramètres spécifiques
+    /// - Parameter params: Paramètres de recherche (dictionnaire clé-valeur)
+    /// - Returns: Liste des jeux correspondant aux critères
+    /// - Throws: APIError si la requête échoue
+    func searchGames(params: [String: String]) async throws -> [Game] {
+        // Construire la chaîne de requête à partir des paramètres
+        let queryItems = params.map { key, value in 
+            "\(key)=\(value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? value)" 
+        }
+        let queryString = queryItems.joined(separator: "&")
+        
+        // Utiliser la méthode fetchGames existante avec la requête construite
+        return try await fetchGames(query: queryString)
+    }
 }
