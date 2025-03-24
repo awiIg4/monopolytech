@@ -8,19 +8,25 @@
 import SwiftUI
 
 struct ManageView: View {
-    @StateObject private var viewModel = ManageViewModel()
+    @ObservedObject private var viewModel: ManageViewModel
     @EnvironmentObject var authService: AuthService
     @State private var selectedItem: ManageItem? = nil
     @State private var showDepositView = false
     @State private var showSellerView = false
     @State private var showManagerCreationView = false
+    @State private var showSessionView = false
     @State private var showStockToSaleView = false
     @State private var showGameSaleView = false
+    
+    init() {
+        self.viewModel = ManageViewModel()
+    }
     
     var body: some View {
         NavigationView {
             List {
-                ForEach(viewModel.manageItems) { item in
+                let items = viewModel.manageItems
+                ForEach(items) { item in
                     Button(action: {
                         selectedItem = item
                         handleAction(for: item)
@@ -53,6 +59,9 @@ struct ManageView: View {
             .sheet(isPresented: $showManagerCreationView) {
                 ManagerView()
             }
+            .sheet(isPresented: $showSessionView) {
+                SessionView()
+            }
             .sheet(isPresented: $showStockToSaleView) {
                 GameStockToSaleView()
             }
@@ -70,6 +79,8 @@ struct ManageView: View {
             showSellerView = true
         case "manager/create":
             showManagerCreationView = true
+        case "session/create":
+            showSessionView = true
         case "game/stockToSale":
             showStockToSaleView = true
         case "game/sale":
@@ -95,11 +106,4 @@ struct ManageView: View {
         default: return "questionmark.circle.fill"
         }
     }
-}
-
-// Maintenir cette définition ici uniquement
-struct ManageItem: Identifiable {
-    let id = UUID()
-    let label: String
-    let route: String
 }

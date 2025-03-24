@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C55830E22D8F19A900C70A36 /* ManageItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55830E12D8F19A500C70A36 /* ManageItem.swift */; };
 		C591B8272D88674F00D3BB3B /* BuyerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C591B8262D88674B00D3BB3B /* BuyerModel.swift */; };
 		C591B8292D88675700D3BB3B /* CodePromoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C591B8282D88675200D3BB3B /* CodePromoModel.swift */; };
 		C591B82B2D88676000D3BB3B /* EditorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C591B82A2D88675D00D3BB3B /* EditorModel.swift */; };
@@ -26,6 +27,9 @@
 		C59DF8C32D8C46C1001A8531 /* ManagerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59DF8C22D8C46BB001A8531 /* ManagerService.swift */; };
 		C59DF8C62D8C46D7001A8531 /* ManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59DF8C52D8C46D0001A8531 /* ManagerViewModel.swift */; };
 		C59DF8C82D8C46E3001A8531 /* ManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59DF8C72D8C46DF001A8531 /* ManagerView.swift */; };
+		C59DF8CB2D8C78E4001A8531 /* SessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59DF8CA2D8C78E1001A8531 /* SessionView.swift */; };
+		C59DF8CD2D8C78EC001A8531 /* SessionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59DF8CC2D8C78E7001A8531 /* SessionViewModel.swift */; };
+		C59DF8CF2D8C78FB001A8531 /* SessionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59DF8CE2D8C78F6001A8531 /* SessionService.swift */; };
 		DF7EECD12D82E85700ADACAA /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECD02D82E85700ADACAA /* AuthService.swift */; };
 		DF7EECD32D82E87600ADACAA /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECD22D82E87600ADACAA /* APIService.swift */; };
 		DF7EECD52D82E89100ADACAA /* GameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7EECD42D82E89100ADACAA /* GameModel.swift */; };
@@ -87,6 +91,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C55830E12D8F19A500C70A36 /* ManageItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageItem.swift; sourceTree = "<group>"; };
 		C591B8262D88674B00D3BB3B /* BuyerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyerModel.swift; sourceTree = "<group>"; };
 		C591B8282D88675200D3BB3B /* CodePromoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodePromoModel.swift; sourceTree = "<group>"; };
 		C591B82A2D88675D00D3BB3B /* EditorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorModel.swift; sourceTree = "<group>"; };
@@ -106,6 +111,9 @@
 		C59DF8C22D8C46BB001A8531 /* ManagerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerService.swift; sourceTree = "<group>"; };
 		C59DF8C52D8C46D0001A8531 /* ManagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerViewModel.swift; sourceTree = "<group>"; };
 		C59DF8C72D8C46DF001A8531 /* ManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerView.swift; sourceTree = "<group>"; };
+		C59DF8CA2D8C78E1001A8531 /* SessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionView.swift; sourceTree = "<group>"; };
+		C59DF8CC2D8C78E7001A8531 /* SessionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionViewModel.swift; sourceTree = "<group>"; };
+		C59DF8CE2D8C78F6001A8531 /* SessionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionService.swift; sourceTree = "<group>"; };
 		DF7EECD02D82E85700ADACAA /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		DF7EECD22D82E87600ADACAA /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		DF7EECD42D82E89100ADACAA /* GameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModel.swift; sourceTree = "<group>"; };
@@ -200,6 +208,7 @@
 		C59DF8BD2D8C2C99001A8531 /* Manage */ = {
 			isa = PBXGroup;
 			children = (
+				C55830E12D8F19A500C70A36 /* ManageItem.swift */,
 				C59DF8C02D8C2CAF001A8531 /* ManageViewModel.swift */,
 				C59DF8BE2D8C2CA3001A8531 /* ManageView.swift */,
 			);
@@ -215,9 +224,19 @@
 			path = Manager;
 			sourceTree = "<group>";
 		};
+		C59DF8C92D8C78DA001A8531 /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				C59DF8CC2D8C78E7001A8531 /* SessionViewModel.swift */,
+				C59DF8CA2D8C78E1001A8531 /* SessionView.swift */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
 		DF7EECC82D82E64900ADACAA /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				C59DF8C92D8C78DA001A8531 /* Session */,
 				DFA9A5712D8DC0B800BCE8CA /* Game */,
 				DFA9A5642D8C803500BCE8CA /* Seller */,
 				C59DF8C42D8C46C8001A8531 /* Manager */,
@@ -308,6 +327,7 @@
 		DF7EECE52D886DDE00ADACAA /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				C59DF8CE2D8C78F6001A8531 /* SessionService.swift */,
 				C59DF8C22D8C46BB001A8531 /* ManagerService.swift */,
 				DF7EECE32D886DD100ADACAA /* GameService.swift */,
 				DF7EECE62D886E7200ADACAA /* NotificationService.swift */,
@@ -586,11 +606,13 @@
 				C591B83C2D886C5200D3BB3B /* SellerListView.swift in Sources */,
 				C591B8312D88677400D3BB3B /* SellerModel.swift in Sources */,
 				DFA9A55D2D8C474F00BCE8CA /* GameDepositViewModel.swift in Sources */,
+				C59DF8CB2D8C78E4001A8531 /* SessionView.swift in Sources */,
 				DF7EECE12D88583F00ADACAA /* APITestView.swift in Sources */,
 				DF7EECE72D886E7200ADACAA /* NotificationService.swift in Sources */,
 				DF7EECDD2D82E99D00ADACAA /* GameCard.swift in Sources */,
 				DFA9A5562D8C466D00BCE8CA /* LicenseService.swift in Sources */,
 				C59DF8AF2D89A923001A8531 /* CatalogView.swift in Sources */,
+				C59DF8CD2D8C78EC001A8531 /* SessionViewModel.swift in Sources */,
 				C59DF8B72D8AC137001A8531 /* Navbar.swift in Sources */,
 				DFA9A5832D9159E700BCE8CA /* SellerStatsViewModel.swift in Sources */,
 				DF7EECE42D886DD100ADACAA /* GameService.swift in Sources */,
@@ -598,6 +620,7 @@
 				C59DF8C32D8C46C1001A8531 /* ManagerService.swift in Sources */,
 				C591B82F2D88676F00D3BB3B /* ManagerModel.swift in Sources */,
 				DFA9A5762D8DC70600BCE8CA /* GameStockToSaleView.swift in Sources */,
+				C55830E22D8F19A900C70A36 /* ManageItem.swift in Sources */,
 				C591B8352D88677F00D3BB3B /* UserModel.swift in Sources */,
 				DF7EECDF2D88581200ADACAA /* APITester.swift in Sources */,
 				DF7EECF02D8997E500ADACAA /* LoginViewModel.swift in Sources */,
@@ -606,6 +629,7 @@
 				DF7EECEE2D8997CE00ADACAA /* LoginView.swift in Sources */,
 				DFE491542D8194EB00A9FA2C /* ContentView.swift in Sources */,
 				DF7EECD72D82E8B800ADACAA /* HomeView.swift in Sources */,
+				C59DF8CF2D8C78FB001A8531 /* SessionService.swift in Sources */,
 				DF7EECD32D82E87600ADACAA /* APIService.swift in Sources */,
 				DFA9A5852D9159FD00BCE8CA /* SellerStatsView.swift in Sources */,
 				DFA9A5812D91599900BCE8CA /* SellerStats.swift in Sources */,
