@@ -7,10 +7,12 @@
 
 import SwiftUI
 
+/// Barre de navigation personnalisée pour l'application
 struct Navbar: View {
     @Binding var currentTab: Tab
     @EnvironmentObject private var authService: AuthService
     
+    /// Onglets disponibles dans la barre de navigation
     enum Tab {
         case login
         case home
@@ -67,6 +69,7 @@ struct Navbar: View {
     }
 }
 
+/// Bouton d'onglet pour la barre de navigation
 struct TabButton: View {
     let icon: String
     let title: String

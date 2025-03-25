@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+/// ViewModel pour la gestion des licences de jeux
 @MainActor
 class LicenseViewModel: ObservableObject {
     // Données
@@ -37,6 +38,7 @@ class LicenseViewModel: ObservableObject {
         }
     }
     
+    /// Charge la liste des licences depuis l'API
     func loadLicenses() async {
         isLoading = true
         errorMessage = nil
@@ -52,15 +54,17 @@ class LicenseViewModel: ObservableObject {
         isLoading = false
     }
     
+    /// Charge la liste des éditeurs pour le sélecteur d'éditeurs
     func loadEditors() async {
         do {
             editors = try await editorService.fetchEditors()
         } catch {
-            print("Erreur lors du chargement des éditeurs: \(error.localizedDescription)")
             NotificationService.shared.showError(error)
         }
     }
     
+    /// Crée une nouvelle licence avec le nom et l'éditeur spécifiés
+    /// - Returns: True si la création a réussi, false sinon
     func createLicense() async -> Bool {
         isLoading = true
         errorMessage = nil
@@ -89,6 +93,8 @@ class LicenseViewModel: ObservableObject {
         }
     }
     
+    /// Met à jour une licence existante
+    /// - Returns: True si la mise à jour a réussi, false sinon
     func updateLicense() async -> Bool {
         guard let selectedLicense = selectedLicense else {
             errorMessage = "Aucune licence sélectionnée"
@@ -122,6 +128,9 @@ class LicenseViewModel: ObservableObject {
         }
     }
     
+    /// Supprime une licence par son ID
+    /// - Parameter id: L'ID de la licence à supprimer
+    /// - Returns: True si la suppression a réussi, false sinon
     func deleteLicense(id: String) async -> Bool {
         isLoading = true
         errorMessage = nil
@@ -147,8 +156,6 @@ class LicenseViewModel: ObservableObject {
                 errorMessage = "Erreur : \(error.localizedDescription)"
             }
             
-            // Ne pas afficher de notification ici, c'est géré dans la vue
-            
             // Recharger quand même la liste pour que l'UI reste utilisable
             await loadLicenses()
             
@@ -158,8 +165,6 @@ class LicenseViewModel: ObservableObject {
             // Erreurs génériques - simplifiées et plus lisibles
             errorMessage = "Impossible de supprimer cette licence"
             
-            // Ne pas afficher de notification ici, c'est géré dans la vue
-            
             // Recharger quand même la liste pour que l'UI reste utilisable
             await loadLicenses()
             
@@ -168,12 +173,15 @@ class LicenseViewModel: ObservableObject {
         }
     }
     
+    /// Prépare le formulaire pour l'édition d'une licence existante
+    /// - Parameter license: La licence à modifier
     func prepareForEdit(license: License) {
         selectedLicense = license
         licenseName = license.nom
         editorId = license.editeur_id ?? ""
     }
     
+    /// Réinitialise le formulaire
     func clearForm() {
         licenseName = ""
         editorId = ""

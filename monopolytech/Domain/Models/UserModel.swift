@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Modèle représentant un utilisateur
 struct User: Identifiable, Codable, Hashable {
     let id: String  // Non-optionnel, utilisera une chaîne vide si absent
     let nom: String
@@ -15,7 +16,7 @@ struct User: Identifiable, Codable, Hashable {
     let adresse: String?
     let type_utilisateur: String
     
-    // Pour la prévisualisation et les tests
+    /// Utilisateur exemple pour les prévisualisations et tests
     static let placeholder = User(
         id: "USR1",
         nom: "Jean Dupont",
@@ -25,7 +26,7 @@ struct User: Identifiable, Codable, Hashable {
         type_utilisateur: "vendeur"
     )
     
-    // État vide pour les placeholders
+    /// Utilisateur vide pour les états d'erreur ou d'initialisation
     static let empty = User(
         id: "",  // Chaîne vide au lieu de nil
         nom: "Aucun nom trouvé",

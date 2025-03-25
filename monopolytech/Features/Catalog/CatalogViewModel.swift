@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+/// ViewModel pour la gestion du catalogue de jeux
 class CatalogViewModel: ObservableObject {
     @Published private(set) var games: [Game] = []
     @Published private(set) var isLoading = false
@@ -23,6 +24,11 @@ class CatalogViewModel: ObservableObject {
         self.gameService = gameService
     }
     
+    /// Charge les jeux avec les filtres de prix spécifiés et pour la page demandée
+    /// - Parameters:
+    ///   - minPrice: Prix minimum (optionnel)
+    ///   - maxPrice: Prix maximum (optionnel)
+    ///   - page: Numéro de page à charger
     func loadGames(minPrice: Double? = nil, maxPrice: Double? = nil, page: Int = 1) {
         isLoading = true
         error = nil
@@ -57,6 +63,12 @@ class CatalogViewModel: ObservableObject {
         }
     }
     
+    /// Recherche des jeux par nom de licence avec les filtres de prix spécifiés
+    /// - Parameters:
+    ///   - query: Terme de recherche
+    ///   - minPrice: Prix minimum (optionnel)
+    ///   - maxPrice: Prix maximum (optionnel)
+    ///   - page: Numéro de page à charger
     func searchGames(query: String, minPrice: Double? = nil, maxPrice: Double? = nil, page: Int = 1) {
         guard !query.isEmpty else {
             loadGames(minPrice: minPrice, maxPrice: maxPrice, page: page)
@@ -98,6 +110,10 @@ class CatalogViewModel: ObservableObject {
         }
     }
     
+    /// Charge la page suivante de résultats
+    /// - Parameters:
+    ///   - minPrice: Prix minimum (optionnel)
+    ///   - maxPrice: Prix maximum (optionnel)
     func loadNextPage(minPrice: Double? = nil, maxPrice: Double? = nil) {
         currentPage += 1
         if currentSearchTerm.isEmpty {
@@ -107,6 +123,10 @@ class CatalogViewModel: ObservableObject {
         }
     }
     
+    /// Charge la page précédente de résultats
+    /// - Parameters:
+    ///   - minPrice: Prix minimum (optionnel)
+    ///   - maxPrice: Prix maximum (optionnel)
     func loadPreviousPage(minPrice: Double? = nil, maxPrice: Double? = nil) {
         if currentPage > 1 {
             currentPage -= 1
@@ -118,7 +138,11 @@ class CatalogViewModel: ObservableObject {
         }
     }
     
-    // Plus besoin de filtrer les jeux localement car c'est géré par l'API
+    /// Retourne les jeux filtrés (cette fonction n'est plus utilisée car le filtrage est géré par l'API)
+    /// - Parameters:
+    ///   - minPrice: Prix minimum
+    ///   - maxPrice: Prix maximum
+    /// - Returns: Liste des jeux filtrés
     func filteredGames(minPrice: Double = 0, maxPrice: Double = Double.infinity) -> [Game] {
         return games
     }

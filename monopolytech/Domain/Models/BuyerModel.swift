@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Modèle représentant un acheteur
 struct Buyer: Identifiable, Codable, Hashable {
     let id: Int
     let nom: String
@@ -14,7 +15,7 @@ struct Buyer: Identifiable, Codable, Hashable {
     let telephone: String
     let adresse: String?
     
-    // For preview and testing purposes
+    /// Acheteur exemple pour les prévisualisations et tests
     static let placeholder = Buyer(
         id: 1,
         nom: "Hugo Brun",
@@ -23,7 +24,7 @@ struct Buyer: Identifiable, Codable, Hashable {
         adresse: "123 rue Example"
     )
     
-    // Empty state placeholders
+    /// Acheteur vide pour les états d'erreur ou d'initialisation
     static let empty = Buyer(
         id: -1,
         nom: "No name found",
@@ -32,19 +33,22 @@ struct Buyer: Identifiable, Codable, Hashable {
         adresse: "No address found"
     )
     
-    // Helper computed properties for empty state handling
+    /// Nom à afficher avec gestion des cas vides
     var displayName: String {
         return nom.isEmpty ? "No name found" : nom
     }
     
+    /// Email à afficher avec gestion des cas vides
     var displayEmail: String {
         return email.isEmpty ? "No email found" : email
     }
     
+    /// Téléphone à afficher avec gestion des cas vides
     var displayPhone: String {
         return telephone.isEmpty ? "No phone number" : telephone
     }
     
+    /// Adresse à afficher avec gestion des cas vides
     var displayAddress: String {
         return adresse ?? "No address found"
     }

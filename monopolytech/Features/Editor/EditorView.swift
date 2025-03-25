@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Vue de gestion des éditeurs permettant de visualiser, créer, modifier et supprimer des éditeurs
 struct EditorView: View {
     @StateObject private var viewModel = EditorViewModel()
     @Environment(\.presentationMode) var presentationMode
@@ -101,6 +102,8 @@ struct EditorView: View {
         .toastMessage()
     }
     
+    /// Supprime un éditeur à l'index spécifié
+    /// - Parameter indexSet: L'index de l'éditeur à supprimer
     private func deleteEditor(at indexSet: IndexSet) {
         for index in indexSet {
             let editor = viewModel.editors[index]
@@ -120,6 +123,7 @@ struct EditorView: View {
     }
 }
 
+/// Composant d'affichage pour une ligne d'éditeur dans la liste
 struct EditorRow: View {
     let editor: Editor
     @ObservedObject var viewModel: EditorViewModel
@@ -184,6 +188,7 @@ struct EditorRow: View {
     }
 }
 
+/// Vue de formulaire pour la création ou modification d'un éditeur
 struct EditorFormView: View {
     @ObservedObject var viewModel: EditorViewModel
     var isEdit: Bool

@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Vue principale pour la gestion des codes promo
 struct PromoCodeView: View {
     @StateObject private var viewModel = PromoCodeViewModel()
     @Environment(\.presentationMode) var presentationMode
@@ -82,6 +83,8 @@ struct PromoCodeView: View {
         .toastMessage()
     }
     
+    /// Supprime un code promo à l'index spécifié
+    /// - Parameter indexSet: L'index du code promo à supprimer
     private func deletePromoCode(at indexSet: IndexSet) {
         for index in indexSet {
             let promoCode = viewModel.promoCodes[index]
@@ -100,6 +103,7 @@ struct PromoCodeView: View {
     }
 }
 
+/// Composant d'affichage pour une ligne de code promo dans la liste
 struct PromoCodeRow: View {
     let promoCode: CodePromo
     @ObservedObject var viewModel: PromoCodeViewModel
@@ -157,6 +161,7 @@ struct PromoCodeRow: View {
     }
 }
 
+/// Vue de formulaire pour la création d'un code promo
 struct PromoCodeFormView: View {
     @ObservedObject var viewModel: PromoCodeViewModel
     var isEdit: Bool

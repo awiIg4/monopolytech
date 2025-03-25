@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+/// ViewModel pour la gestion des acheteurs
 class BuyerViewModel: ObservableObject {
     // Services
     private let buyerService = BuyerService.shared
@@ -37,6 +38,7 @@ class BuyerViewModel: ObservableObject {
         setupValidation()
     }
     
+    /// Configure la validation du formulaire
     private func setupValidation() {
         Publishers.CombineLatest4($nom, $email, $telephone, $adresse)
             .map { nom, email, telephone, adresse in
@@ -49,6 +51,7 @@ class BuyerViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
+    /// Vérifie si un email est valide
     private func isValidEmail(_ email: String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
@@ -66,9 +69,7 @@ class BuyerViewModel: ObservableObject {
         errorMessage = nil
         
         do {
-            print("Recherche de l'acheteur avec l'email: \(email)")
             buyer = try await buyerService.getBuyerByEmail(email: email)
-            print("Acheteur chargé avec succès: \(buyer?.nom ?? "Inconnu")")
         } catch let error as APIError {
             let errorDescription: String
             
@@ -90,19 +91,14 @@ class BuyerViewModel: ObservableObject {
             }
             
             errorMessage = errorDescription
-            print("Erreur détaillée: \(error)")
-            
-            // Réinitialiser le buyer en cas d'erreur
             buyer = nil
         } catch {
             errorMessage = "Erreur inattendue: \(error.localizedDescription)"
-            print("Erreur détaillée: \(error)")
             
             NotificationService.shared.showError(NSError(domain: "", code: 0, userInfo: [
                 NSLocalizedDescriptionKey: "Impossible de charger l'acheteur"
             ]))
             
-            // Réinitialiser le buyer en cas d'erreur
             buyer = nil
         }
         
@@ -137,8 +133,6 @@ class BuyerViewModel: ObservableObject {
             
             // Fermer la feuille d'enregistrement
             showRegisterSheet = false
-            
-            print("Acheteur enregistré: \(message)")
         } catch let error as APIError {
             let errorDescription: String
             
@@ -160,10 +154,8 @@ class BuyerViewModel: ObservableObject {
             }
             
             errorMessage = errorDescription
-            print("Erreur détaillée: \(error)")
         } catch {
             errorMessage = "Erreur inattendue: \(error.localizedDescription)"
-            print("Erreur détaillée: \(error)")
             
             // Créer un NSError pour le message d'erreur
             NotificationService.shared.showError(NSError(domain: "BuyerError", code: 0, userInfo: [
@@ -174,7 +166,7 @@ class BuyerViewModel: ObservableObject {
         isLoading = false
     }
     
-    /// Réinitialise le formulaire
+    /// Réinitialise le formulaire d'enregistrement
     func resetForm() {
         nom = ""
         email = ""

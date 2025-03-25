@@ -8,20 +8,21 @@
 import Foundation
 import Combine
 
+/// ViewModel pour gérer la logique d'authentification
 class LoginViewModel: ObservableObject {
     @Published var email: String = ""
     @Published var password: String = ""
-    @Published var userType: String = "admin"  // Default to admin
+    @Published var userType: String = "admin"  // Par défaut admin
     @Published var isLoading: Bool = false
     @Published var errorMessage: String = ""
     @Published var isAuthenticated: Bool = false
     
-    // User type options (admin and gestionnaire only)
+    // Options de type d'utilisateur (admin et gestionnaire uniquement)
     let userTypeOptions = ["admin", "gestionnaire"]
     
     private let authService = AuthService.shared
     
-    /// Attempt to authenticate with current credentials
+    /// Tente de s'authentifier avec les identifiants actuels
     func login() async {
         if !validateInputs() {
             return
@@ -33,7 +34,7 @@ class LoginViewModel: ObservableObject {
         }
         
         do {
-            // Use the correct authentication method based on user type
+            // Utilise la méthode d'authentification appropriée selon le type d'utilisateur
             let user = try await authService.login(email: email, password: password, userType: userType)
             
             await MainActor.run {
@@ -53,7 +54,7 @@ class LoginViewModel: ObservableObject {
         }
     }
     
-    /// Validate form inputs before submission
+    /// Valide les champs du formulaire avant soumission
     private func validateInputs() -> Bool {
         if email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             errorMessage = "Veuillez entrer votre email"

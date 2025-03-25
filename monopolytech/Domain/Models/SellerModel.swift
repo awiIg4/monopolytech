@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Modèle représentant un vendeur
 struct Seller: Identifiable, Codable, Hashable {
     let id: String
     let nom: String
@@ -14,7 +15,7 @@ struct Seller: Identifiable, Codable, Hashable {
     let telephone: String
     let adresse: String?
     
-    // For preview and testing purposes
+    /// Vendeur exemple pour les prévisualisations et tests
     static let placeholder = Seller(
         id: "SEL1",
         nom: "Hugo Brun",
@@ -23,7 +24,7 @@ struct Seller: Identifiable, Codable, Hashable {
         adresse: "789 rue Seller"
     )
     
-    // Empty state placeholders
+    /// Vendeur vide pour les états d'erreur ou d'initialisation
     static let empty = Seller(
         id: "NONE",
         nom: "No name found",
@@ -32,7 +33,6 @@ struct Seller: Identifiable, Codable, Hashable {
         adresse: "No address found"
     )
     
-    // Helper computed properties for empty state handling
     var displayName: String {
         return nom.isEmpty ? "No name found" : nom
     }

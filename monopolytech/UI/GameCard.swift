@@ -7,8 +7,8 @@
 
 import SwiftUI
 
+/// Carte affichant les informations d'un jeu
 struct GameCard: View {
-
     let game: Game
     var onTap: ((Game) -> Void)? = nil
     
@@ -17,9 +17,7 @@ struct GameCard: View {
             onTap?(game)
         }) {
             VStack(alignment: .leading, spacing: 4) {
-                // Header avec titre et indicateur de statut
                 HStack(alignment: .top) {
-                    // Game title
                     Text(game.licence_name ?? "Unknown Game")
                         .font(.headline)
                         .foregroundColor(.primary)
@@ -28,7 +26,6 @@ struct GameCard: View {
                     
                     Spacer()
                     
-                    // Statut indicator
                     Circle()
                         .fill(game.statut == "available" ? Color.green : Color.red)
                         .frame(width: 8, height: 8)
@@ -37,7 +34,6 @@ struct GameCard: View {
                 Spacer()
                     .frame(height: 4)
                 
-                // Price
                 Text("\(formatPrice(game.prix)) €")
                     .font(.title3)
                     .fontWeight(.bold)
@@ -55,6 +51,7 @@ struct GameCard: View {
         .buttonStyle(PlainButtonStyle())
     }
     
+    /// Formate le prix avec deux décimales
     private func formatPrice(_ price: Double) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -70,7 +67,6 @@ struct GameCard_Previews: PreviewProvider {
             GameCard(game: Game.placeholder)
                 .padding()
             
-            // Grid preview
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
                 ForEach(Game.placeholders) { game in
                     GameCard(game: game)

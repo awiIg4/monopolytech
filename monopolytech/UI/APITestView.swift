@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-// TODO: Convert to a real test suite
+/// Vue pour tester les connexions API
 struct APITestView: View {
     @State private var testResults = "No tests run yet"
     @State private var isRunningTests = false
@@ -40,91 +40,84 @@ struct APITestView: View {
             .cornerRadius(8)
             .padding()
         }
-        .toastMessage() // Add toast message support
+        .toastMessage()
     }
     
+    /// Exécute une série de tests pour vérifier la connectivité avec l'API
     private func runTests() {
         isRunningTests = true
         testResults = "Starting tests...\n"
         
         Task {
-            // Create separate results for each test to avoid mutation issues
             var gamesTestResult = ""
             var categoriesTestResult = ""
-            var usersTestResult = "" // Added variable for users test
+            var usersTestResult = ""
             
-            // Test fetchGames
+            // Test de récupération des jeux
             do {
-                gamesTestResult += "📱 Testing fetchGames()...\n"
+                gamesTestResult += "Test de fetchGames()...\n"
                 let games = try await GameService.shared.fetchGames()
-                gamesTestResult += "✅ Successfully fetched \(games.count) games\n"
+                gamesTestResult += "Récupération réussie de \(games.count) jeux\n"
                 if let firstGame = games.first {
-                    gamesTestResult += "First game: \(firstGame.licence_name ?? "Unknown")\n"
-                    gamesTestResult += "Price: \(firstGame.prix) €\n"
+                    gamesTestResult += "Premier jeu: \(firstGame.licence_name ?? "Inconnu")\n"
+                    gamesTestResult += "Prix: \(firstGame.prix) €\n"
                 }
                 
-                // Show success notification
                 await MainActor.run {
-                    NotificationService.shared.showSuccess("Games fetched successfully!")
+                    NotificationService.shared.showSuccess("Jeux récupérés avec succès!")
                 }
             } catch {
-                gamesTestResult += "❌ Error fetching games: \(error.localizedDescription)\n"
+                gamesTestResult += "Erreur lors de la récupération des jeux: \(error.localizedDescription)\n"
                 
-                // Show error notification
                 await MainActor.run {
                     NotificationService.shared.showError(error)
                 }
             }
             
-            // Test getUsers - New test section for users
+            // Test de récupération des utilisateurs
             do {
-                usersTestResult += "📱 Testing getUsers endpoint...\n"
+                usersTestResult += "Test du point de terminaison getUsers...\n"
                 
-                // Call the API tester method for users
                 let (responseData, statusCode, _) = try await APIService.shared.requestWithHeaders(
                     "utilisateurs", 
                     httpMethod: "GET"
                 )
                 
                 if (200...299).contains(statusCode) {
-                    usersTestResult += "✅ Successfully accessed users endpoint with status: \(statusCode)\n"
-                    let responseString = String(data: responseData, encoding: .utf8) ?? "No data"
-                    usersTestResult += "Response preview: \(responseString.prefix(100))...\n"
+                    usersTestResult += "Accès réussi au point de terminaison des utilisateurs avec statut: \(statusCode)\n"
+                    let responseString = String(data: responseData, encoding: .utf8) ?? "Pas de données"
+                    usersTestResult += "Aperçu de la réponse: \(responseString.prefix(100))...\n"
                     
-                    // Try to parse the users data
                     do {
                         let decoder = JSONDecoder()
                         let users = try decoder.decode([User].self, from: responseData)
-                        usersTestResult += "✅ Successfully parsed \(users.count) users\n"
+                        usersTestResult += "Analyse réussie de \(users.count) utilisateurs\n"
                         
                         await MainActor.run {
-                            NotificationService.shared.showSuccess("Users fetched successfully!")
+                            NotificationService.shared.showSuccess("Utilisateurs récupérés avec succès!")
                         }
                     } catch {
-                        usersTestResult += "⚠️ Could not parse users data: \(error.localizedDescription)\n"
-                        usersTestResult += "This might be expected if you're not authenticated or if the response format doesn't match the User model\n"
+                        usersTestResult += "Impossible d'analyser les données utilisateur: \(error.localizedDescription)\n"
+                        usersTestResult += "Cela peut être normal si vous n'êtes pas authentifié ou si le format de réponse ne correspond pas\n"
                     }
                 } else {
-                    usersTestResult += "❌ Failed to access users endpoint. Status: \(statusCode)\n"
-                    usersTestResult += "This is expected if you're not authenticated - try logging in first\n"
+                    usersTestResult += "Échec d'accès au point de terminaison des utilisateurs. Statut: \(statusCode)\n"
+                    usersTestResult += "C'est attendu si vous n'êtes pas authentifié - essayez de vous connecter d'abord\n"
                 }
             } catch {
-                usersTestResult += "❌ Error fetching users: \(error.localizedDescription)\n"
+                usersTestResult += "Erreur lors de la récupération des utilisateurs: \(error.localizedDescription)\n"
                 
-                // Show error notification
                 await MainActor.run {
                     NotificationService.shared.showError(error)
                 }
             }
             
-            // Combine results only at the end
+            // Combiner les résultats
             let finalResults = gamesTestResult + 
                               "\n-------------------\n\n" + 
-                              usersTestResult +
-                              "\n-------------------\n\n" + 
-                              categoriesTestResult
+                              usersTestResult
             
-            // Update the UI on the main thread
+            // Mettre à jour l'interface utilisateur
             await MainActor.run {
                 testResults = finalResults
                 isRunningTests = false
@@ -133,7 +126,6 @@ struct APITestView: View {
     }
 }
 
-// Preview provider for SwiftUI canvas
 struct APITestView_Previews: PreviewProvider {
     static var previews: some View {
         APITestView()

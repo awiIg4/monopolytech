@@ -7,23 +7,23 @@
 
 import Foundation
 
+/// Modèle représentant un éditeur de jeux
 struct Editor: Identifiable, Codable, Hashable {
     let id: String
     let nom: String
     
-    // For preview and testing purposes
+    /// Éditeur exemple pour les prévisualisations et tests
     static let placeholder = Editor(
         id: "ED1",
         nom: "Hugo Games"
     )
     
-    // Empty state placeholders
+    /// Éditeur vide pour les états d'erreur ou d'initialisation
     static let empty = Editor(
         id: "NONE",
         nom: "No editor found"
     )
     
-    // Helper computed properties for empty state handling
     var displayName: String {
         return nom.isEmpty ? "No editor found" : nom
     }

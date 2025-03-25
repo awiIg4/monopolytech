@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+/// ViewModel pour la gestion des éditeurs
 @MainActor
 class EditorViewModel: ObservableObject {
     // Données
@@ -31,6 +32,7 @@ class EditorViewModel: ObservableObject {
         }
     }
     
+    /// Charge la liste des éditeurs depuis l'API
     func loadEditors() async {
         isLoading = true
         errorMessage = nil
@@ -46,6 +48,8 @@ class EditorViewModel: ObservableObject {
         isLoading = false
     }
     
+    /// Crée un nouvel éditeur avec le nom spécifié
+    /// - Returns: True si la création a réussi, false sinon
     func createEditor() async -> Bool {
         isLoading = true
         errorMessage = nil
@@ -65,6 +69,8 @@ class EditorViewModel: ObservableObject {
         }
     }
     
+    /// Met à jour l'éditeur sélectionné avec le nouveau nom
+    /// - Returns: True si la mise à jour a réussi, false sinon
     func updateEditor() async -> Bool {
         guard let selectedEditor = selectedEditor else {
             errorMessage = "Aucun éditeur sélectionné"
@@ -95,6 +101,9 @@ class EditorViewModel: ObservableObject {
         }
     }
     
+    /// Supprime un éditeur par son ID
+    /// - Parameter id: L'ID de l'éditeur à supprimer
+    /// - Returns: True si la suppression a réussi, false sinon
     func deleteEditor(id: String) async -> Bool {
         isLoading = true
         errorMessage = nil
@@ -137,11 +146,14 @@ class EditorViewModel: ObservableObject {
         }
     }
     
+    /// Prépare le formulaire pour l'édition d'un éditeur existant
+    /// - Parameter editor: L'éditeur à modifier
     func prepareForEdit(editor: Editor) {
         selectedEditor = editor
         editorName = editor.nom
     }
     
+    /// Réinitialise le formulaire
     func clearForm() {
         editorName = ""
         selectedEditor = nil

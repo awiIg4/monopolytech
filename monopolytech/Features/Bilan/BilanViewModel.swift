@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+/// ViewModel pour gérer les données du bilan financier
 class BilanViewModel: ObservableObject {
     @Published var bilan: BilanModel?
     @Published var isLoading = false
@@ -20,6 +21,7 @@ class BilanViewModel: ObservableObject {
         loadBilan()
     }
     
+    /// Charge les données du bilan depuis l'API
     func loadBilan() {
         isLoading = true
         errorMessage = ""
@@ -44,7 +46,7 @@ class BilanViewModel: ObservableObject {
     
     /// Formate une date pour l'affichage
     func formatDate(_ dateString: String) -> String {
-        // Méthode 1: Utiliser ISO8601DateFormatter (gère le format complet avec millisecondes)
+        // Méthode avec ISO8601DateFormatter
         let isoFormatter = ISO8601DateFormatter()
         isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         
@@ -55,7 +57,7 @@ class BilanViewModel: ObservableObject {
             return formatter.string(from: date)
         }
         
-        // Méthode 2: Utiliser DateFormatter avec pattern spécifique (plan B)
+        // Alternative avec DateFormatter
         let backupFormatter = DateFormatter()
         backupFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         
@@ -66,7 +68,7 @@ class BilanViewModel: ObservableObject {
             return outputFormatter.string(from: date)
         }
         
-        // Méthode 3: Parsing manuel simple (plan C)
+        // Méthode de secours avec parsing manuel
         if dateString.contains("T") {
             let components = dateString.split(separator: "T")[0].split(separator: "-")
             if components.count == 3 {
@@ -77,7 +79,7 @@ class BilanViewModel: ObservableObject {
         return dateString
     }
     
-    /// Formate un montant en acceptant soit une chaîne, soit un nombre
+    /// Formate un montant financier pour l'affichage
     func formatMontant(_ montant: String, suffixe: String = "", préfixe: String = "") -> String {
         // Convertir la chaîne en Double
         guard let valeur = Double(montant.replacingOccurrences(of: ",", with: ".")) else {

@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Vue principale pour la gestion des sessions de vente
 struct SessionView: View {
     @StateObject private var viewModel = SessionViewModel()
     @Environment(\.presentationMode) var presentationMode
@@ -107,6 +108,8 @@ struct SessionView: View {
         .toastMessage()
     }
     
+    /// Supprime une session à l'index spécifié
+    /// - Parameter indexSet: L'index de la session à supprimer
     private func deleteSession(at indexSet: IndexSet) {
         for index in indexSet {
             let session = viewModel.sessions[index]
@@ -122,6 +125,7 @@ struct SessionView: View {
     }
 }
 
+/// Composant d'affichage pour une ligne de session dans la liste
 struct SessionRow: View {
     let session: SessionService.Session
     @ObservedObject var viewModel: SessionViewModel
@@ -213,7 +217,9 @@ struct SessionRow: View {
         }
     }
     
-    // Formatage des dates (date seule)
+    /// Formate une date ISO 8601 pour l'affichage (date seule)
+    /// - Parameter dateString: La chaîne de date à formater
+    /// - Returns: La date formatée
     private func formatDate(_ dateString: String) -> String {
         let isoFormatter = ISO8601DateFormatter()
         isoFormatter.formatOptions = [.withInternetDateTime]
@@ -241,7 +247,9 @@ struct SessionRow: View {
         return dateString
     }
     
-    // Formatage des dates avec heure pour les timestamps de création/modification
+    /// Formate une date ISO 8601 pour l'affichage (date et heure)
+    /// - Parameter dateString: La chaîne de date à formater
+    /// - Returns: La date et l'heure formatées
     private func formatDateWithTime(_ dateString: String) -> String {
         let isoFormatter = ISO8601DateFormatter()
         isoFormatter.formatOptions = [.withInternetDateTime]
@@ -257,6 +265,7 @@ struct SessionRow: View {
     }
 }
 
+/// Vue de formulaire pour la création ou modification d'une session
 struct SessionFormView: View {
     @ObservedObject var viewModel: SessionViewModel
     @Environment(\.dismiss) private var dismiss

@@ -7,8 +7,9 @@
 
 import Foundation
 
+/// Service pour gérer les codes promotionnels
 class PromoCodeService {
-    // Singleton instance
+    /// Instance partagée pour l'accès au service
     static let shared = PromoCodeService()
     
     private let apiService = APIService.shared
@@ -27,6 +28,8 @@ class PromoCodeService {
     }
     
     /// Récupère tous les codes promo
+    /// - Returns: Liste des codes promo
+    /// - Throws: APIError si la requête échoue
     func fetchPromoCodes() async throws -> [CodePromo] {
         // Récupérer les données brutes
         let (data, _) = try await apiService.request(
@@ -34,11 +37,6 @@ class PromoCodeService {
             httpMethod: "GET",
             returnRawResponse: true
         )
-        
-        // Imprimer la réponse pour debug
-        if let jsonString = String(data: data, encoding: .utf8) {
-            print("Réponse API reçue: \(jsonString)")
-        }
         
         // Structure qui correspond exactement au format de l'API
         struct PromoCodeResponse: Decodable {
@@ -61,6 +59,9 @@ class PromoCodeService {
     }
     
     /// Récupère un code promo spécifique par son libellé
+    /// - Parameter libelle: Libellé du code promo
+    /// - Returns: Code promo correspondant
+    /// - Throws: APIError si la requête échoue
     func fetchPromoCode(libelle: String) async throws -> CodePromo {
         struct PromoCodeResponse: Decodable {
             let id: Int
@@ -83,6 +84,9 @@ class PromoCodeService {
     }
     
     /// Récupère seulement la réduction associée à un code promo
+    /// - Parameter codePromo: Code promo à vérifier
+    /// - Returns: Pourcentage de réduction
+    /// - Throws: APIError si la requête échoue
     func fetchPromoCodeReduction(codePromo: String) async throws -> Double {
         struct ReductionDTO: Decodable {
             let reduction: Int
@@ -95,6 +99,9 @@ class PromoCodeService {
     }
     
     /// Recherche des codes promo par terme
+    /// - Parameter query: Terme de recherche
+    /// - Returns: Liste des codes promo correspondants
+    /// - Throws: APIError si la requête échoue
     func searchPromoCodes(query: String) async throws -> [CodePromo] {
         struct PromoCodeDTO: Decodable {
             let id: Int
@@ -117,6 +124,11 @@ class PromoCodeService {
     }
     
     /// Crée un nouveau code promo
+    /// - Parameters:
+    ///   - libelle: Libellé du code promo
+    ///   - reductionPourcent: Pourcentage de réduction
+    /// - Returns: Code promo créé
+    /// - Throws: APIError si la requête échoue
     func createPromoCode(libelle: String, reductionPourcent: Int) async throws -> CodePromo {
         let request = PromoCodeRequest(libelle: libelle, reductionPourcent: reductionPourcent)
         let jsonData = try request.toJSONData()
@@ -139,14 +151,6 @@ class PromoCodeService {
                 }
             }
             
-            // Pour le débogage
-            if let jsonString = String(data: data, encoding: .utf8) {
-                print("Réponse API de création: \(jsonString)")
-            }
-            
-            // Depuis iOS 16, nous pouvons utiliser un décodeur avec des options de décodage plus flexibles
-            // mais pour la compatibilité, nous allons utiliser une approche plus robuste
-            
             // Retourner un CodePromo basé sur les données de la requête puisque
             // nous savons que la création a réussi (statut 2xx)
             return CodePromo(
@@ -162,6 +166,12 @@ class PromoCodeService {
     }
     
     /// Met à jour un code promo existant
+    /// - Parameters:
+    ///   - libelle: Libellé actuel du code promo
+    ///   - newLibelle: Nouveau libellé (optionnel)
+    ///   - reductionPourcent: Nouveau pourcentage de réduction (optionnel)
+    /// - Returns: Code promo mis à jour
+    /// - Throws: APIError si la requête échoue
     func updatePromoCode(libelle: String, newLibelle: String? = nil, reductionPourcent: Int? = nil) async throws -> CodePromo {
         struct PromoCodeDTO: Decodable {
             let id: Int
@@ -205,6 +215,9 @@ class PromoCodeService {
     }
     
     /// Supprime un code promo
+    /// - Parameter libelle: Libellé du code promo à supprimer
+    /// - Returns: Message de confirmation
+    /// - Throws: APIError si la requête échoue
     func deletePromoCode(libelle: String) async throws -> String {
         // Encodage URL pour gérer les caractères spéciaux dans le libellé
         let encodedLibelle = libelle.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? libelle

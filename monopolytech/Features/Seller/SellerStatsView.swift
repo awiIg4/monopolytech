@@ -7,11 +7,13 @@
 
 import SwiftUI
 
+/// Vue pour afficher et gérer les statistiques d'un vendeur
 struct SellerStatsView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel = SellerStatsViewModel()
     @FocusState private var focusedField: FocusField?
     
+    /// Champs pouvant recevoir le focus
     enum FocusField {
         case sellerEmail
     }

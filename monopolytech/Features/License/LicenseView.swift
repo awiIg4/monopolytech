@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Vue principale pour la gestion des licences de jeux
 struct LicenseView: View {
     @StateObject private var viewModel = LicenseViewModel()
     @Environment(\.presentationMode) var presentationMode
@@ -101,6 +102,8 @@ struct LicenseView: View {
         .toastMessage()
     }
     
+    /// Supprime une licence à l'index spécifié
+    /// - Parameter indexSet: L'index de la licence à supprimer
     private func deleteLicense(at indexSet: IndexSet) {
         for index in indexSet {
             let license = viewModel.licenses[index]
@@ -120,6 +123,7 @@ struct LicenseView: View {
     }
 }
 
+/// Composant d'affichage pour une ligne de licence dans la liste
 struct LicenseRow: View {
     let license: License
     @ObservedObject var viewModel: LicenseViewModel
@@ -192,6 +196,7 @@ struct LicenseRow: View {
     }
 }
 
+/// Vue de formulaire pour la création ou modification d'une licence
 struct LicenseFormView: View {
     @ObservedObject var viewModel: LicenseViewModel
     var isEdit: Bool

@@ -9,6 +9,7 @@ import Foundation
 
 /// Service pour les fonctionnalités de gestion globale
 class GestionService {
+    /// Instance partagée pour l'accès au service
     static let shared = GestionService()
     
     private let apiService = APIService.shared
@@ -17,25 +18,23 @@ class GestionService {
     private init() {}
     
     /// Récupère le bilan financier de la session courante
-    /// - Returns: Le bilan financier
+    /// - Returns: Le bilan financier contenant les informations de la session
     /// - Throws: APIError si la requête échoue
     func getBilanCurrentSession() async throws -> BilanModel {
         do {
-            print("📊 Récupération du bilan de la session courante...")
-            
             let (bilanData, statusCode) = try await apiService.request(
                 "\(endpoint)/bilan",
                 returnRawResponse: true
             )
             
-            // Debug de la réponse brute
-            let responseString = String(data: bilanData, encoding: .utf8) ?? "Données illisibles"
-            print("📊 BILAN RESPONSE [Code: \(statusCode)]:\n\(responseString)")
+            // Vérification du statut de la réponse
+            guard (200...299).contains(statusCode) else {
+                throw APIError.serverError(statusCode, "Échec de récupération du bilan")
+            }
             
-            // Décodage de la réponse
+            // Décodage de la réponse vers le modèle BilanModel
             return try JSONDecoder().decode(BilanModel.self, from: bilanData)
         } catch {
-            print("❌ ERREUR lors de la récupération du bilan: \(error)")
             throw error
         }
     }

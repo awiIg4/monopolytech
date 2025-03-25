@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Modèle représentant un jeu à déposer, utilisé dans la vue
+/// Modèle représentant un jeu à déposer
 struct GameToDeposit: Identifiable {
     let id = UUID()
     let licenseId: String

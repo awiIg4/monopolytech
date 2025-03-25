@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Vue principale pour le menu de gestion de l'application
 struct ManageView: View {
     @ObservedObject private var viewModel: ManageViewModel
     @EnvironmentObject var authService: AuthService
@@ -38,7 +39,7 @@ struct ManageView: View {
                         handleAction(for: item)
                     }) {
                         HStack {
-                            Image(systemName: getIconName(for: item))
+                            Image(systemName: item.icon)
                                 .foregroundColor(.blue)
                                 .frame(width: 24, height: 24)
                             
@@ -55,7 +56,7 @@ struct ManageView: View {
                 }
             }
             .listStyle(InsetGroupedListStyle())
-            .navigationTitle("Management")
+            .navigationTitle("Gestion")
             .sheet(isPresented: $showDepositView) {
                 GameDepositView()
             }
@@ -85,6 +86,7 @@ struct ManageView: View {
             }
             .sheet(isPresented: $showBuyerSheet) {
                 BuyerView()
+            }
             .sheet(isPresented: $showSellerStatsView) {
                 SellerStatsView()
             }
@@ -94,7 +96,9 @@ struct ManageView: View {
         }
     }
     
-    private func handleAction(for item: ManageItem) {
+    /// Gère l'action associée à un élément du menu
+    /// - Parameter item: L'élément sélectionné
+    func handleAction(for item: ManageItem) {
         switch item.route {
         case "game/deposit":
             showDepositView = true
@@ -122,23 +126,6 @@ struct ManageView: View {
             showBilanView = true
         default:
             break
-        }
-    }
-    
-    private func getIconName(for item: ManageItem) -> String {
-        switch item.route {
-        case "seller": return "person.fill"
-        case "game/deposit": return "gamecontroller.fill"
-        case "game/sale": return "cart.fill"
-        case "buyer/create": return "person.badge.plus"
-        case "manager/create": return "person.2.fill"
-        case "session/create": return "calendar.badge.plus"
-        case "license/manage": return "doc.badge.plus"
-        case "editor/create": return "building.2.fill"
-        case "game/stockToSale": return "arrow.right.square.fill"
-        case "code-promo": return "tag.fill"
-        case "bilan": return "chart.bar.fill"
-        default: return "questionmark.circle.fill"
         }
     }
 }

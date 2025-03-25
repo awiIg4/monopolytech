@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Vue principale pour la création d'un gestionnaire
 struct ManagerView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = ManagerViewModel()
@@ -14,6 +15,7 @@ struct ManagerView: View {
     @State private var alertMessage = ""
     @FocusState private var focusField: Field?
     
+    /// Champs pouvant recevoir le focus
     enum Field {
         case nom, email, telephone, adresse, password
     }
@@ -74,14 +76,12 @@ struct ManagerView: View {
                         focusField = nil // Masquer le clavier
                         Task {
                             do {
-                                print("Tentative de création du gestionnaire...")
                                 let result = try await viewModel.createManager()
                                 
                                 // Assurons-nous que la réponse est traitée sur le thread principal
                                 await MainActor.run {
                                     alertMessage = result
                                     showAlert = true
-                                    print("Message de succès: \(result)")
                                     
                                     // Vidons les champs immédiatement en cas de succès
                                     if result.contains("succès") {
@@ -92,7 +92,6 @@ struct ManagerView: View {
                                 await MainActor.run {
                                     alertMessage = "Erreur: \(error.localizedDescription)"
                                     showAlert = true
-                                    print("Erreur lors de la création: \(error)")
                                 }
                             }
                         }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-// Protocol to standardize user display properties
+/// Protocole définissant les propriétés d'affichage communes à tous les utilisateurs
 protocol UserDisplayable {
     var displayName: String { get }
     var displayEmail: String { get }
@@ -15,11 +15,12 @@ protocol UserDisplayable {
     var displayAddress: String { get }
 }
 
-// Conform our models to UserDisplayable
+// Conformité des modèles au protocole UserDisplayable
 extension Buyer: UserDisplayable {}
 extension Seller: UserDisplayable {}
 extension Manager: UserDisplayable {}
 
+/// Carte réutilisable pour afficher les informations d'un utilisateur
 struct UserCard<T: UserDisplayable>: View {
     let user: T
     var onTap: ((T) -> Void)? = nil
@@ -29,12 +30,10 @@ struct UserCard<T: UserDisplayable>: View {
             onTap?(user)
         }) {
             VStack(alignment: .leading, spacing: 8) {
-                // Name
                 Text(user.displayName)
                     .font(.headline)
                     .foregroundColor(.primary)
                 
-                // Email
                 HStack {
                     Image(systemName: "envelope")
                     Text(user.displayEmail)
@@ -42,7 +41,6 @@ struct UserCard<T: UserDisplayable>: View {
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 
-                // Phone
                 HStack {
                     Image(systemName: "phone")
                     Text(user.displayPhone)
@@ -50,7 +48,6 @@ struct UserCard<T: UserDisplayable>: View {
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 
-                // Address
                 HStack {
                     Image(systemName: "location")
                     Text(user.displayAddress)
@@ -73,19 +70,15 @@ struct UserCard<T: UserDisplayable>: View {
 struct UserCard_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            // Preview pour un Buyer
             UserCard(user: Buyer.placeholder)
                 .padding()
             
-            // Preview pour un Seller
             UserCard(user: Seller.placeholder)
                 .padding()
             
-            // Preview pour un Manager
             UserCard(user: Manager.placeholder)
                 .padding()
             
-            // Preview en mode grille
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
                 UserCard(user: Buyer.placeholder)
                 UserCard(user: Seller.placeholder)

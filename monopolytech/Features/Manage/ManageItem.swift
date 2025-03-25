@@ -7,9 +7,11 @@
 
 import Foundation
 
+/// Structure représentant un élément du menu de gestion
 struct ManageItem: Identifiable {
     let id = UUID()
     let label: String
     let route: String
+    let icon: String
 }
 

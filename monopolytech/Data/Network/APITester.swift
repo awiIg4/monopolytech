@@ -8,11 +8,12 @@
 import Foundation
 import SwiftUI
 
-// TODO: Convert to a real test suite
+// Classe pour tester les fonctionnalités de l'API
 class APITester {
     static let shared = APITester()
     private let gameService = GameService.shared
     
+    // Teste la récupération des jeux
     func testFetchGames() async {
         do {
             print("📱 Testing fetchGames()...")
@@ -27,6 +28,7 @@ class APITester {
         }
     }
     
+    // Teste la récupération des détails d'un jeu
     func testFetchGameDetails() async {
         do {
             print("📱 Testing fetchGames() first, to get an ID...")
@@ -45,11 +47,12 @@ class APITester {
         }
     }
     
+    // Teste l'accès à la liste des utilisateurs
     func testGetUsers() async {
         print("📱 Testing getUsers endpoint '/utilisateurs'...")
         
         do {
-            // Try to access the users endpoint (authentication token will be used if present in APIService)
+            // Test d'accès au point d'accès des utilisateurs
             let (responseData, statusCode, _) = try await APIService.shared.requestWithHeaders(
                 "utilisateurs", 
                 httpMethod: "GET"
@@ -60,7 +63,7 @@ class APITester {
                 let responseString = String(data: responseData, encoding: .utf8) ?? "No data"
                 print("Response preview: \(responseString.prefix(200))...")
                 
-                // Try to parse the users data
+                // Tentative de décodage des données
                 do {
                     let decoder = JSONDecoder()
                     let users = try decoder.decode([User].self, from: responseData)
@@ -77,7 +80,7 @@ class APITester {
         }
     }
     
-    // This method can be uncommented once you have a CategoryService
+    // Cette méthode peut être décommentée une fois que vous avez un CategoryService
     /*
     func testFetchCategories() async {
         do {
@@ -91,13 +94,14 @@ class APITester {
     }
     */
     
+    // Exécute tous les tests disponibles
     func runAllTests() async {
         await testFetchGames()
         print("\n-------------------\n")
         await testFetchGameDetails()
         print("\n-------------------\n")
         await testGetUsers()
-        // Uncomment when CategoryService is implemented
+        // Décommentez quand CategoryService sera implémenté
         // print("\n-------------------\n")
         // await testFetchCategories()
     }

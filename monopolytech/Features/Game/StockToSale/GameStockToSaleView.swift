@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-// TODO: add buyer details to invoice
+/// Vue permettant de mettre des jeux en stock dans le rayon de vente
 struct GameStockToSaleView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel = GameStockToSaleViewModel()
@@ -85,7 +85,7 @@ struct GameStockToSaleView: View {
     }
 }
 
-// Composant pour afficher une ligne de jeu
+/// Composant pour afficher une ligne de jeu dans la liste
 struct GameRow: View {
     let game: Game
     let licenseName: String

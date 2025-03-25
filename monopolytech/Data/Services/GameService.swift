@@ -7,32 +7,32 @@
 
 import Foundation
 
-/// Service responsible for game-related API operations
+/// Service responsable des opérations liées aux jeux
 class GameService {
-    /// Specific endpoint for game-related API
+    /// Point d'accès spécifique pour l'API des jeux
     let gameEndpoint = "jeux/"
     
-    /// The underlying API service used for network requests
+    /// Service API sous-jacent utilisé pour les requêtes réseau
     private let apiService: APIService
     
-    /// Shared singleton instance for app-wide use
+    /// Instance partagée pour l'utilisation dans toute l'application
     static let shared = GameService()
     
-    /// Initialize the Game service
-    /// - Parameter apiService: The API service to use for requests
+    /// Initialise le service de jeux
+    /// - Parameter apiService: Le service API à utiliser pour les requêtes
     init(apiService: APIService = .shared) {
         self.apiService = apiService
     }
     
-    /// Fetch all games with optional search parameters
-    /// - Parameter query: Optional search query to filter games
-    /// - Returns: Array of Game objects
-    /// - Throws: APIError if the request fails
+    /// Récupère tous les jeux avec paramètres de recherche optionnels
+    /// - Parameter query: Requête de recherche optionnelle pour filtrer les jeux
+    /// - Returns: Tableau d'objets Game
+    /// - Throws: APIError si la requête échoue
     func fetchGames(query: String? = nil) async throws -> [Game] {
         let endpoint = query != nil ? gameEndpoint + "rechercher?q=\(query!)" : gameEndpoint + "rechercher"
         
         do {
-            // Define a DTO that matches the API response structure
+            // Définition d'un DTO qui correspond à la structure de réponse de l'API
             struct GameDTO: Decodable {
                 let quantite: Int
                 let prix_min: Double
@@ -40,7 +40,7 @@ class GameService {
                 let licence_nom: String
                 let editeur_nom: String
                 
-                // Convert response to our Game model
+                // Conversion de la réponse vers notre modèle Game
                 func toGame() -> Game {
                     return Game(
                         id: UUID().uuidString,
@@ -58,7 +58,7 @@ class GameService {
                 }
             }
             
-            // Make the request and convert response
+            // Effectuer la requête et convertir la réponse
             let gamesDTO: [GameDTO] = try await apiService.request(endpoint)
             return gamesDTO.map { $0.toGame() }
         } catch {
@@ -66,23 +66,23 @@ class GameService {
         }
     }
     
-    /// Fetch a specific game by ID
-    /// - Parameter id: The ID of the game to fetch
-    /// - Returns: A single Game object
-    /// - Throws: APIError if the request fails
+    /// Récupère un jeu spécifique par ID
+    /// - Parameter id: L'ID du jeu à récupérer
+    /// - Returns: Un objet Game
+    /// - Throws: APIError si la requête échoue
     func fetchGame(id: String) async throws -> Game {
         return try await apiService.request("\(gameEndpoint)\(id)")
     }
     
-    /// Deposit one or more games for sale
-    /// - Parameter request: Structured request containing game details
-    /// - Returns: Array of deposited games
-    /// - Throws: APIError if the request fails
+    /// Dépose un ou plusieurs jeux pour la vente
+    /// - Parameter request: Requête structurée contenant les détails des jeux
+    /// - Returns: Tableau des jeux déposés
+    /// - Throws: APIError si la requête échoue
     func depositGames(request: GameDepositRequest) async throws -> [Game] {
         do {
             let requestData = try JSONEncoder().encode(request)
             
-            // Make the request
+            // Effectuer la requête
             let (responseData, statusCode) = try await apiService.request(
                 "jeux/deposer",
                 httpMethod: "POST",
@@ -90,7 +90,7 @@ class GameService {
                 returnRawResponse: true
             )
             
-            // Success handling
+            // Gestion des succès
             if (200...299).contains(statusCode) {
                 do {
                     let games = try JSONDecoder().decode([Game].self, from: responseData)
@@ -100,30 +100,30 @@ class GameService {
                         let game = try JSONDecoder().decode(Game.self, from: responseData)
                         return [game]
                     } catch {
-                        // Even if we can't decode the response, return an empty array for success status
+                        // Même si nous ne pouvons pas décoder la réponse, retourner un tableau vide pour le succès
                         return []
                     }
                 }
             } else {
-                throw APIError.serverError(statusCode, "Game deposit failed with status \(statusCode)")
+                throw APIError.serverError(statusCode, "Échec du dépôt de jeu avec statut \(statusCode)")
             }
         } catch {
             throw error
         }
     }
 
-    /// Convenience method to deposit a single game
+    /// Méthode simplifiée pour déposer un seul jeu
     /// - Parameters:
-    ///   - licenseId: ID of the game license
-    ///   - price: Price of the game
-    ///   - quantity: Number of copies to deposit
-    ///   - sellerId: ID of the seller
-    ///   - promoCode: Optional promotional code
-    /// - Returns: Array of deposited games
-    /// - Throws: APIError if the request fails
+    ///   - licenseId: ID de la licence du jeu
+    ///   - price: Prix du jeu
+    ///   - quantity: Nombre d'exemplaires à déposer
+    ///   - sellerId: ID du vendeur
+    ///   - promoCode: Code promotionnel optionnel
+    /// - Returns: Tableau des jeux déposés
+    /// - Throws: APIError si la requête échoue
     func depositGame(licenseId: String, price: Double, quantity: Int, sellerId: String, promoCode: String? = nil) async throws -> [Game] {
         let request = GameDepositRequest(
-            licence: [Int(licenseId)!],  // Convertir en Int
+            licence: [Int(licenseId)!],
             prix: [price],
             quantite: [quantity],
             code_promo: promoCode,
@@ -144,17 +144,13 @@ class GameService {
                 returnRawResponse: true
             )
             
-            // Déboguer la réponse brute
-            let responseString = String(data: responseData, encoding: .utf8) ?? "No response data"
-            print("📄 GAMES NOT IN SALE RESPONSE [Status: \(statusCode)]:\n\(responseString)")
-            
             // Vérifier le code de statut
             if (200...299).contains(statusCode) {
                 // Structure DTO adaptée au format de réponse réel
                 struct GameDTO: Decodable {
                     let id: Int
                     let licence_id: Int
-                    let prix: String // <- Modifié: prix en String au lieu de Double
+                    let prix: String // Prix en String au lieu de Double
                     let statut: String?
                     let depot_id: Int?
                     let depot: DepotDTO?
@@ -191,14 +187,12 @@ class GameService {
                     let gamesDTO = try decoder.decode([GameDTO].self, from: responseData)
                     return gamesDTO.map { $0.toGame() }
                 } catch {
-                    print("❌ Erreur de décodage: \(error)")
                     return []
                 }
             } else {
                 throw APIError.serverError(statusCode, "Récupération des jeux échouée")
             }
         } catch {
-            print("❌ Erreur lors de la récupération des jeux non mis en rayon: \(error)")
             throw error
         }
     }
@@ -221,17 +215,13 @@ class GameService {
             // Encoder le payload
             let jsonData = try JSONSerialization.data(withJSONObject: payload)
             
-            // Effectuer la requête avec le status code pour debug
+            // Effectuer la requête
             let (responseData, statusCode) = try await apiService.request(
                 "\(gameEndpoint)updateStatus",
                 httpMethod: "PUT",
                 requestBody: jsonData,
                 returnRawResponse: true
             )
-            
-            // Debug - afficher la réponse brute
-            let responseString = String(data: responseData, encoding: .utf8) ?? "No response data"
-            print("📄 PUT GAMES FOR SALE RESPONSE [Status: \(statusCode)]:\n\(responseString)")
             
             // Vérifier le code de statut
             if (200...299).contains(statusCode) {
@@ -254,12 +244,11 @@ class GameService {
                 }
             } else {
                 // Si la requête a échoué, lancer une erreur
-                throw APIError.serverError(statusCode, responseString)
+                throw APIError.serverError(statusCode, String(data: responseData, encoding: .utf8) ?? "Erreur inconnue")
             }
         } catch let error as APIError {
             throw error
         } catch {
-            print("❌ Erreur lors de la mise en rayon: \(error.localizedDescription)")
             throw APIError.networkError(error)
         }
     }
@@ -391,7 +380,6 @@ class GameService {
         return try await searchGames(params: params)
     }
 
-    // Ajouter cette fonction searchGames qui est référencée mais manquante:
     /// Rechercher des jeux avec des paramètres spécifiques
     /// - Parameter params: Paramètres de recherche (dictionnaire clé-valeur)
     /// - Returns: Liste des jeux correspondant aux critères
@@ -412,16 +400,15 @@ class GameService {
     /// - Returns: Réponse de succès
     /// - Throws: APIError si la requête échoue
     func recoverGames(gameIds: [String]) async throws -> String {
-        // Convertir en Int exactement comme dans le front
+        // Convertir en Int
         let intIds = gameIds.compactMap { Int($0) }
         
-        // Utiliser exactement la même structure de payload que dans le front
+        // Préparation de la requête
         let payload: [String: Any] = [
             "jeux_a_recup": intIds
         ]
         
         do {
-            print("🎮 Récupération des jeux: \(intIds)")
             let jsonData = try JSONSerialization.data(withJSONObject: payload)
             
             let (responseData, statusCode) = try await apiService.request(
@@ -431,17 +418,12 @@ class GameService {
                 returnRawResponse: true
             )
             
-            // Afficher la réponse brute
-            let responseString = String(data: responseData, encoding: .utf8) ?? "Données illisibles"
-            print("🎮 RECOVER GAMES RESPONSE [Code: \(statusCode)]:\n\(responseString)")
-            
             if (200...299).contains(statusCode) {
                 return "Jeux récupérés avec succès"
             } else {
-                throw APIError.serverError(statusCode, responseString)
+                throw APIError.serverError(statusCode, String(data: responseData, encoding: .utf8) ?? "Erreur inconnue")
             }
         } catch {
-            print("❌ Erreur lors de la récupération des jeux: \(error)")
             throw error
         }
     }
@@ -454,18 +436,10 @@ class GameService {
     /// - Throws: APIError si la requête échoue
     func getSellerRecuperableGames(sellerId: String, sessionId: String) async throws -> [Game] {
         do {
-            print("🎮 Récupération des jeux récupérables - vendeur: \(sellerId), session: \(sessionId)")
-            
-            let URL = "\(gameEndpoint)a_recuperer?vendeur=\(sellerId)&session=\(sessionId)"
-            print("URL: \(URL)")
-            
             let (responseData, statusCode) = try await apiService.request(
                 "\(gameEndpoint)a_recuperer?vendeur=\(sellerId)&session=\(sessionId)",
                 returnRawResponse: true
             )
-            
-            let responseString = String(data: responseData, encoding: .utf8) ?? "Données illisibles"
-            print("🎮 RECUPERABLE GAMES RESPONSE [Code: \(statusCode)]:\n\(responseString)")
             
             if (200...299).contains(statusCode) {
                 struct GameDTO: Decodable {
@@ -523,16 +497,13 @@ class GameService {
                     }
                 }
                 
-                // LA CORRECTION EST ICI: Décoder directement le tableau JSON
-                // Au lieu de rechercher un objet avec une propriété "jeux"
+                // Décodage direct du tableau JSON
                 let gamesDTO = try JSONDecoder().decode([GameDTO].self, from: responseData)
                 return gamesDTO.map { $0.toGame() }
             } else {
-                print("⚠️ Pas de jeux récupérables trouvés (code \(statusCode))")
                 return []
             }
         } catch {
-            print("❌ Erreur lors de la récupération des jeux récupérables: \(error)")
             if let apiError = error as? APIError, case .serverError(404, _) = apiError {
                 return []
             }

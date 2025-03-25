@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+/// ViewModel pour la gestion des sessions de vente
 @MainActor
 class SessionViewModel: ObservableObject {
     @Published var sessions: [SessionService.Session] = []
@@ -28,27 +29,20 @@ class SessionViewModel: ObservableObject {
     @Published var showDeleteAlert: Bool = false
     @Published var selectedSession: SessionService.Session? = nil
     
-    // Utilisez l'initialisation directe ou via un inject si nécessaire
+    // Service pour accéder aux données
     private let sessionService: SessionService
     
     init() {
-        // Utilisez une autre méthode d'initialisation si le constructeur est privé
-        self.sessionService = SessionService.shared // ou une autre méthode d'accès
+        self.sessionService = SessionService.shared
     }
     
+    /// Charge la liste des sessions depuis l'API
     func loadSessions() async {
         isLoading = true
         errorMessage = nil
         
         do {
             let loadedSessions = try await sessionService.getAllSessions()
-            
-            // Débogage: examiner le format des dates
-            if let firstSession = loadedSessions.first {
-                print("Format de date brut dans l'API: \(firstSession.date_debut)")
-                print("Date formatée: \(formatDate(firstSession.date_debut))")
-            }
-            
             sessions = loadedSessions
         } catch {
             errorMessage = "Erreur lors du chargement des sessions: \(error.localizedDescription)"
@@ -57,6 +51,8 @@ class SessionViewModel: ObservableObject {
         isLoading = false
     }
     
+    /// Crée une nouvelle session
+    /// - Returns: True si la création a réussi, false sinon
     func createSession() async -> Bool {
         isLoading = true
         errorMessage = nil
@@ -90,6 +86,8 @@ class SessionViewModel: ObservableObject {
         }
     }
     
+    /// Met à jour une session existante
+    /// - Returns: True si la mise à jour a réussi, false sinon
     func updateSession() async -> Bool {
         guard let selectedSession = selectedSession else {
             errorMessage = "Aucune session sélectionnée"
@@ -127,6 +125,9 @@ class SessionViewModel: ObservableObject {
         }
     }
     
+    /// Supprime une session par son ID
+    /// - Parameter id: L'ID de la session à supprimer
+    /// - Returns: True si la suppression a réussi, false sinon
     func deleteSession(id: Int) async -> Bool {
         isLoading = true
         errorMessage = nil
@@ -177,6 +178,8 @@ class SessionViewModel: ObservableObject {
         }
     }
     
+    /// Prépare le formulaire pour l'édition d'une session existante
+    /// - Parameter session: La session à modifier
     func prepareForEdit(session: SessionService.Session) {
         selectedSession = session
         
@@ -199,6 +202,7 @@ class SessionViewModel: ObservableObject {
         fraisDepotEnPourcentage = session.frais_depot_en_pourcentage
     }
     
+    /// Réinitialise le formulaire
     func clearForm() {
         dateDebut = Date()
         dateFin = Date().addingTimeInterval(3600 * 3)
@@ -209,6 +213,9 @@ class SessionViewModel: ObservableObject {
         selectedSession = nil
     }
     
+    /// Formate une date ISO 8601 pour l'affichage
+    /// - Parameter dateString: La chaîne de date à formater
+    /// - Returns: La date formatée
     func formatDate(_ dateString: String) -> String {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime]
@@ -219,26 +226,6 @@ class SessionViewModel: ObservableObject {
             return displayFormatter.string(from: date)
         }
         
-        return dateString
-    }
-    
-    // Ajouter cette fonction de formatage pour le débogage
-    private func formaterDate(_ dateString: String) -> String {
-        print("Formatage de la date: \(dateString)")
-        
-        let isoFormatter = ISO8601DateFormatter()
-        isoFormatter.formatOptions = [.withInternetDateTime]
-        
-        if let date = isoFormatter.date(from: dateString) {
-            print("Date parsée avec succès: \(date)")
-            let formatter = DateFormatter()
-            formatter.dateFormat = "dd/MM/yyyy"
-            let result = formatter.string(from: date)
-            print("Résultat du formatage: \(result)")
-            return result
-        }
-        
-        print("Échec du parsing de la date")
         return dateString
     }
 }

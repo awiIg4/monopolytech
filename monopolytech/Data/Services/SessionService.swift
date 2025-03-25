@@ -61,7 +61,6 @@ class SessionService {
                 requestBody: jsonData
             )
         } catch {
-            print("❌ Erreur lors de la création de la session: \(error)")
             throw error
         }
     }
@@ -73,7 +72,6 @@ class SessionService {
         do {
             return try await apiService.request(endpoint)
         } catch {
-            print("❌ Erreur lors de la récupération des sessions: \(error)")
             throw error
         }
     }
@@ -88,10 +86,8 @@ class SessionService {
             if case .serverError(404, _) = error {
                 return nil
             }
-            print("❌ Erreur lors de la récupération de la session courante: \(error)")
             throw error
         } catch {
-            print("❌ Erreur lors de la récupération de la session courante: \(error)")
             throw error
         }
     }
@@ -104,7 +100,6 @@ class SessionService {
         do {
             return try await apiService.request("\(endpoint)/\(id)")
         } catch {
-            print("❌ Erreur lors de la récupération de la session \(id): \(error)")
             throw error
         }
     }
@@ -125,7 +120,6 @@ class SessionService {
                 requestBody: jsonData
             )
         } catch {
-            print("❌ Erreur lors de la mise à jour de la session \(id): \(error)")
             throw error
         }
     }
@@ -149,7 +143,6 @@ class SessionService {
             
             return String(data: data, encoding: .utf8) ?? "Session supprimée avec succès."
         } catch {
-            print("❌ Erreur lors de la suppression de la session \(id): \(error)")
             throw error
         }
     }
@@ -165,7 +158,7 @@ class SessionService {
 }
 
 extension Session {
-    // Convertit un modèle Session en SessionService.Session (pour les API)
+    /// Convertit un modèle Session en SessionService.Session (pour les API)
     func toServiceModel() -> SessionService.Session {
         return SessionService.Session(
             id: id ?? 0,
@@ -182,7 +175,7 @@ extension Session {
 }
 
 extension SessionService.Session {
-    // Convertit un SessionService.Session en modèle de domaine Session
+    /// Convertit un SessionService.Session en modèle de domaine Session
     func toDomainModel() -> Session {
         return Session(
             id: id,
@@ -197,7 +190,9 @@ extension SessionService.Session {
 }
 
 extension SessionService {
-    // Récupère toutes les sessions et les convertit en modèles de domaine
+    /// Récupère toutes les sessions et les convertit en modèles de domaine
+    /// - Returns: Liste des sessions au format du domaine
+    /// - Throws: APIError si la requête échoue
     func getAllSessionsAsDomainModels() async throws -> [monopolytech.Session] {
         let apiSessions = try await getAllSessions()
         return apiSessions.map { $0.toDomainModel() }

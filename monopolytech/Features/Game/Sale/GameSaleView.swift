@@ -7,11 +7,13 @@
 
 import SwiftUI
 
+/// Vue pour l'achat de jeux par les clients
 struct GameSaleView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel = GameSaleViewModel()
     @FocusState private var focusedField: FocusField?
     
+    /// Champs pouvant recevoir le focus
     enum FocusField {
         case gameIds, buyerEmail, promoCode
     }
@@ -182,6 +184,7 @@ struct GameSaleView: View {
     }
 }
 
+/// Vue pour afficher la facture après un achat réussi
 struct InvoiceView: View {
     let invoiceContent: String
     let onDismiss: () -> Void
@@ -201,7 +204,7 @@ struct InvoiceView: View {
                         .background(Color(.systemGray6))
                         .cornerRadius(8)
                     
-                    // Bouton pour terminer - le bouton de partage a été supprimé
+                    // Bouton pour terminer
                     Button(action: {
                         onDismiss()
                     }) {

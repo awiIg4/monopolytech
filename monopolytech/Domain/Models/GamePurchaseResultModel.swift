@@ -9,13 +9,8 @@ import Foundation
 
 /// Résultat d'un achat de jeux
 struct GamePurchaseResult: Codable {
-    /// Montant total de l'achat
     let totalAmount: Double
-    
-    /// Montant de la réduction appliquée
     let discount: Double
-    
-    /// Liste des jeux achetés
     let purchasedGames: [PurchasedGame]
     
     /// Montant final après réduction

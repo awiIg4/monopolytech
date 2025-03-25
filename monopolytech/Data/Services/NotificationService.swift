@@ -8,15 +8,17 @@
 import SwiftUI
 import Combine
 
-// Represents a notification or toast message
+/// Représente une notification ou un message toast
 struct ToastMessage: Identifiable {
     let id = UUID()
     let message: String
     let type: ToastType
     
+    /// Type de notification avec une apparence spécifique
     enum ToastType {
         case success, error, info
         
+        /// Couleur associée au type de notification
         var color: Color {
             switch self {
             case .success: return .green
@@ -25,6 +27,7 @@ struct ToastMessage: Identifiable {
             }
         }
         
+        /// Icône associée au type de notification
         var icon: String {
             switch self {
             case .success: return "checkmark.circle.fill"
@@ -35,28 +38,36 @@ struct ToastMessage: Identifiable {
     }
 }
 
-// A service to manage notifications and errors
+/// Service pour gérer les notifications et les erreurs
 class NotificationService: ObservableObject {
+    /// Instance partagée pour toute l'application
     static let shared = NotificationService()
-    private init() {} // Singleton pattern
+    private init() {} // Pattern Singleton
     
+    /// Toast actuel à afficher
     @Published var currentToast: ToastMessage?
     
+    /// Affiche une notification de succès
+    /// - Parameter message: Message à afficher
     func showSuccess(_ message: String) {
         currentToast = ToastMessage(message: message, type: .success)
     }
     
+    /// Affiche une notification d'erreur
+    /// - Parameter error: Erreur à afficher
     func showError(_ error: Error) {
         let message = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
         currentToast = ToastMessage(message: message, type: .error)
     }
     
+    /// Affiche une notification d'information
+    /// - Parameter message: Message à afficher
     func showInfo(_ message: String) {
         currentToast = ToastMessage(message: message, type: .info)
     }
 }
 
-// A view modifier to display toast messages
+/// Modificateur de vue pour afficher les messages toast
 struct ToastModifier: ViewModifier {
     @ObservedObject private var notificationService = NotificationService.shared
     @State private var workItem: DispatchWorkItem?
@@ -101,6 +112,7 @@ struct ToastModifier: ViewModifier {
 }
 
 extension View {
+    /// Ajoute la fonctionnalité de toast à n'importe quelle vue
     func toastMessage() -> some View {
         self.modifier(ToastModifier())
     }

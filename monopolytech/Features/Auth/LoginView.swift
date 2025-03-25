@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Vue de connexion pour l'authentification des utilisateurs
 struct LoginView: View {
     @StateObject private var viewModel = LoginViewModel()
     @Environment(\.presentationMode) var presentationMode
@@ -15,7 +16,7 @@ struct LoginView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 25) {
-                // En-tête
+                // En-tête avec icône et titre
                 VStack(spacing: 15) {
                     Image(systemName: "person.circle.fill")
                         .resizable()
@@ -35,9 +36,9 @@ struct LoginView: View {
                 }
                 .padding(.top, 30)
                 
-                // Formulaire
+                // Formulaire de connexion
                 VStack(spacing: 20) {
-                    // Type d'utilisateur - comme dans le web (seulement admin et gestionnaire)
+                    // Sélecteur de type d'utilisateur
                     VStack(alignment: .leading, spacing: 5) {
                         Text("Type d'utilisateur")
                             .font(.headline)
@@ -75,7 +76,7 @@ struct LoginView: View {
                             .cornerRadius(8)
                     }
                     
-                    // Message d'erreur
+                    // Affichage des messages d'erreur
                     if !viewModel.errorMessage.isEmpty {
                         Text(viewModel.errorMessage)
                             .foregroundColor(.red)

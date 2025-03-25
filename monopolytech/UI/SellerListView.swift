@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Vue affichant une liste de vendeurs avec possibilité de voir les détails
 struct SellerListView: View {
     let sellers: [Seller]
     @State private var selectedSeller: Seller?
@@ -37,13 +38,13 @@ struct SellerListView: View {
     }
 }
 
+/// Vue détaillée d'un vendeur
 struct SellerFullDetailView: View {
     let seller: Seller
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
-            // Header with back button
             HStack {
                 Button(action: { dismiss() }) {
                     HStack {
@@ -55,7 +56,6 @@ struct SellerFullDetailView: View {
             }
             .padding(.horizontal)
             
-            // Profile Section
             VStack(alignment: .leading, spacing: 8) {
                 Text("Informations personnelles")
                     .font(.title2)
@@ -83,6 +83,7 @@ struct SellerFullDetailView: View {
     }
 }
 
+/// Ligne affichant une information avec icône, titre et valeur
 struct DetailRow: View {
     let icon: String
     let title: String

@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+/// ViewModel pour la gestion des codes promo
 @MainActor
 class PromoCodeViewModel: ObservableObject {
     // Données
@@ -30,6 +31,7 @@ class PromoCodeViewModel: ObservableObject {
         }
     }
     
+    /// Charge la liste des codes promo depuis l'API
     func loadPromoCodes() async {
         isLoading = true
         errorMessage = nil
@@ -37,11 +39,9 @@ class PromoCodeViewModel: ObservableObject {
         do {
             // Appel direct au service sans transformation complexe
             promoCodes = try await promoCodeService.fetchPromoCodes()
-            print("Codes promo chargés avec succès: \(promoCodes.count) codes")
         } catch {
             // Erreur générique
             errorMessage = "Erreur lors du chargement: \(error.localizedDescription)"
-            print("Erreur détaillée: \(error)")
             
             // Liste vide, pas de données fictives
             promoCodes = []
@@ -117,7 +117,6 @@ class PromoCodeViewModel: ObservableObject {
             await loadPromoCodes()
         } catch {
             errorMessage = "Erreur lors de la création du code promo: \(error.localizedDescription)"
-            print("Erreur détaillée: \(error)")
             
             // Créer un NSError pour le message d'erreur
             let nsError = NSError(
@@ -131,6 +130,9 @@ class PromoCodeViewModel: ObservableObject {
         isLoading = false
     }
     
+    /// Supprime un code promo par son libellé
+    /// - Parameter libelle: Le libellé du code promo à supprimer
+    /// - Returns: True si la suppression a réussi, false sinon
     func deletePromoCode(libelle: String) async -> Bool {
         isLoading = true
         errorMessage = nil
@@ -167,6 +169,7 @@ class PromoCodeViewModel: ObservableObject {
         return false
     }
     
+    /// Réinitialise le formulaire
     func clearForm() {
         promoCodeLibelle = ""
         promoCodeReduction = 0

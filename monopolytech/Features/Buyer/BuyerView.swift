@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Vue pour la gestion des acheteurs
 struct BuyerView: View {
     @StateObject private var viewModel = BuyerViewModel()
     @Environment(\.presentationMode) var presentationMode
@@ -54,7 +55,7 @@ struct BuyerView: View {
         .toastMessage()
     }
     
-    // Vue de recherche par email
+    /// Section de recherche par email
     private var searchSection: some View {
         HStack {
             Image(systemName: "envelope")
@@ -88,7 +89,7 @@ struct BuyerView: View {
         .padding(.bottom)
     }
     
-    // Vue de détails d'un acheteur
+    /// Section affichant les détails d'un acheteur
     private func buyerDetailsSection(_ buyer: Buyer) -> some View {
         VStack(alignment: .leading, spacing: 15) {
             Text("Informations de l'acheteur")
@@ -110,7 +111,7 @@ struct BuyerView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
     
-    // Vue lorsqu'aucun acheteur n'est chargé
+    /// Vue affichée lorsqu'aucun acheteur n'est sélectionné
     private var noDataView: some View {
         VStack(spacing: 20) {
             Image(systemName: "person.crop.circle.badge.questionmark")
@@ -130,7 +131,7 @@ struct BuyerView: View {
     }
 }
 
-// Vue pour l'enregistrement d'un nouvel acheteur
+/// Vue pour l'enregistrement d'un nouvel acheteur
 struct BuyerRegisterView: View {
     @ObservedObject var viewModel: BuyerViewModel
     @Environment(\.presentationMode) var presentationMode
@@ -197,7 +198,7 @@ struct BuyerRegisterView: View {
     }
 }
 
-// Composant réutilisable pour afficher une ligne de détails
+/// Composant réutilisable pour afficher une ligne de détails d'acheteur
 struct BuyerDetailRow: View {
     let icon: String
     let title: String

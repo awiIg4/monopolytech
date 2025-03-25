@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-// TODO: Faire disparaitre la petite barre avec OK entre la toolbar et la vue
-/// Vue pour déposer des jeux
+/// Vue pour déposer des jeux dans le système
 struct GameDepositView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel = GameDepositViewModel()
     @FocusState private var focusedField: FocusField?
     @State private var isKeyboardVisible: Bool = false
     
+    /// Champs pouvant recevoir le focus
     enum FocusField {
         case sellerEmail, price, quantity, promoCode
     }
@@ -238,7 +238,7 @@ struct GameDepositView: View {
                 }
             }
             .onAppear {
-                // Surveillez les notifications de clavier
+                // Surveillance des notifications de clavier
                 NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidShowNotification, object: nil, queue: .main) { _ in
                     isKeyboardVisible = true
                 }
@@ -247,7 +247,7 @@ struct GameDepositView: View {
                 }
             }
             .onDisappear {
-                // Nettoyez les observateurs
+                // Nettoyage des observateurs
                 NotificationCenter.default.removeObserver(self)
             }
             .alert(isPresented: $viewModel.showAlert) {

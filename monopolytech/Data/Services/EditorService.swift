@@ -7,9 +7,10 @@
 
 import Foundation
 
+/// Service pour gérer les éditeurs
 class EditorService {
     
-    // Singleton instance
+    /// Instance partagée
     static let shared = EditorService()
     
     private let apiService = APIService.shared
@@ -27,6 +28,8 @@ class EditorService {
     }
     
     /// Récupère tous les éditeurs
+    /// - Returns: Liste des éditeurs
+    /// - Throws: APIError si la requête échoue
     func fetchEditors() async throws -> [Editor] {
         struct EditorDTO: Decodable {
             let id: Int
@@ -45,6 +48,9 @@ class EditorService {
     }
     
     /// Récupère un éditeur spécifique par ID
+    /// - Parameter id: Identifiant de l'éditeur
+    /// - Returns: L'éditeur correspondant
+    /// - Throws: APIError si la requête échoue
     func fetchEditor(id: String) async throws -> Editor {
         struct EditorDTO: Decodable {
             let id: Int
@@ -63,6 +69,9 @@ class EditorService {
     }
     
     /// Récupère un éditeur par son nom
+    /// - Parameter name: Nom de l'éditeur
+    /// - Returns: L'éditeur correspondant
+    /// - Throws: APIError si la requête échoue
     func fetchEditorByName(name: String) async throws -> Editor {
         struct EditorDTO: Decodable {
             let id: Int
@@ -85,6 +94,7 @@ class EditorService {
     /// Recherche des éditeurs par terme de recherche
     /// - Parameter query: Le terme de recherche
     /// - Returns: Liste des éditeurs correspondants (limité à 5 selon l'API)
+    /// - Throws: APIError si la requête échoue
     func searchEditors(query: String) async throws -> [Editor] {
         struct EditorDTO: Decodable {
             let id: Int
@@ -107,6 +117,7 @@ class EditorService {
     /// Crée un nouvel éditeur
     /// - Parameter name: Le nom de l'éditeur à créer
     /// - Returns: L'éditeur créé
+    /// - Throws: APIError si la requête échoue
     func createEditor(name: String) async throws -> Editor {
         struct EditorDTO: Decodable {
             let id: Int
@@ -137,6 +148,7 @@ class EditorService {
     ///   - id: L'identifiant de l'éditeur à mettre à jour
     ///   - name: Le nouveau nom
     /// - Returns: L'éditeur mis à jour
+    /// - Throws: APIError si la requête échoue
     func updateEditor(id: String, name: String) async throws -> Editor {
         struct EditorDTO: Decodable {
             let id: Int
@@ -165,8 +177,8 @@ class EditorService {
     /// Supprime un éditeur
     /// - Parameter id: L'identifiant de l'éditeur à supprimer
     /// - Returns: Message de confirmation
+    /// - Throws: APIError si la requête échoue
     func deleteEditor(id: String) async throws -> String {
-        // Version adaptée à votre APIService
         return try await apiService.request(
             "\(endpoint)/\(id)",
             httpMethod: "DELETE"

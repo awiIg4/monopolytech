@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// ViewModel pour la gestion de la création d'un gestionnaire
 class ManagerViewModel: ObservableObject {
     @Published var nom = ""
     @Published var email = ""
@@ -17,6 +18,7 @@ class ManagerViewModel: ObservableObject {
     
     private let managerService = ManagerService.shared
     
+    /// Vérifie si le formulaire est valide pour l'envoi
     var isFormValid: Bool {
         !nom.isEmpty &&
         !email.isEmpty &&
@@ -26,6 +28,8 @@ class ManagerViewModel: ObservableObject {
         motdepasse.count >= 6
     }
     
+    /// Crée un nouveau gestionnaire avec les données du formulaire
+    /// - Returns: Un message de confirmation ou d'erreur
     func createManager() async throws -> String {
         let request = ManagerService.CreateManagerRequest(
             nom: nom,
@@ -35,7 +39,6 @@ class ManagerViewModel: ObservableObject {
             motdepasse: motdepasse
         )
         
-        print("Création d'un gestionnaire avec les données: \(nom), \(email)")
         var responseString = try await managerService.createManager(request)
         
         // Assurons-nous que nous avons un message de succès cohérent
@@ -55,6 +58,7 @@ class ManagerViewModel: ObservableObject {
         return responseString
     }
     
+    /// Réinitialise le formulaire
     func clearForm() {
         nom = ""
         email = ""

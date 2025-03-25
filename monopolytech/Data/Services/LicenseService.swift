@@ -9,6 +9,7 @@ import Foundation
 
 /// Service pour récupérer et gérer les licences
 class LicenseService {
+    /// Instance partagée pour l'accès au service
     static let shared = LicenseService()
     
     private let apiService = APIService.shared
@@ -27,6 +28,8 @@ class LicenseService {
     }
     
     /// Récupère toutes les licences
+    /// - Returns: Liste complète des licences
+    /// - Throws: APIError si la requête échoue
     func fetchLicenses() async throws -> [License] {
         do {
             // Créer un DTO qui correspond à la structure exacte de l'API
@@ -59,6 +62,9 @@ class LicenseService {
     }
     
     /// Récupère une licence spécifique par ID
+    /// - Parameter id: Identifiant de la licence à récupérer
+    /// - Returns: La licence correspondante
+    /// - Throws: APIError si la requête échoue
     func fetchLicense(id: String) async throws -> License {
         struct LicenseDTO: Decodable {
             let id: Int
@@ -85,6 +91,9 @@ class LicenseService {
     }
     
     /// Récupère une licence par son nom
+    /// - Parameter name: Nom de la licence à rechercher
+    /// - Returns: La licence correspondante
+    /// - Throws: APIError si la requête échoue
     func fetchLicenseByName(name: String) async throws -> License {
         struct LicenseDTO: Decodable {
             let id: Int
@@ -115,6 +124,7 @@ class LicenseService {
     /// Recherche des licences par terme de recherche
     /// - Parameter query: Le terme de recherche
     /// - Returns: Liste des licences correspondantes (limité à 5 selon l'API)
+    /// - Throws: APIError si la requête échoue
     func searchLicenses(query: String) async throws -> [License] {
         struct LicenseDTO: Decodable {
             let id: Int
@@ -143,8 +153,11 @@ class LicenseService {
     }
     
     /// Crée une nouvelle licence
-    /// - Parameter license: Les données de la licence à créer
+    /// - Parameters:
+    ///   - name: Nom de la nouvelle licence
+    ///   - editorId: Identifiant de l'éditeur associé
     /// - Returns: La licence créée
+    /// - Throws: APIError si la requête échoue
     func createLicense(name: String, editorId: Int) async throws -> License {
         struct LicenseDTO: Decodable {
             let id: Int
@@ -178,6 +191,7 @@ class LicenseService {
     ///   - name: Le nouveau nom (optionnel)
     ///   - editorId: Le nouvel identifiant d'éditeur (optionnel)
     /// - Returns: La licence mise à jour
+    /// - Throws: APIError si la requête échoue
     func updateLicense(id: String, name: String? = nil, editorId: Int? = nil) async throws -> License {
         struct LicenseDTO: Decodable {
             let id: Int
@@ -203,8 +217,7 @@ class LicenseService {
             updateData["nom"] = name
         }
         
-        // Utiliser directement l'ID d'éditeur fourni ou une valeur par défaut (0)
-        // Pas besoin de convertir currentLicense.editeur_id qui est optionnel
+        // Utiliser directement l'ID d'éditeur fourni
         if let editorId = editorId {
             updateData["editeur_id"] = editorId
         }
@@ -225,6 +238,7 @@ class LicenseService {
     /// Supprime une licence
     /// - Parameter id: L'identifiant de la licence à supprimer
     /// - Returns: Message de confirmation
+    /// - Throws: APIError si la requête échoue
     func deleteLicense(id: String) async throws -> String {
         return try await apiService.request("\(endpoint)/\(id)", httpMethod: "DELETE")
     }

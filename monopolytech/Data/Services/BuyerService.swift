@@ -25,7 +25,7 @@ class BuyerService {
         let encodedEmail = email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? email
         
         do {
-            // Récupérer les données brutes pour le débogage
+            // Récupérer les données brutes
             let (data, statusCode) = try await apiService.request(
                 "\(endpoint)/\(encodedEmail)",
                 httpMethod: "GET",
@@ -35,26 +35,17 @@ class BuyerService {
             // Vérifier que le statut est OK
             guard (200...299).contains(statusCode) else {
                 if let errorMessage = String(data: data, encoding: .utf8) {
-                    print("Erreur API: \(errorMessage)")
                     throw APIError.serverError(statusCode, errorMessage)
                 } else {
                     throw APIError.serverError(statusCode, "Erreur lors de la récupération de l'acheteur")
                 }
             }
             
-            // Imprimer la réponse pour debug
-            if let jsonString = String(data: data, encoding: .utf8) {
-                print("Réponse API: \(jsonString)")
-            }
-            
-            // Décoder la réponse directement vers le modèle Buyer avec adaptateur
+            // Décoder la réponse directement vers le modèle Buyer
             let decoder = JSONDecoder()
-            
-            // Adapter le nom du champ adresse du JSON si nécessaire
             let buyer = try decoder.decode(Buyer.self, from: data)
             return buyer
         } catch {
-            print("Erreur détaillée: \(error)")
             throw error
         }
     }
@@ -68,7 +59,7 @@ class BuyerService {
     /// - Returns: Message de confirmation
     /// - Throws: APIError si la requête échoue
     func registerBuyer(nom: String, email: String, telephone: String, adresse: String) async throws -> String {
-        // Utiliser une structure plus simple qui correspond aux champs de l'API
+        // Préparation des données pour l'API
         let buyerRequest: [String: Any] = [
             "nom": nom,
             "email": email,
@@ -90,7 +81,6 @@ class BuyerService {
             // Vérifier que le statut est OK
             guard (200...299).contains(statusCode) else {
                 if let errorMessage = String(data: data, encoding: .utf8) {
-                    print("Erreur API: \(errorMessage)")
                     throw APIError.serverError(statusCode, errorMessage)
                 } else {
                     throw APIError.serverError(statusCode, "Erreur lors de l'enregistrement de l'acheteur")
@@ -100,7 +90,6 @@ class BuyerService {
             // Retourner le message de succès
             return String(data: data, encoding: .utf8) ?? "Compte acheteur créé avec succès."
         } catch {
-            print("Erreur détaillée: \(error)")
             throw error
         }
     }

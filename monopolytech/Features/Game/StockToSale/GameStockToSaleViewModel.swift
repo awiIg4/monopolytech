@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+/// ViewModel pour la gestion des jeux à mettre en rayon
 class GameStockToSaleViewModel: ObservableObject {
     // États
     @Published var isLoading: Bool = false
@@ -27,7 +28,7 @@ class GameStockToSaleViewModel: ObservableObject {
         loadGames()
     }
     
-    /// Charge les jeux qui ne sont pas en rayon
+    /// Charge les jeux qui ne sont pas encore en rayon
     func loadGames() {
         isLoading = true
         
@@ -50,7 +51,7 @@ class GameStockToSaleViewModel: ObservableObject {
         }
     }
     
-    /// Charge les noms des licences pour tous les jeux
+    /// Charge les noms des licences pour tous les jeux chargés
     private func loadLicenseNames() {
         // Récupérer un ensemble d'IDs de licences uniques
         let licenseIds = Set(games.map { $0.licence_id })
@@ -64,8 +65,6 @@ class GameStockToSaleViewModel: ObservableObject {
                         self.licenseNames[licenseId] = license.nom
                     }
                 } catch {
-                    print("Erreur lors du chargement de la licence \(licenseId): \(error.localizedDescription)")
-                    
                     await MainActor.run {
                         self.licenseNames[licenseId] = "Licence inconnue"
                     }
@@ -74,14 +73,17 @@ class GameStockToSaleViewModel: ObservableObject {
         }
     }
     
-    /// Récupère le nom d'une licence
+    /// Récupère le nom d'une licence pour un jeu donné
+    /// - Parameter game: Le jeu dont on veut obtenir le nom de licence
+    /// - Returns: Le nom de la licence ou un texte de chargement si non disponible
     func getLicenseName(for game: Game) -> String {
         return licenseNames[game.licence_id] ?? "Chargement..."
     }
     
-    /// Met un jeu en rayon
+    /// Met un jeu en rayon pour la vente
+    /// - Parameter game: Le jeu à mettre en rayon
     func putGameForSale(_ game: Game) {
-        // Correction ici pour le problème de l'optional
+        // Vérification de l'identifiant du jeu
         guard let gameId = game.id, !gameId.isEmpty else {
             errorMessage = "Identifiant de jeu invalide"
             showAlert = true
@@ -92,7 +94,7 @@ class GameStockToSaleViewModel: ObservableObject {
         
         Task {
             do {
-                // La correction est ici aussi pour l'expected element type
+                // Mise à jour du statut du jeu
                 let updatedGames = try await gameService.putGamesForSale(gameIds: [gameId])
                 
                 await MainActor.run {

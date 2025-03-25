@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// ViewModel pour la création d'un vendeur
 class SellerCreateViewModel: ObservableObject {
     @Published var nom = ""
     @Published var email = ""
@@ -29,6 +30,8 @@ class SellerCreateViewModel: ObservableObject {
     }
     
     /// Valide le format de l'email
+    /// - Parameter email: L'email à valider
+    /// - Returns: True si l'email est valide, false sinon
     private func isValidEmail(_ email: String) -> Bool {
         // Vérification simple: non vide, contient @, et au moins un . après @
         let emailParts = email.split(separator: "@")
@@ -43,7 +46,7 @@ class SellerCreateViewModel: ObservableObject {
         return true
     }
     
-    /// Crée un nouveau vendeur
+    /// Crée un nouveau vendeur avec les données du formulaire
     func createSeller() async {
         if (!isFormValid) {
             if nom.isEmpty {
@@ -97,8 +100,10 @@ class SellerCreateViewModel: ObservableObject {
             }
         }
     }
-    // TODO: fix too many error messages to be displayed
+    
     /// Analyse une erreur API pour extraire les messages pertinents
+    /// - Parameter error: L'erreur API à analyser
+    /// - Returns: Un message d'erreur formaté
     private func parseApiError(_ error: APIError) -> String {
         if case .serverError(let statusCode, let message) = error, statusCode == 400 {
             // Essayer de parser les erreurs JSON spécifiques
@@ -107,7 +112,6 @@ class SellerCreateViewModel: ObservableObject {
                let errors = json["errors"] as? [[String: Any]] {
                 
                 var errorMessages = [String]()
-                
                 
                 for errorItem in errors {
                     if let path = errorItem["path"] as? String,
@@ -119,7 +123,6 @@ class SellerCreateViewModel: ObservableObject {
                         return msg
                     }
                 }
-
                 
                 if !errorMessages.isEmpty {
                     return errorMessages.joined(separator: "\n")

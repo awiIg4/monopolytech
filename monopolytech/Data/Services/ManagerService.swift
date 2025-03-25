@@ -56,8 +56,6 @@ class ManagerService {
             
             // Convertir les données en chaîne de texte
             if let responseString = String(data: data, encoding: .utf8) {
-                print("Réponse du serveur: \(responseString)")
-                
                 // Assurons-nous que la réponse contient "succès" si elle est vide ou peu claire
                 if responseString.isEmpty || !responseString.contains("succès") {
                     return "Compte gestionnaire créé avec succès."
@@ -68,7 +66,6 @@ class ManagerService {
                 return "Compte gestionnaire créé avec succès."
             }
         } catch {
-            print("❌ Erreur de création: \(error)")
             throw error
         }
     }

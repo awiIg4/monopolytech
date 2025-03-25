@@ -7,26 +7,26 @@
 
 import Foundation
 
+/// Modèle représentant un code promotionnel
 struct CodePromo: Identifiable, Codable, Hashable {
     let id: String
     let libelle: String
     let reductionPourcent: Double
     
-    // For preview and testing purposes
+    /// Code promo exemple pour les prévisualisations et tests
     static let placeholder = CodePromo(
         id: "PROMO1",
         libelle: "SPRING2024",
         reductionPourcent: 15.0
     )
     
-    // Empty state placeholders
+    /// Code promo vide pour les états d'erreur ou d'initialisation
     static let empty = CodePromo(
         id: "NONE",
         libelle: "No promo code found",
         reductionPourcent: 0.0
     )
     
-    // Helper computed properties for empty state handling
     var displayLibelle: String {
         return libelle.isEmpty ? "No promo code found" : libelle
     }

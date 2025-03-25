@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-// Définition de l'énumération Tab
+/// Définition des onglets de navigation
 enum Tab {
     case home
     case catalog
@@ -15,6 +15,7 @@ enum Tab {
     case login
 }
 
+/// Vue principale de l'application
 struct ContentView: View {
     @StateObject private var authService = AuthService.shared
     @State private var currentTab: Navbar.Tab = .home
@@ -37,7 +38,7 @@ struct ContentView: View {
                 }
                 .padding(.bottom, 50)
                 
-                // Navbar personnalisée
+                // Navbar
                 VStack(spacing: 0) {
                     Divider()
                     Navbar(currentTab: $currentTab)
@@ -63,9 +64,5 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-// In ManageViewModel.swift, update the setupActions method
-
 private func setupActions() {
-    // Add navigation to game deposit
-    // This will be called when the user taps on the "Deposit Game" item
 }

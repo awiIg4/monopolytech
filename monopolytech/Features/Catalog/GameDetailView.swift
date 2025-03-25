@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Vue détaillée d'un jeu du catalogue
 struct GameDetailView: View {
     let game: Game
     @Environment(\.dismiss) private var dismiss
@@ -75,9 +76,7 @@ struct GameDetailView: View {
                         
                         Divider()
                         
-                        // Informations détaillées
-                        InfoRow(title: "Licence", value: game.licence_id, icon: "doc.fill")
-                        
+                        // Informations détaillées                        
                         InfoRow(title: "Éditeur", value: game.editeur_nom, icon: "building.fill")
                         
                         if let depotId = game.depot_id {
@@ -115,6 +114,9 @@ struct GameDetailView: View {
         }
     }
     
+    /// Formate un prix pour l'affichage
+    /// - Parameter price: Le prix à formater
+    /// - Returns: Le prix formaté en tant que chaîne de caractères
     private func formatPrice(_ price: Double) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -123,6 +125,9 @@ struct GameDetailView: View {
         return formatter.string(from: NSNumber(value: price)) ?? "\(price)"
     }
     
+    /// Formate une date pour l'affichage
+    /// - Parameter date: La date à formater
+    /// - Returns: La date formatée en tant que chaîne de caractères
     private func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .long
@@ -132,7 +137,8 @@ struct GameDetailView: View {
     }
 }
 
-// MARK: - Supporting Views
+// MARK: - Vues de support
+/// Vue affichant le statut d'un jeu
 struct StatusView: View {
     let status: String
     

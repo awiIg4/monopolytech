@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+/// ViewModel pour la fonctionnalité d'achat de jeux
 class GameSaleViewModel: ObservableObject {
     // Formulaire d'achat
     @Published var gameIds: String = ""
@@ -31,6 +32,7 @@ class GameSaleViewModel: ObservableObject {
     private let buyerService = BuyerService.shared
     
     /// Recherche un acheteur par email
+    /// - Returns: Récupère les informations de l'acheteur depuis l'API
     func fetchBuyer() async {
         let email = buyerEmail.trimmingCharacters(in: .whitespacesAndNewlines)
         
@@ -63,7 +65,7 @@ class GameSaleViewModel: ObservableObject {
         }
     }
     
-    /// Effectue l'achat des jeux
+    /// Effectue l'achat des jeux spécifiés
     func purchaseGames() async {
         // Validation des IDs de jeux
         let idsString = gameIds.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -120,6 +122,7 @@ class GameSaleViewModel: ObservableObject {
     }
     
     /// Génère le contenu d'une facture au format texte
+    /// - Returns: Le texte formaté de la facture
     func generateInvoiceContent() -> String {
         guard let result = purchaseResult else {
             return "Aucune donnée d'achat disponible"

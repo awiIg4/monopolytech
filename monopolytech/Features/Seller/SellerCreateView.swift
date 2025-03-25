@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Vue pour la création d'un nouveau vendeur
 struct SellerCreateView: View {
     @StateObject private var viewModel = SellerCreateViewModel()
     @Environment(\.presentationMode) var presentationMode

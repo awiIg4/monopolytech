@@ -40,7 +40,7 @@ class GameDepositViewModel: ObservableObject {
         loadLicenses()
     }
     
-    /// Charge la liste des licences disponibles
+    /// Charge la liste des licences disponibles depuis l'API
     func loadLicenses() {
         isLoadingLicenses = true
         
@@ -62,7 +62,7 @@ class GameDepositViewModel: ObservableObject {
         }
     }
     
-    /// Ajoute un jeu à la liste à déposer
+    /// Ajoute un jeu à la liste des jeux à déposer
     func addGame() {
         guard validateGameForm() else {
             return
@@ -87,7 +87,8 @@ class GameDepositViewModel: ObservableObject {
         resetGameForm()
     }
     
-    /// Supprime un jeu de la liste
+    /// Supprime un jeu de la liste à déposer
+    /// - Parameter index: L'index du jeu à supprimer
     func removeGame(at index: Int) {
         guard index >= 0 && index < gamesToDeposit.count else {
             errorMessage = "Index invalide"
@@ -98,7 +99,7 @@ class GameDepositViewModel: ObservableObject {
         gamesToDeposit.remove(at: index)
     }
     
-    /// Soumet le formulaire complet de dépôt
+    /// Soumet le formulaire complet de dépôt de jeux
     func submitDeposit() {
         guard validateMainForm() else {
             return
@@ -154,6 +155,7 @@ class GameDepositViewModel: ObservableObject {
     }
     
     /// Valide le formulaire d'ajout de jeu
+    /// - Returns: True si le formulaire est valide, false sinon
     private func validateGameForm() -> Bool {
         if selectedLicense == nil {
             errorMessage = "Veuillez sélectionner une licence"
@@ -195,6 +197,7 @@ class GameDepositViewModel: ObservableObject {
     }
     
     /// Valide le formulaire principal de dépôt
+    /// - Returns: True si le formulaire est valide, false sinon
     private func validateMainForm() -> Bool {
         if sellerEmail.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             errorMessage = "Veuillez entrer l'email du vendeur"

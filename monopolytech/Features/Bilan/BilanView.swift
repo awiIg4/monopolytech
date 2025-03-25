@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Vue affichant le bilan financier de la session courante
 struct BilanView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel = BilanViewModel()
@@ -14,10 +15,8 @@ struct BilanView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                // Contenu principal
                 ScrollView {
                     VStack(spacing: 20) {
-                        // Titre
                         Text("Bilan Financier")
                             .font(.largeTitle)
                             .fontWeight(.bold)
@@ -76,7 +75,6 @@ struct BilanView: View {
                                     color: .green
                                 )
                                 
-                                // Bouton de rafraîchissement
                                 Button(action: {
                                     viewModel.loadBilan()
                                 }) {
@@ -99,7 +97,7 @@ struct BilanView: View {
                             .padding(.horizontal)
                             
                         } else if !viewModel.errorMessage.isEmpty {
-                            // Message d'erreur
+                            // Affichage des erreurs
                             VStack {
                                 Image(systemName: "exclamationmark.triangle")
                                     .font(.system(size: 50))
@@ -137,7 +135,7 @@ struct BilanView: View {
                     }
                 }
                 
-                // Overlay de chargement
+                // Indicateur de chargement
                 if viewModel.isLoading {
                     Color.black.opacity(0.3)
                         .edgesIgnoringSafeArea(.all)

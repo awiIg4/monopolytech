@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Modèle représentant un jeu
 struct Game: Identifiable, Codable, Hashable {
     let id: String?
     let licence_id: String
@@ -21,8 +22,7 @@ struct Game: Identifiable, Codable, Hashable {
     let updatedAt: Date?
     var category: Category?
     
-
-    // For previews and tests
+    /// Jeu exemple pour les prévisualisations et tests
     static let placeholder = Game(
         id: "1",
         licence_id: "ac-valhalla",
@@ -37,7 +37,7 @@ struct Game: Identifiable, Codable, Hashable {
         updatedAt: nil
     )
     
-    // For preview and testing purposes
+    /// Liste de jeux exemples pour les prévisualisations et tests
     static let placeholders = [
         Game(
             id: "1",
@@ -107,10 +107,12 @@ struct Game: Identifiable, Codable, Hashable {
     ]
 }
 
+/// Modèle représentant une catégorie de jeu
 struct Category: Identifiable, Codable, Hashable {
     let id: String
     let name: String
     
+    /// Liste de catégories exemples
     static let placeholders = [
         Category(id: "action", name: "Action"),
         Category(id: "adventure", name: "Aventure"),

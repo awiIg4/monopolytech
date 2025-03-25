@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+/// ViewModel pour les statistiques d'un vendeur
 class SellerStatsViewModel: ObservableObject {
     // Formulaire
     @Published var sellerEmail: String = ""
@@ -36,7 +37,7 @@ class SellerStatsViewModel: ObservableObject {
         loadSessions()
     }
     
-    /// Charge la liste des sessions
+    /// Charge la liste des sessions disponibles
     func loadSessions() {
         isLoadingSessions = true
         
@@ -46,7 +47,7 @@ class SellerStatsViewModel: ObservableObject {
                 let fetchedSessions : [Session] = try await sessionService.getAllSessionsAsDomainModels()
                 
                 await MainActor.run {
-                    self.sessions = fetchedSessions // Maintenant c'est le bon type
+                    self.sessions = fetchedSessions
                     self.isLoadingSessions = false
                     
                     // Sélectionner la première session par défaut
@@ -64,7 +65,7 @@ class SellerStatsViewModel: ObservableObject {
         }
     }
     
-    /// Recherche un vendeur par email
+    /// Recherche un vendeur par son email
     func searchSeller() {
         isLoading = true
         errorMessage = ""
@@ -124,7 +125,7 @@ class SellerStatsViewModel: ObservableObject {
         }
     }
     
-    /// Réinitialise le solde du vendeur
+    /// Réinitialise le solde du vendeur pour la session sélectionnée
     func resetSellerBalance() {
         guard let seller = seller, !selectedSessionId.isEmpty else {
             errorMessage = "Veuillez d'abord sélectionner un vendeur et une session"
@@ -159,7 +160,8 @@ class SellerStatsViewModel: ObservableObject {
         }
     }
     
-    /// Toggle selection d'un jeu à récupérer
+    /// Active/désactive la sélection d'un jeu pour la récupération
+    /// - Parameter gameId: L'identifiant du jeu à sélectionner/désélectionner
     func toggleGameSelection(_ gameId: String) {
         if selectedGamesToRecover.contains(gameId) {
             selectedGamesToRecover.remove(gameId)
@@ -203,7 +205,9 @@ class SellerStatsViewModel: ObservableObject {
         }
     }
     
-    /// Formatte une date pour l'affichage
+    /// Formate une date pour l'affichage
+    /// - Parameter dateString: La chaîne de date à formater
+    /// - Returns: La date formatée
     func formatDate(_ dateString: String?) -> String {
         guard let dateString = dateString else { return "Date inconnue" }
         

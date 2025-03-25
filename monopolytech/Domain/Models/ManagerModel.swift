@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Modèle représentant un gestionnaire
 struct Manager: Identifiable, Codable, Hashable {
     let id: String
     let nom: String
@@ -15,7 +16,7 @@ struct Manager: Identifiable, Codable, Hashable {
     let adresse: String
     let motdepasse: String?
     
-    // For preview and testing purposes
+    /// Gestionnaire exemple pour les prévisualisations et tests
     static let placeholder = Manager(
         id: "MNG1",
         nom: "Hugo Brun",
@@ -25,7 +26,7 @@ struct Manager: Identifiable, Codable, Hashable {
         motdepasse: nil
     )
     
-    // Empty state placeholders
+    /// Gestionnaire vide pour les états d'erreur ou d'initialisation
     static let empty = Manager(
         id: "NONE",
         nom: "No name found",
@@ -35,7 +36,6 @@ struct Manager: Identifiable, Codable, Hashable {
         motdepasse: nil
     )
     
-    // Helper computed properties for empty state handling
     var displayName: String {
         return nom.isEmpty ? "No name found" : nom
     }

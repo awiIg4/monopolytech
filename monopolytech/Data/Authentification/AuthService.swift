@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-/// Authentication request model matching backend API requirements
+/// Modèle pour l'envoi des requêtes d'authentification
 struct LoginRequest: Codable {
     let email: String
     let motdepasse: String
@@ -19,13 +19,13 @@ struct LoginRequest: Codable {
     }
 }
 
-/// Authentication response model
+/// Modèle pour les réponses d'authentification
 struct LoginResponse: Codable {
     var token: String?
     var user: UserAuth?
 }
 
-/// User model that matches backend structure
+/// Modèle utilisateur pour l'authentification
 struct UserAuth: Codable, Identifiable {
     let id: String
     let email: String
@@ -48,7 +48,7 @@ struct UserAuth: Codable, Identifiable {
     }
 }
 
-/// Authentication error types for user-friendly messages
+/// Types d'erreurs d'authentification avec messages
 enum AuthError: Error, LocalizedError {
     case invalidCredentials
     case tokenExpired
@@ -72,18 +72,18 @@ enum AuthError: Error, LocalizedError {
     }
 }
 
-/// Authentication service for managing user sessions
+/// Service gérant l'authentification
 class AuthService: ObservableObject {
     private let apiService: APIService
     
-    // User state
+    // État utilisateur
     @Published var currentUser: UserAuth?
     @Published var isAuthenticated: Bool = false
     
-    // Singleton instance
+    // Instance singleton
     static let shared = AuthService()
     
-    // UserDefaults keys for persistence
+    // Clés de stockage
     private let tokenKey = "auth.token"
     private let userKey = "auth.user"
     private let tokenExpirationKey = "auth.tokenExpiration"
@@ -95,16 +95,14 @@ class AuthService: ObservableObject {
         loadFromStorage()
     }
     
-    /// Load saved authentication data from UserDefaults
+    /// Charge l'état d'authentification sauvegardé
     private func loadFromStorage() {
         if let tokenData = UserDefaults.standard.string(forKey: tokenKey) {
-            // Check if token is expired before using it
             if let expirationTimestamp = UserDefaults.standard.double(forKey: tokenExpirationKey) as Double?,
                expirationTimestamp > 0 {
                 let expirationDate = Date(timeIntervalSince1970: expirationTimestamp)
                 tokenExpirationDate = expirationDate
                 
-                // Only set token if it's still valid
                 if expirationDate > Date() {
                     apiService.setSecurityToken(tokenData)
                     startExpirationTimer(expiryDate: expirationDate)
@@ -115,18 +113,16 @@ class AuthService: ObservableObject {
                         self.isAuthenticated = true
                     }
                 } else {
-                    // Token expired, clear storage
                     logout()
                 }
             }
         }
     }
     
-    /// Save authentication data to UserDefaults
+    /// Sauvegarde l'état d'authentification
     private func saveToStorage(token: String, user: UserAuth) {
         UserDefaults.standard.set(token, forKey: tokenKey)
         
-        // Extract and save expiration time
         if let expirationDate = extractTokenExpiration(from: token) {
             tokenExpirationDate = expirationDate
             UserDefaults.standard.set(expirationDate.timeIntervalSince1970, forKey: tokenExpirationKey)
@@ -138,11 +134,10 @@ class AuthService: ObservableObject {
         }
     }
     
-    /// Authenticate user with email and password based on user type
+    /// Authentifie un utilisateur
     func login(email: String, password: String, userType: String) async throws -> UserAuth {
         let loginRequest = LoginRequest(email: email, motdepasse: password)
         
-        // Select endpoint based on user type (admin or gestionnaire)
         let endpoint: String
         switch userType.lowercased() {
         case "admin":
@@ -156,36 +151,28 @@ class AuthService: ObservableObject {
         do {
             let requestData = try JSONEncoder().encode(loginRequest)
             
-            // Make authentication request
             let (responseData, statusCode, headerFields) = try await apiService.requestWithHeaders(
                 endpoint,
                 httpMethod: "POST",
                 requestBody: requestData
             )
             
-            // Process successful authentication
             if (200...299).contains(statusCode) {
-                // Extract token from cookies
                 if let accessToken = extractCookie(named: "accessToken", from: headerFields) {
-                    // Create user from available information
-                    // In a more complete implementation, we would extract user data from JWT claims
                     let user = UserAuth(
-                        id: "user-\(email.hashValue)", // Generate a deterministic ID based on email
+                        id: "user-\(email.hashValue)", 
                         email: email,
                         username: nil,
                         role: userType.uppercased()
                     )
                     
-                    // Save token for future requests
                     apiService.setSecurityToken(accessToken)
                     
-                    // Update state on main thread
                     await MainActor.run {
                         self.currentUser = user
                         self.isAuthenticated = true
                     }
                     
-                    // Persist authentication
                     saveToStorage(token: accessToken, user: user)
                     
                     return user
@@ -193,7 +180,6 @@ class AuthService: ObservableObject {
                     throw AuthError.unknown("Authentification réussie mais aucun token reçu")
                 }
             } else {
-                // Handle error status codes
                 let errorMessage = String(data: responseData, encoding: .utf8) ?? "Erreur inconnue"
                 throw AuthError.unknown("Erreur serveur (\(statusCode)): \(errorMessage)")
             }
@@ -204,33 +190,26 @@ class AuthService: ObservableObject {
         }
     }
     
-    // TODO : Check if the logout function works properly
-    /// Log out the current user and clear session data
+    /// Déconnecte l'utilisateur
     func logout() {
-        // Clear memory state
         currentUser = nil
         isAuthenticated = false
         
-        // Clear API service token - MUST happen first
         apiService.setSecurityToken(nil)
         
-        // Cancel expiration timer
         tokenExpirationTimer?.invalidate()
         tokenExpirationTimer = nil
         
-        // Clear storage
         UserDefaults.standard.removeObject(forKey: tokenKey)
         UserDefaults.standard.removeObject(forKey: userKey)
         UserDefaults.standard.removeObject(forKey: tokenExpirationKey)
         
-        // Force cache cleanup
         URLCache.shared.removeAllCachedResponses()
     }
     
-    /// Extract a cookie value from response headers
+    /// Extrait un cookie des en-têtes HTTP
     private func extractCookie(named cookieName: String, from headerFields: [AnyHashable: Any]) -> String? {
         if let cookiesStr = headerFields["Set-Cookie"] as? String {
-            // Handle single cookie string
             if cookiesStr.contains("\(cookieName)=") {
                 let components = cookiesStr.components(separatedBy: ";")
                 if let tokenComponent = components.first(where: { $0.contains("\(cookieName)=") }) {
@@ -242,7 +221,6 @@ class AuthService: ObservableObject {
             }
             return nil
         } else if let cookies = headerFields["Set-Cookie"] as? [String] {
-            // Handle array of cookies
             for cookie in cookies {
                 if cookie.contains("\(cookieName)=") {
                     let components = cookie.components(separatedBy: ";")
@@ -258,9 +236,8 @@ class AuthService: ObservableObject {
         return nil
     }
     
-    /// Extract expiration from JWT
+    /// Extrait la date d'expiration d'un token JWT
     private func extractTokenExpiration(from token: String) -> Date? {
-        // JWT token format: header.payload.signature
         let parts = token.components(separatedBy: ".")
         
         guard parts.count == 3,
@@ -270,17 +247,15 @@ class AuthService: ObservableObject {
             return nil
         }
         
-        // JWT exp is in seconds since epoch
         return Date(timeIntervalSince1970: expTimestamp)
     }
     
-    /// Base64Url decode helper
+    /// Décode une chaîne Base64Url
     private func base64UrlDecode(_ value: String) -> Data? {
         var base64 = value
             .replacingOccurrences(of: "-", with: "+")
             .replacingOccurrences(of: "_", with: "/")
         
-        // Add padding if needed
         while base64.count % 4 != 0 {
             base64.append("=")
         }
@@ -288,36 +263,29 @@ class AuthService: ObservableObject {
         return Data(base64Encoded: base64)
     }
     
-    /// Start expiration timer
+    /// Démarre le timer d'expiration du token
     private func startExpirationTimer(expiryDate: Date) {
-        // Cancel existing timer if any
         tokenExpirationTimer?.invalidate()
         
         let timeInterval = expiryDate.timeIntervalSinceNow
         if timeInterval > 0 {
-            // Schedule timer only if expiration is in the future
             tokenExpirationTimer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: false) { [weak self] _ in
                 DispatchQueue.main.async {
                     self?.handleTokenExpiration()
                 }
             }
         } else {
-            // Token already expired
             handleTokenExpiration()
         }
     }
     
-    /// Handle token expiration
+    /// Gère l'expiration d'un token
     private func handleTokenExpiration() {
-        // Log out and notify user
         logout()
         NotificationCenter.default.post(name: NSNotification.Name("TokenExpired"), object: nil)
-        
-        // You can also show an alert or notification here
-        print("Authentication token expired. Please log in again.")
     }
     
-    /// Check token validity
+    /// Vérifie si le token actuel est valide
     func isTokenValid() -> Bool {
         guard isAuthenticated, 
               let expirationDate = tokenExpirationDate else {

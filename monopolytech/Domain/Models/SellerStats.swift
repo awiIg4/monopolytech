@@ -7,7 +7,7 @@
 
 import Foundation
 
-// Ajouter le protocole Equatable
+/// Modèle représentant les statistiques d'un vendeur
 struct SellerStats: Equatable {
     // Statistiques globales (toutes sessions)
     let totalRevenueAllSessions: Double
@@ -24,7 +24,7 @@ struct SellerStats: Equatable {
     let stockGames: [Game]
     let recuperableGames: [Game]
     
-    // Pour la prévisualisation et les tests
+    /// Statistiques exemple pour les prévisualisations et tests
     static let placeholder = SellerStats(
         totalRevenueAllSessions: 500.0,
         totalAmountDue: 250.0,
@@ -37,7 +37,7 @@ struct SellerStats: Equatable {
         recuperableGames: [Game.placeholder, Game.placeholder, Game.placeholder]
     )
     
-    // État vide pour les placeholders
+    /// Statistiques vides pour les états d'erreur ou d'initialisation
     static let empty = SellerStats(
         totalRevenueAllSessions: 0.0,
         totalAmountDue: 0.0,

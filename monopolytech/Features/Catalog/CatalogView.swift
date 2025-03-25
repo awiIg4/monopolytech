@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Vue principale du catalogue présentant la liste des jeux disponibles
 struct CatalogView: View {
     @StateObject private var viewModel = CatalogViewModel()
     @State private var searchText = ""
@@ -23,7 +24,7 @@ struct CatalogView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                // Search and filter section
+                // Section de recherche et filtres
                 VStack(spacing: 8) {
                     // Barre de recherche améliorée
                     HStack {
@@ -64,7 +65,7 @@ struct CatalogView: View {
                     )
                     .padding(.horizontal)
                     
-                    // Price filter button
+                    // Bouton de filtre par prix
                     Button(action: { showPriceFilter.toggle() }) {
                         HStack {
                             Image(systemName: "slider.horizontal.3")
@@ -74,7 +75,7 @@ struct CatalogView: View {
                     }
                     .padding(.horizontal)
                     
-                    // Price filter view
+                    // Vue du filtre de prix
                     if showPriceFilter {
                         VStack(spacing: 12) {
                             HStack {
@@ -114,7 +115,7 @@ struct CatalogView: View {
                 .background(Color.white)
                 .shadow(color: .gray.opacity(0.2), radius: 2, y: 2)
                 
-                // Games grid or loading indicator
+                // Grille de jeux ou indicateur de chargement
                 if viewModel.isLoading {
                     Spacer()
                     ProgressView("Chargement des jeux...")
@@ -197,6 +198,7 @@ struct CatalogView: View {
         }
     }
     
+    /// Exécute la recherche en fonction du texte saisi
     private func performSearch() {
         if searchText.isEmpty {
             viewModel.loadGames(minPrice: minPrice, maxPrice: maxPrice)
@@ -205,6 +207,7 @@ struct CatalogView: View {
         }
     }
     
+    /// Met à jour la recherche en fonction des filtres de prix
     private func updateSearch() {
         if searchText.isEmpty {
             viewModel.loadGames(minPrice: minPrice, maxPrice: maxPrice)

@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Vue pour la gestion des vendeurs existants
 struct SellerManageView: View {
     @StateObject private var viewModel = SellerManageViewModel()
     
@@ -89,9 +90,9 @@ struct SellerManageView: View {
     }
 }
 
-/// Vue de détail d'un vendeur
+/// Vue de détail d'un vendeur avec ses informations et statistiques
 struct SellerDetailCard: View {
-    let seller: User  // Utilise User au lieu de Seller
+    let seller: User
     let stats: SellerStats?
     
     var body: some View {
@@ -120,7 +121,7 @@ struct SellerDetailCard: View {
             .background(Color(.systemGray6))
             .cornerRadius(10)
             
-            // Statistiques
+            // Statistiques si disponibles
             if let stats = stats {
                 Text("Statistiques")
                     .font(.headline)

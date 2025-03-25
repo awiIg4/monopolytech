@@ -7,11 +7,12 @@
 
 import Foundation
 
+/// Modèle représentant le bilan financier d'une session
 struct BilanModel: Codable {
     let session: BilanSession
     let bilan: BilanDetails
     
-    // Structure simplifiée de Session uniquement pour le bilan
+    /// Structure simplifiée de Session uniquement pour le bilan
     struct BilanSession: Codable {
         let id: Int
         let date_debut: String

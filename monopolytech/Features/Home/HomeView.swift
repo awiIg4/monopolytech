@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Vue d'accueil principale de l'application
 struct HomeView: View {
     @EnvironmentObject private var authService: AuthService
     @State private var showLogoutAlert = false  // Pour contrôler l'affichage de l'alerte
@@ -73,7 +74,7 @@ struct HomeView: View {
                 
                 // Boutons de navigation avec nouveau style
                 VStack(spacing: 15) {
-                    // About Button
+                    // Bouton À propos
                     NavigationLink(destination: AboutView()) {
                         HStack {
                             Image(systemName: "info.circle.fill")
@@ -94,28 +95,7 @@ struct HomeView: View {
                         .shadow(color: .blue.opacity(0.3), radius: 5)
                     }
                     
-                    // API Test Button
-                    NavigationLink(destination: APITestView()) {
-                        HStack {
-                            Image(systemName: "antenna.radiowaves.left.and.right.circle.fill")
-                            Text("Tester l'API")
-                                .fontWeight(.semibold)
-                        }
-                        .frame(minWidth: 250)
-                        .padding()
-                        .background(
-                            LinearGradient(
-                                colors: [.gray, .gray.opacity(0.8)],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .foregroundColor(.white)
-                        .cornerRadius(15)
-                        .shadow(color: .gray.opacity(0.3), radius: 5)
-                    }
-                    
-                    // Logout Button
+                    // Bouton de déconnexion
                     if authService.isAuthenticated {
                         Button(action: {
                             showLogoutAlert = true  // Afficher l'alerte au lieu de se déconnecter directement
@@ -139,43 +119,7 @@ struct HomeView: View {
                             .shadow(color: .red.opacity(0.3), radius: 5)
                         }
                     }
-                    
-                    // TempLogin Button - Nouveau bouton
-                    Button(action: {
-                        // D'abord déconnexion si déjà connecté
-                        if authService.isAuthenticated {
-                            authService.logout()
-                        }
-                        
-                        // Puis connexion en tant qu'admin
-                        Task {
-                            do {
-                                try await authService.login(email: "admin@example.com", password: "admin123", userType: "admin")
-                            } catch {
-                                print("Erreur de connexion temporaire: \(error)")
-                            }
-                        }
-                    }) {
-                        HStack {
-                            Image(systemName: "person.fill.badge.plus")
-                            Text("TempLogin (Admin)")
-                                .fontWeight(.semibold)
-                        }
-                        .frame(minWidth: 250)
-                        .padding()
-                        .background(
-                            LinearGradient(
-                                colors: [.purple, .purple.opacity(0.8)],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .foregroundColor(.white)
-                        .cornerRadius(15)
-                        .shadow(color: .purple.opacity(0.3), radius: 5)
-                    }
                 }
-                .padding(.top, 20)
                 
                 Spacer()
                 
@@ -222,6 +166,7 @@ struct HomeView: View {
     }
 }
 
+/// Vue présentant les informations sur l'application
 struct AboutView: View {
     var body: some View {
         ScrollView {
@@ -268,6 +213,7 @@ struct AboutView: View {
     }
 }
 
+/// Composant de section d'information pour la vue À propos
 struct InfoSection: View {
     let title: String
     let content: String

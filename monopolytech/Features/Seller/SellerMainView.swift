@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Vue principale pour la gestion des vendeurs, avec onglets pour créer et gérer
 struct SellerMainView: View {
     @State private var selectedTab = 0
     @Environment(\.presentationMode) var presentationMode
