@@ -319,10 +319,12 @@ class SellerService {
                 
                 if (200...299).contains(amountDueStatusCode) {
                     struct AmountDueResponse: Decodable {
-                        let sommedue: Double
+                        let sommedue: String // Changé de Double à String pour correspondre au JSON
                     }
                     let response = try JSONDecoder().decode(AmountDueResponse.self, from: amountDueData)
-                    amountDue = response.sommedue
+                    // Convertir la chaîne en Double après décodage
+                    amountDue = Double(response.sommedue.replacingOccurrences(of: ",", with: ".")) ?? 0.0
+                    print("📊 DEBUG - Amount due: \(amountDue)")
                 }
             } catch {
                 print("⚠️ Impossible de récupérer la somme due: \(error)")
