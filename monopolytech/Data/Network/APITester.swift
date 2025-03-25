@@ -80,20 +80,6 @@ class APITester {
         }
     }
     
-    // Cette méthode peut être décommentée une fois que vous avez un CategoryService
-    /*
-    func testFetchCategories() async {
-        do {
-            print("📱 Testing fetchCategories()...")
-            let categories = try await CategoryService.shared.fetchCategories()
-            print("✅ Successfully fetched \(categories.count) categories")
-            print("Categories: \(categories.map { $0.name })")
-        } catch {
-            print("❌ Error fetching categories: \(error.localizedDescription)")
-        }
-    }
-    */
-    
     // Exécute tous les tests disponibles
     func runAllTests() async {
         await testFetchGames()
@@ -101,8 +87,5 @@ class APITester {
         await testFetchGameDetails()
         print("\n-------------------\n")
         await testGetUsers()
-        // Décommentez quand CategoryService sera implémenté
-        // print("\n-------------------\n")
-        // await testFetchCategories()
     }
 }
