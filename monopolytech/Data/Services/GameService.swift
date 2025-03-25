@@ -412,29 +412,36 @@ class GameService {
     /// - Returns: Réponse de succès
     /// - Throws: APIError si la requête échoue
     func recoverGames(gameIds: [String]) async throws -> String {
+        // Convertir en Int exactement comme dans le front
         let intIds = gameIds.compactMap { Int($0) }
         
+        // Utiliser exactement la même structure de payload que dans le front
         let payload: [String: Any] = [
             "jeux_a_recup": intIds
         ]
         
         do {
+            print("🎮 Récupération des jeux: \(intIds)")
             let jsonData = try JSONSerialization.data(withJSONObject: payload)
             
             let (responseData, statusCode) = try await apiService.request(
-                "\(gameEndpoint)/recuperer",
+                "\(gameEndpoint)recuperer",
                 httpMethod: "POST",
                 requestBody: jsonData,
                 returnRawResponse: true
             )
             
+            // Afficher la réponse brute
+            let responseString = String(data: responseData, encoding: .utf8) ?? "Données illisibles"
+            print("🎮 RECOVER GAMES RESPONSE [Code: \(statusCode)]:\n\(responseString)")
+            
             if (200...299).contains(statusCode) {
                 return "Jeux récupérés avec succès"
             } else {
-                let errorMessage = String(data: responseData, encoding: .utf8) ?? "Erreur inconnue"
-                throw APIError.serverError(statusCode, errorMessage)
+                throw APIError.serverError(statusCode, responseString)
             }
         } catch {
+            print("❌ Erreur lors de la récupération des jeux: \(error)")
             throw error
         }
     }
@@ -447,13 +454,88 @@ class GameService {
     /// - Throws: APIError si la requête échoue
     func getSellerRecuperableGames(sellerId: String, sessionId: String) async throws -> [Game] {
         do {
-            struct RecuperableGamesResponse: Decodable {
-                let jeux: [Game]
-            }
+            print("🎮 Récupération des jeux récupérables - vendeur: \(sellerId), session: \(sessionId)")
             
-            let response: RecuperableGamesResponse = try await apiService.request("\(gameEndpoint)/a_recuperer?vendeur=\(sellerId)&session=\(sessionId)")
-            return response.jeux
+            let URL = "\(gameEndpoint)a_recuperer?vendeur=\(sellerId)&session=\(sessionId)"
+            print("URL: \(URL)")
+            
+            let (responseData, statusCode) = try await apiService.request(
+                "\(gameEndpoint)a_recuperer?vendeur=\(sellerId)&session=\(sessionId)",
+                returnRawResponse: true
+            )
+            
+            let responseString = String(data: responseData, encoding: .utf8) ?? "Données illisibles"
+            print("🎮 RECUPERABLE GAMES RESPONSE [Code: \(statusCode)]:\n\(responseString)")
+            
+            if (200...299).contains(statusCode) {
+                struct GameDTO: Decodable {
+                    let id: Int
+                    let licence_id: Int
+                    let prix: String
+                    let statut: String
+                    let depot_id: Int
+                    let createdAt: String?
+                    let updatedAt: String?
+                    let depot: DepotDTO
+                    
+                    struct DepotDTO: Decodable {
+                        let id: Int
+                        let vendeur_id: Int
+                        let session_id: Int
+                        let frais_depot: String
+                        let date_depot: String
+                        let vendeur: VendeurDTO
+                        let session: SessionDTO
+                        
+                        struct VendeurDTO: Decodable {
+                            let id: Int
+                        }
+                        
+                        struct SessionDTO: Decodable {
+                            let id: Int
+                            let date_debut: String
+                            let date_fin: String
+                            let valeur_commission: Int
+                            let commission_en_pourcentage: Bool
+                            let valeur_frais_depot: Int
+                            let frais_depot_en_pourcentage: Bool
+                        }
+                    }
+                    
+                    func toGame() -> Game {
+                        let dateFormatter = ISO8601DateFormatter()
+                        let createdDate = createdAt.flatMap { dateFormatter.date(from: $0) }
+                        let updatedDate = updatedAt.flatMap { dateFormatter.date(from: $0) }
+                        
+                        return Game(
+                            id: String(id),
+                            licence_id: String(licence_id),
+                            licence_name: "",
+                            prix: Double(prix.replacingOccurrences(of: ",", with: ".")) ?? 0.0,
+                            prix_max: 0.0,
+                            quantite: 1,
+                            editeur_nom: "",
+                            statut: statut,
+                            depot_id: depot_id,
+                            createdAt: createdDate,
+                            updatedAt: updatedDate
+                        )
+                    }
+                }
+                
+                // LA CORRECTION EST ICI: Décoder directement le tableau JSON
+                // Au lieu de rechercher un objet avec une propriété "jeux"
+                let gamesDTO = try JSONDecoder().decode([GameDTO].self, from: responseData)
+                return gamesDTO.map { $0.toGame() }
+            } else {
+                print("⚠️ Pas de jeux récupérables trouvés (code \(statusCode))")
+                return []
+            }
         } catch {
+            print("❌ Erreur lors de la récupération des jeux récupérables: \(error)")
+            if let apiError = error as? APIError, case .serverError(404, _) = apiError {
+                return []
+            }
             throw error
         }
     }
