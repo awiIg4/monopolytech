@@ -17,6 +17,8 @@ struct ManageView: View {
     @State private var showSessionView = false
     @State private var showStockToSaleView = false
     @State private var showGameSaleView = false
+    @State private var showSellerStatsView = false
+    @State private var showBilanView = false
     
     init() {
         self.viewModel = ManageViewModel()
@@ -68,6 +70,12 @@ struct ManageView: View {
             .sheet(isPresented: $showGameSaleView) {
                 GameSaleView()
             }
+            .sheet(isPresented: $showSellerStatsView) {
+                SellerStatsView()
+            }
+            .sheet(isPresented: $showBilanView) {
+                BilanView()
+            }
         }
     }
     
@@ -77,6 +85,8 @@ struct ManageView: View {
             showDepositView = true
         case "seller":
             showSellerView = true
+        case "seller/stats":
+            showSellerStatsView = true
         case "manager/create":
             showManagerCreationView = true
         case "session/create":
@@ -85,6 +95,8 @@ struct ManageView: View {
             showStockToSaleView = true
         case "game/sale":
             showGameSaleView = true
+        case "bilan":
+            showBilanView = true
         default:
             break
         }
