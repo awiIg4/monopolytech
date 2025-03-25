@@ -412,29 +412,36 @@ class GameService {
     /// - Returns: Réponse de succès
     /// - Throws: APIError si la requête échoue
     func recoverGames(gameIds: [String]) async throws -> String {
+        // Convertir en Int exactement comme dans le front
         let intIds = gameIds.compactMap { Int($0) }
         
+        // Utiliser exactement la même structure de payload que dans le front
         let payload: [String: Any] = [
             "jeux_a_recup": intIds
         ]
         
         do {
+            print("🎮 Récupération des jeux: \(intIds)")
             let jsonData = try JSONSerialization.data(withJSONObject: payload)
             
             let (responseData, statusCode) = try await apiService.request(
-                "\(gameEndpoint)/recuperer",
+                "\(gameEndpoint)recuperer",
                 httpMethod: "POST",
                 requestBody: jsonData,
                 returnRawResponse: true
             )
             
+            // Afficher la réponse brute
+            let responseString = String(data: responseData, encoding: .utf8) ?? "Données illisibles"
+            print("🎮 RECOVER GAMES RESPONSE [Code: \(statusCode)]:\n\(responseString)")
+            
             if (200...299).contains(statusCode) {
                 return "Jeux récupérés avec succès"
             } else {
-                let errorMessage = String(data: responseData, encoding: .utf8) ?? "Erreur inconnue"
-                throw APIError.serverError(statusCode, errorMessage)
+                throw APIError.serverError(statusCode, responseString)
             }
         } catch {
+            print("❌ Erreur lors de la récupération des jeux: \(error)")
             throw error
         }
     }
@@ -447,13 +454,75 @@ class GameService {
     /// - Throws: APIError si la requête échoue
     func getSellerRecuperableGames(sellerId: String, sessionId: String) async throws -> [Game] {
         do {
-            struct RecuperableGamesResponse: Decodable {
-                let jeux: [Game]
-            }
+            // Log pour débogage
+            print("🎮 Récupération des jeux récupérables - vendeur: \(sellerId), session: \(sessionId)")
             
-            let response: RecuperableGamesResponse = try await apiService.request("\(gameEndpoint)/a_recuperer?vendeur=\(sellerId)&session=\(sessionId)")
-            return response.jeux
+            let URL = "\(gameEndpoint)a_recuperer?vendeur=\(sellerId)&session=\(sessionId)"
+
+            print("URL: \(URL)")
+            
+            
+            // CORRECTION: Ajouter un slash avant "a_recuperer" 
+            let (responseData, statusCode) = try await apiService.request(
+                "\(gameEndpoint)a_recuperer?vendeur=\(sellerId)&session=\(sessionId)",
+                returnRawResponse: true
+            )
+            
+            // Afficher la réponse brute
+            let responseString = String(data: responseData, encoding: .utf8) ?? "Données illisibles"
+            print("🎮 RECUPERABLE GAMES RESPONSE [Code: \(statusCode)]:\n\(responseString)")
+            
+            // Si réponse 200-299, essayer de décoder
+            if (200...299).contains(statusCode) {
+                // Structure attendue selon l'API
+                struct RecuperableGamesResponse: Decodable {
+                    let jeux: [GameDTO]
+                }
+                
+                struct GameDTO: Decodable {
+                    let id: Int
+                    let licence_id: Int
+                    let prix: String
+                    let statut: String
+                    let depot_id: Int
+                    let createdAt: String?
+                    let updatedAt: String?
+                    
+                    func toGame() -> Game {
+                        // Conversion des dates si présentes
+                        let dateFormatter = ISO8601DateFormatter()
+                        let createdDate = createdAt.flatMap { dateFormatter.date(from: $0) }
+                        let updatedDate = updatedAt.flatMap { dateFormatter.date(from: $0) }
+                        
+                        return Game(
+                            id: String(id),
+                            licence_id: String(licence_id),
+                            licence_name: "",  // Champ obligatoire, utiliser chaîne vide
+                            prix: Double(prix.replacingOccurrences(of: ",", with: ".")) ?? 0.0,
+                            prix_max: 0.0,
+                            quantite: 1,
+                            editeur_nom: "",  // Champ obligatoire, utiliser chaîne vide
+                            statut: statut,
+                            depot_id: depot_id,
+                            createdAt: createdDate,
+                            updatedAt: updatedDate
+                        )
+                    }
+                }
+                
+                let response = try JSONDecoder().decode(RecuperableGamesResponse.self, from: responseData)
+                return response.jeux.map { $0.toGame() }
+            } else {
+                // En cas d'erreur 404 ou autre, retourner un tableau vide
+                print("⚠️ Pas de jeux récupérables trouvés (code \(statusCode))")
+                return []
+            }
         } catch {
+            print("❌ Erreur lors de la récupération des jeux récupérables: \(error)")
+            // Si c'est une 404, on retourne simplement un tableau vide
+            if let apiError = error as? APIError, case .serverError(404, _) = apiError {
+                return []
+            }
             throw error
         }
     }

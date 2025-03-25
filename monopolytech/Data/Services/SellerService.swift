@@ -299,20 +299,10 @@ class SellerService {
             // 3. Essayer de récupérer les jeux à récupérer (gestion de l'erreur 404)
             print("📊 DEBUG - getSellerStats - ÉTAPE 3: Récupération des jeux à récupérer")
             do {
-                let (recuperableData, recuperableStatusCode) = try await apiService.request(
-                    "\(gameEndpoint)/a_recuperer?vendeur=\(sellerId)&session=\(sessionId)",
-                    returnRawResponse: true
+                recuperableGames = try await gameService.getSellerRecuperableGames(
+                    sellerId: sellerId, 
+                    sessionId: sessionId
                 )
-                let recuperableResponseString = String(data: recuperableData, encoding: .utf8) ?? "Données illisibles"
-                print("📊 DEBUG - RECUPERABLE GAMES RESPONSE [Code: \(recuperableStatusCode)]:\n\(recuperableResponseString)")
-                
-                if (200...299).contains(recuperableStatusCode) {
-                    struct RecuperableGamesResponse: Decodable {
-                        let jeux: [GameDTO]
-                    }
-                    let response = try JSONDecoder().decode(RecuperableGamesResponse.self, from: recuperableData)
-                    recuperableGames = response.jeux.map { $0.toGame() }
-                }
             } catch {
                 print("⚠️ Impossible de récupérer les jeux à récupérer: \(error)")
             }
@@ -411,6 +401,100 @@ class SellerService {
                 throw APIError.serverError(statusCode, errorMessage)
             }
         } catch {
+            throw error
+        }
+    }
+
+    func getSellerRecuperableGames(sellerId: String, sessionId: String) async throws -> [Game] {
+        do {
+            // Log pour débogage
+            print("🎮 Récupération des jeux récupérables - vendeur: \(sellerId), session: \(sessionId)")
+            
+            let URL = "\(gameEndpoint)a_recuperer?vendeur=\(sellerId)&session=\(sessionId)"
+            print("URL: \(URL)")
+            
+            let (responseData, statusCode) = try await apiService.request(
+                "\(gameEndpoint)a_recuperer?vendeur=\(sellerId)&session=\(sessionId)",
+                returnRawResponse: true
+            )
+            
+            // Afficher la réponse brute
+            let responseString = String(data: responseData, encoding: .utf8) ?? "Données illisibles"
+            print("🎮 RECUPERABLE GAMES RESPONSE [Code: \(statusCode)]:\n\(responseString)")
+            
+            // Si réponse 200-299, essayer de décoder
+            if (200...299).contains(statusCode) {
+                // Structure pour le format de jeu du backend
+                struct GameDTO: Decodable {
+                    let id: Int
+                    let licence_id: Int
+                    let prix: String
+                    let statut: String
+                    let depot_id: Int
+                    let createdAt: String?
+                    let updatedAt: String?
+                    let depot: DepotDTO
+                    
+                    struct DepotDTO: Decodable {
+                        let id: Int
+                        let vendeur_id: Int
+                        let session_id: Int
+                        let frais_depot: String
+                        let date_depot: String
+                        let vendeur: VendeurDTO
+                        let session: SessionDTO
+                        
+                        struct VendeurDTO: Decodable {
+                            let id: Int
+                        }
+                        
+                        struct SessionDTO: Decodable {
+                            let id: Int
+                            let date_debut: String
+                            let date_fin: String
+                            let valeur_commission: Int
+                            let commission_en_pourcentage: Bool
+                            let valeur_frais_depot: Int
+                            let frais_depot_en_pourcentage: Bool
+                        }
+                    }
+                    
+                    func toGame() -> Game {
+                        // Conversion des dates si présentes
+                        let dateFormatter = ISO8601DateFormatter()
+                        let createdDate = createdAt.flatMap { dateFormatter.date(from: $0) }
+                        let updatedDate = updatedAt.flatMap { dateFormatter.date(from: $0) }
+                        
+                        return Game(
+                            id: String(id),
+                            licence_id: String(licence_id),
+                            licence_name: "",  // Champ obligatoire, utiliser chaîne vide
+                            prix: Double(prix.replacingOccurrences(of: ",", with: ".")) ?? 0.0,
+                            prix_max: 0.0,
+                            quantite: 1,
+                            editeur_nom: "",  // Champ obligatoire, utiliser chaîne vide
+                            statut: statut,
+                            depot_id: depot_id,
+                            createdAt: createdDate,
+                            updatedAt: updatedDate
+                        )
+                    }
+                }
+                
+                // CORRECTION: Décoder directement un tableau de GameDTO plutôt qu'un objet avec une propriété "jeux"
+                let gamesDTO = try JSONDecoder().decode([GameDTO].self, from: responseData)
+                return gamesDTO.map { $0.toGame() }
+            } else {
+                // En cas d'erreur 404 ou autre, retourner un tableau vide
+                print("⚠️ Pas de jeux récupérables trouvés (code \(statusCode))")
+                return []
+            }
+        } catch {
+            print("❌ Erreur lors de la récupération des jeux récupérables: \(error)")
+            // Si c'est une 404, on retourne simplement un tableau vide
+            if let apiError = error as? APIError, case .serverError(404, _) = apiError {
+                return []
+            }
             throw error
         }
     }
