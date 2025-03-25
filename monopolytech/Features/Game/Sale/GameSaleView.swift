@@ -83,10 +83,8 @@ struct GameSaleView: View {
                                             .font(.body).bold()
                                         Text(buyer.email)
                                             .font(.caption)
-                                        if let tel = buyer.telephone {
-                                            Text(tel)
+                                        Text(buyer.telephone)
                                                 .font(.caption)
-                                        }
                                     }
                                     
                                     Spacer()
