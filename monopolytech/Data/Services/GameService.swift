@@ -454,31 +454,20 @@ class GameService {
     /// - Throws: APIError si la requête échoue
     func getSellerRecuperableGames(sellerId: String, sessionId: String) async throws -> [Game] {
         do {
-            // Log pour débogage
             print("🎮 Récupération des jeux récupérables - vendeur: \(sellerId), session: \(sessionId)")
             
             let URL = "\(gameEndpoint)a_recuperer?vendeur=\(sellerId)&session=\(sessionId)"
-
             print("URL: \(URL)")
             
-            
-            // CORRECTION: Ajouter un slash avant "a_recuperer" 
             let (responseData, statusCode) = try await apiService.request(
                 "\(gameEndpoint)a_recuperer?vendeur=\(sellerId)&session=\(sessionId)",
                 returnRawResponse: true
             )
             
-            // Afficher la réponse brute
             let responseString = String(data: responseData, encoding: .utf8) ?? "Données illisibles"
             print("🎮 RECUPERABLE GAMES RESPONSE [Code: \(statusCode)]:\n\(responseString)")
             
-            // Si réponse 200-299, essayer de décoder
             if (200...299).contains(statusCode) {
-                // Structure attendue selon l'API
-                struct RecuperableGamesResponse: Decodable {
-                    let jeux: [GameDTO]
-                }
-                
                 struct GameDTO: Decodable {
                     let id: Int
                     let licence_id: Int
@@ -487,9 +476,33 @@ class GameService {
                     let depot_id: Int
                     let createdAt: String?
                     let updatedAt: String?
+                    let depot: DepotDTO
+                    
+                    struct DepotDTO: Decodable {
+                        let id: Int
+                        let vendeur_id: Int
+                        let session_id: Int
+                        let frais_depot: String
+                        let date_depot: String
+                        let vendeur: VendeurDTO
+                        let session: SessionDTO
+                        
+                        struct VendeurDTO: Decodable {
+                            let id: Int
+                        }
+                        
+                        struct SessionDTO: Decodable {
+                            let id: Int
+                            let date_debut: String
+                            let date_fin: String
+                            let valeur_commission: Int
+                            let commission_en_pourcentage: Bool
+                            let valeur_frais_depot: Int
+                            let frais_depot_en_pourcentage: Bool
+                        }
+                    }
                     
                     func toGame() -> Game {
-                        // Conversion des dates si présentes
                         let dateFormatter = ISO8601DateFormatter()
                         let createdDate = createdAt.flatMap { dateFormatter.date(from: $0) }
                         let updatedDate = updatedAt.flatMap { dateFormatter.date(from: $0) }
@@ -497,11 +510,11 @@ class GameService {
                         return Game(
                             id: String(id),
                             licence_id: String(licence_id),
-                            licence_name: "",  // Champ obligatoire, utiliser chaîne vide
+                            licence_name: "",
                             prix: Double(prix.replacingOccurrences(of: ",", with: ".")) ?? 0.0,
                             prix_max: 0.0,
                             quantite: 1,
-                            editeur_nom: "",  // Champ obligatoire, utiliser chaîne vide
+                            editeur_nom: "",
                             statut: statut,
                             depot_id: depot_id,
                             createdAt: createdDate,
@@ -510,16 +523,16 @@ class GameService {
                     }
                 }
                 
-                let response = try JSONDecoder().decode(RecuperableGamesResponse.self, from: responseData)
-                return response.jeux.map { $0.toGame() }
+                // LA CORRECTION EST ICI: Décoder directement le tableau JSON
+                // Au lieu de rechercher un objet avec une propriété "jeux"
+                let gamesDTO = try JSONDecoder().decode([GameDTO].self, from: responseData)
+                return gamesDTO.map { $0.toGame() }
             } else {
-                // En cas d'erreur 404 ou autre, retourner un tableau vide
                 print("⚠️ Pas de jeux récupérables trouvés (code \(statusCode))")
                 return []
             }
         } catch {
             print("❌ Erreur lors de la récupération des jeux récupérables: \(error)")
-            // Si c'est une 404, on retourne simplement un tableau vide
             if let apiError = error as? APIError, case .serverError(404, _) = apiError {
                 return []
             }
