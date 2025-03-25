@@ -133,6 +133,7 @@
 		DFA9A56F2D8C824A00BCE8CA /* CommonUIComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonUIComponents.swift; sourceTree = "<group>"; };
 		DFA9A5732D8DC4D400BCE8CA /* GameStockToSaleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStockToSaleViewModel.swift; sourceTree = "<group>"; };
 		DFA9A5752D8DC70600BCE8CA /* GameStockToSaleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStockToSaleView.swift; sourceTree = "<group>"; };
+		DFA9A58F2D93364800BCE8CA /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		DFE4914E2D8194EB00A9FA2C /* monopolytech.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = monopolytech.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFE491512D8194EB00A9FA2C /* monopolytechApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = monopolytechApp.swift; sourceTree = "<group>"; };
 		DFE491532D8194EB00A9FA2C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -354,7 +355,6 @@
 			isa = PBXGroup;
 			children = (
 				DFA9A5722D8DC4A300BCE8CA /* StockToSale */,
-				DFA9A5592D8C470E00BCE8CA /* Deposit */,
 			);
 			path = Game;
 			sourceTree = "<group>";
@@ -371,6 +371,7 @@
 		DFE491452D8194EB00A9FA2C = {
 			isa = PBXGroup;
 			children = (
+				DFA9A58F2D93364800BCE8CA /* README.md */,
 				DF7EECE22D8868C300ADACAA /* temp.md */,
 				DFE491502D8194EB00A9FA2C /* monopolytech */,
 				DFE491622D8194ED00A9FA2C /* monopolytechTests */,
