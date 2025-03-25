@@ -127,6 +127,27 @@ class GameSaleViewModel: ObservableObject {
         
         var content = "=== Facture d'Achat ===\n\n"
         
+        // Ajouter les informations de l'acheteur si disponibles
+        if let buyer = self.buyer {
+            content += "🧑 INFORMATIONS ACHETEUR\n"
+            content += "Nom: \(buyer.nom)\n"
+            content += "Email: \(buyer.email)\n"
+            
+            // Ajouter le téléphone si présent
+            if !buyer.telephone.isEmpty {
+                content += "Téléphone: \(buyer.telephone)\n"
+            }
+            
+            // Ajouter l'adresse si présente
+            if let adresse = buyer.adresse, !adresse.isEmpty {
+                content += "Adresse: \(adresse)\n"
+            }
+            
+            content += "\n------------------------------------------\n\n"
+        }
+        
+        content += "📋 DÉTAIL DES ACHATS\n\n"
+        
         for game in result.purchasedGames {
             content += "Jeu : \(game.name)\n"
             content += "Prix : \(String(format: "%.2f", game.price)) €\n"
@@ -149,6 +170,13 @@ class GameSaleViewModel: ObservableObject {
         if result.discount > 0 {
             content += "🏷️ Réduction appliquée : \(String(format: "%.2f", result.discount)) €\n"
         }
+        
+        // Ajouter la date et l'heure de l'achat
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        dateFormatter.locale = Locale(identifier: "fr_FR")
+        content += "\nDate: \(dateFormatter.string(from: Date()))\n"
         
         return content
     }
