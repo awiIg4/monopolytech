@@ -26,7 +26,7 @@ struct BilanView: View {
                         if let bilan = viewModel.bilan {
                             // Informations de session
                             VStack(alignment: .leading, spacing: 10) {
-                                Text("Session Actuelle")
+                                Text("Dernière Session")
                                     .font(.headline)
                                     .padding(.bottom, 5)
                                 
