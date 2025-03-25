@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ManageView: View {
-    @StateObject private var viewModel = ManageViewModel()
+    @ObservedObject private var viewModel: ManageViewModel
     @EnvironmentObject var authService: AuthService
     @State private var selectedItem: ManageItem? = nil
     @State private var showDepositView = false
@@ -16,11 +16,23 @@ struct ManageView: View {
     @State private var showManagerCreationView = false
     @State private var showSessionView = false
     @State private var showStockToSaleView = false
+    @State private var showGameSaleView = false
+    @State private var showLicenseView = false
+    @State private var showEditorView = false
+    @State private var showPromoCodeView = false
+    @State private var showBuyerSheet = false
+    @State private var showSellerStatsView = false
+    @State private var showBilanView = false
+    
+    init() {
+        self.viewModel = ManageViewModel()
+    }
     
     var body: some View {
         NavigationView {
             List {
-                ForEach(viewModel.manageItems) { item in
+                let items = viewModel.manageItems
+                ForEach(items) { item in
                     Button(action: {
                         selectedItem = item
                         handleAction(for: item)
@@ -55,8 +67,29 @@ struct ManageView: View {
             }
             .sheet(isPresented: $showSessionView) {
                 SessionView()
+            }
             .sheet(isPresented: $showStockToSaleView) {
                 GameStockToSaleView()
+            }
+            .sheet(isPresented: $showGameSaleView) {
+                GameSaleView()
+            }
+            .sheet(isPresented: $showLicenseView) {
+                LicenseView()
+            }
+            .sheet(isPresented: $showEditorView) {
+                EditorView()
+            }
+            .sheet(isPresented: $showPromoCodeView) {
+                PromoCodeView()
+            }
+            .sheet(isPresented: $showBuyerSheet) {
+                BuyerView()
+            .sheet(isPresented: $showSellerStatsView) {
+                SellerStatsView()
+            }
+            .sheet(isPresented: $showBilanView) {
+                BilanView()
             }
         }
     }
@@ -67,12 +100,26 @@ struct ManageView: View {
             showDepositView = true
         case "seller":
             showSellerView = true
+        case "seller/stats":
+            showSellerStatsView = true
         case "manager/create":
             showManagerCreationView = true
         case "session/create":
             showSessionView = true
         case "game/stockToSale":
             showStockToSaleView = true
+        case "game/sale":
+            showGameSaleView = true
+        case "license/manage":
+            showLicenseView = true
+        case "editor/manage":
+            showEditorView = true
+        case "code-promo":
+            showPromoCodeView = true
+        case "buyer/create":
+            showBuyerSheet = true
+        case "bilan":
+            showBilanView = true
         default:
             break
         }
@@ -86,7 +133,7 @@ struct ManageView: View {
         case "buyer/create": return "person.badge.plus"
         case "manager/create": return "person.2.fill"
         case "session/create": return "calendar.badge.plus"
-        case "license/create": return "doc.badge.plus"
+        case "license/manage": return "doc.badge.plus"
         case "editor/create": return "building.2.fill"
         case "game/stockToSale": return "arrow.right.square.fill"
         case "code-promo": return "tag.fill"
@@ -94,11 +141,4 @@ struct ManageView: View {
         default: return "questionmark.circle.fill"
         }
     }
-}
-
-// Maintenir cette définition ici uniquement
-struct ManageItem: Identifiable {
-    let id = UUID()
-    let label: String
-    let route: String
 }

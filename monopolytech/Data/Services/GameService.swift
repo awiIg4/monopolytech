@@ -263,4 +263,280 @@ class GameService {
             throw APIError.networkError(error)
         }
     }
+
+    /// Achète des jeux
+    /// - Parameters:
+    ///   - gameIds: Liste d'IDs des jeux à acheter
+    ///   - promoCode: Code promotionnel optionnel
+    ///   - buyerId: ID de l'acheteur optionnel
+    /// - Returns: Résultat de l'achat
+    /// - Throws: APIError si la requête échoue
+    func buyGames(gameIds: [String], promoCode: String? = nil, buyerId: String? = nil) async throws -> GamePurchaseResult {
+        // Convertir les IDs de String à Int
+        let intIds = gameIds.compactMap { Int($0) }
+        
+        // Préparer la requête
+        var payload: [String: Any] = [
+            "jeux_a_acheter": intIds
+        ]
+        
+        if let promoCode = promoCode, !promoCode.isEmpty {
+            payload["code_promo"] = promoCode
+        }
+        
+        if let buyerId = buyerId, !buyerId.isEmpty {
+            payload["acheteur"] = Int(buyerId)
+        }
+        
+        do {
+            // Encoder le payload
+            let jsonData = try JSONSerialization.data(withJSONObject: payload)
+            
+            // Effectuer la requête
+            let (responseData, statusCode) = try await apiService.request(
+                "\(gameEndpoint)acheter",
+                httpMethod: "POST",
+                requestBody: jsonData,
+                returnRawResponse: true
+            )
+            
+            // Vérifier le code de statut
+            if (200...299).contains(statusCode) {
+                do {
+                    if let json = try? JSONSerialization.jsonObject(with: responseData) as? [String: Any] {
+                        // Extraire les informations de base
+                        let totalAmount = json["montant_total"] as? Double ?? 0.0
+                        let reduction = json["reduction"] as? Double ?? 0.0
+                        
+                        var purchasedGames: [PurchasedGame] = []
+                        
+                        // Extraire les achats
+                        if let achats = json["achats"] as? [[String: Any]] {
+                            for achat in achats {
+                                let jeuId = achat["jeu_id"] as? Int ?? 0
+                                let achatId = achat["id"] as? Int ?? 0
+                                let commissionStr = achat["commission"] as? String ?? "0"
+                                let commission = Double(commissionStr.replacingOccurrences(of: ",", with: ".")) ?? 0.0
+                                
+                                // Prix estimé basé sur la commission
+                                let estimatedPrice = max(commission * 5, 10.0)
+                                
+                                // Créer un objet PurchasedGame avec les informations disponibles
+                                let purchasedGame = PurchasedGame(
+                                    id: String(jeuId),
+                                    name: "Jeu #\(jeuId) (Achat #\(achatId))", 
+                                    price: estimatedPrice,
+                                    commission: commission,
+                                    vendorName: nil,
+                                    editorName: nil
+                                )
+                                
+                                purchasedGames.append(purchasedGame)
+                            }
+                        }
+                        
+                        // Calculer un montant total si non fourni
+                        let calculatedTotal = purchasedGames.reduce(0) { $0 + $1.total }
+                        let finalTotal = totalAmount > 0 ? totalAmount : calculatedTotal
+                        
+                        return GamePurchaseResult(
+                            totalAmount: finalTotal,
+                            discount: reduction,
+                            purchasedGames: purchasedGames
+                        )
+                    }
+                    
+                    // Si on ne peut pas traiter le JSON, retourner un résultat minimal
+                    return GamePurchaseResult(
+                        totalAmount: 0,
+                        discount: 0,
+                        purchasedGames: []
+                    )
+                } catch {
+                    return GamePurchaseResult(
+                        totalAmount: 0,
+                        discount: 0,
+                        purchasedGames: []
+                    )
+                }
+            } else {
+                throw APIError.serverError(statusCode, String(data: responseData, encoding: .utf8) ?? "Erreur inconnue")
+            }
+        } catch let error as APIError {
+            throw error
+        } catch {
+            throw APIError.networkError(error)
+        }
+    }
+
+    /// Récupère un jeu par son ID
+    /// - Parameter id: ID du jeu
+    /// - Returns: Le jeu correspondant
+    /// - Throws: APIError si la requête échoue
+    func getGameById(id: String) async throws -> Game {
+        do {
+            let game: Game = try await apiService.request("\(gameEndpoint)search/\(id)")
+            return game
+        } catch {
+            throw error
+        }
+    }
+
+    /// Récupère les jeux en vente
+    /// - Returns: Liste des jeux en vente
+    /// - Throws: APIError si la requête échoue
+    func fetchGamesInSale() async throws -> [Game] {
+        // Utiliser la fonction de recherche avec le statut "en vente"
+        let params = ["statut": "en vente"]
+        return try await searchGames(params: params)
+    }
+
+    // Ajouter cette fonction searchGames qui est référencée mais manquante:
+    /// Rechercher des jeux avec des paramètres spécifiques
+    /// - Parameter params: Paramètres de recherche (dictionnaire clé-valeur)
+    /// - Returns: Liste des jeux correspondant aux critères
+    /// - Throws: APIError si la requête échoue
+    func searchGames(params: [String: String]) async throws -> [Game] {
+        // Construire la chaîne de requête à partir des paramètres
+        let queryItems = params.map { key, value in 
+            "\(key)=\(value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? value)" 
+        }
+        let queryString = queryItems.joined(separator: "&")
+        
+        // Utiliser la méthode fetchGames existante avec la requête construite
+        return try await fetchGames(query: queryString)
+    }
+
+    /// Récupère des jeux (les marque comme récupérés)
+    /// - Parameter gameIds: Liste des IDs de jeux à récupérer
+    /// - Returns: Réponse de succès
+    /// - Throws: APIError si la requête échoue
+    func recoverGames(gameIds: [String]) async throws -> String {
+        // Convertir en Int exactement comme dans le front
+        let intIds = gameIds.compactMap { Int($0) }
+        
+        // Utiliser exactement la même structure de payload que dans le front
+        let payload: [String: Any] = [
+            "jeux_a_recup": intIds
+        ]
+        
+        do {
+            print("🎮 Récupération des jeux: \(intIds)")
+            let jsonData = try JSONSerialization.data(withJSONObject: payload)
+            
+            let (responseData, statusCode) = try await apiService.request(
+                "\(gameEndpoint)recuperer",
+                httpMethod: "POST",
+                requestBody: jsonData,
+                returnRawResponse: true
+            )
+            
+            // Afficher la réponse brute
+            let responseString = String(data: responseData, encoding: .utf8) ?? "Données illisibles"
+            print("🎮 RECOVER GAMES RESPONSE [Code: \(statusCode)]:\n\(responseString)")
+            
+            if (200...299).contains(statusCode) {
+                return "Jeux récupérés avec succès"
+            } else {
+                throw APIError.serverError(statusCode, responseString)
+            }
+        } catch {
+            print("❌ Erreur lors de la récupération des jeux: \(error)")
+            throw error
+        }
+    }
+
+    /// Récupère les jeux récupérables d'un vendeur
+    /// - Parameters:
+    ///   - sellerId: ID du vendeur
+    ///   - sessionId: ID de la session
+    /// - Returns: Liste des jeux récupérables
+    /// - Throws: APIError si la requête échoue
+    func getSellerRecuperableGames(sellerId: String, sessionId: String) async throws -> [Game] {
+        do {
+            print("🎮 Récupération des jeux récupérables - vendeur: \(sellerId), session: \(sessionId)")
+            
+            let URL = "\(gameEndpoint)a_recuperer?vendeur=\(sellerId)&session=\(sessionId)"
+            print("URL: \(URL)")
+            
+            let (responseData, statusCode) = try await apiService.request(
+                "\(gameEndpoint)a_recuperer?vendeur=\(sellerId)&session=\(sessionId)",
+                returnRawResponse: true
+            )
+            
+            let responseString = String(data: responseData, encoding: .utf8) ?? "Données illisibles"
+            print("🎮 RECUPERABLE GAMES RESPONSE [Code: \(statusCode)]:\n\(responseString)")
+            
+            if (200...299).contains(statusCode) {
+                struct GameDTO: Decodable {
+                    let id: Int
+                    let licence_id: Int
+                    let prix: String
+                    let statut: String
+                    let depot_id: Int
+                    let createdAt: String?
+                    let updatedAt: String?
+                    let depot: DepotDTO
+                    
+                    struct DepotDTO: Decodable {
+                        let id: Int
+                        let vendeur_id: Int
+                        let session_id: Int
+                        let frais_depot: String
+                        let date_depot: String
+                        let vendeur: VendeurDTO
+                        let session: SessionDTO
+                        
+                        struct VendeurDTO: Decodable {
+                            let id: Int
+                        }
+                        
+                        struct SessionDTO: Decodable {
+                            let id: Int
+                            let date_debut: String
+                            let date_fin: String
+                            let valeur_commission: Int
+                            let commission_en_pourcentage: Bool
+                            let valeur_frais_depot: Int
+                            let frais_depot_en_pourcentage: Bool
+                        }
+                    }
+                    
+                    func toGame() -> Game {
+                        let dateFormatter = ISO8601DateFormatter()
+                        let createdDate = createdAt.flatMap { dateFormatter.date(from: $0) }
+                        let updatedDate = updatedAt.flatMap { dateFormatter.date(from: $0) }
+                        
+                        return Game(
+                            id: String(id),
+                            licence_id: String(licence_id),
+                            licence_name: "",
+                            prix: Double(prix.replacingOccurrences(of: ",", with: ".")) ?? 0.0,
+                            prix_max: 0.0,
+                            quantite: 1,
+                            editeur_nom: "",
+                            statut: statut,
+                            depot_id: depot_id,
+                            createdAt: createdDate,
+                            updatedAt: updatedDate
+                        )
+                    }
+                }
+                
+                // LA CORRECTION EST ICI: Décoder directement le tableau JSON
+                // Au lieu de rechercher un objet avec une propriété "jeux"
+                let gamesDTO = try JSONDecoder().decode([GameDTO].self, from: responseData)
+                return gamesDTO.map { $0.toGame() }
+            } else {
+                print("⚠️ Pas de jeux récupérables trouvés (code \(statusCode))")
+                return []
+            }
+        } catch {
+            print("❌ Erreur lors de la récupération des jeux récupérables: \(error)")
+            if let apiError = error as? APIError, case .serverError(404, _) = apiError {
+                return []
+            }
+            throw error
+        }
+    }
 }

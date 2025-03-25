@@ -164,3 +164,43 @@ class SessionService {
     }
 }
 
+extension Session {
+    // Convertit un modèle Session en SessionService.Session (pour les API)
+    func toServiceModel() -> SessionService.Session {
+        return SessionService.Session(
+            id: id ?? 0,
+            date_debut: date_debut,
+            date_fin: date_fin,
+            valeur_commission: Int(valeur_commission),  // Conversion de Double à Int
+            commission_en_pourcentage: commission_en_pourcentage,
+            valeur_frais_depot: Int(valeur_frais_depot),  // Conversion de Double à Int
+            frais_depot_en_pourcentage: frais_depot_en_pourcentage,
+            createdAt: nil,  // Utiliser nil si pas disponible
+            updatedAt: nil   // Utiliser nil si pas disponible
+        )
+    }
+}
+
+extension SessionService.Session {
+    // Convertit un SessionService.Session en modèle de domaine Session
+    func toDomainModel() -> Session {
+        return Session(
+            id: id,
+            date_debut: date_debut,
+            date_fin: date_fin,
+            valeur_commission: Double(valeur_commission),  // Conversion de Int à Double
+            commission_en_pourcentage: commission_en_pourcentage,
+            valeur_frais_depot: Double(valeur_frais_depot),  // Conversion de Int à Double
+            frais_depot_en_pourcentage: frais_depot_en_pourcentage
+        )
+    }
+}
+
+extension SessionService {
+    // Récupère toutes les sessions et les convertit en modèles de domaine
+    func getAllSessionsAsDomainModels() async throws -> [monopolytech.Session] {
+        let apiSessions = try await getAllSessions()
+        return apiSessions.map { $0.toDomainModel() }
+    }
+}
+
