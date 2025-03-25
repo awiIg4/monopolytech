@@ -164,6 +164,7 @@
 		DFA9A56F2D8C824A00BCE8CA /* CommonUIComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonUIComponents.swift; sourceTree = "<group>"; };
 		DFA9A5732D8DC4D400BCE8CA /* GameStockToSaleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStockToSaleViewModel.swift; sourceTree = "<group>"; };
 		DFA9A5752D8DC70600BCE8CA /* GameStockToSaleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStockToSaleView.swift; sourceTree = "<group>"; };
+		DFA9A58F2D93364800BCE8CA /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		DFA9A5772D8F092D00BCE8CA /* GamePurchaseResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamePurchaseResultModel.swift; sourceTree = "<group>"; };
 		DFA9A5792D8F095C00BCE8CA /* BuyerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyerService.swift; sourceTree = "<group>"; };
 		DFA9A57C2D8F09B100BCE8CA /* GameSaleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSaleViewModel.swift; sourceTree = "<group>"; };
@@ -446,7 +447,6 @@
 			children = (
 				DFA9A57B2D8F099D00BCE8CA /* Sale */,
 				DFA9A5722D8DC4A300BCE8CA /* StockToSale */,
-				DFA9A5592D8C470E00BCE8CA /* Deposit */,
 			);
 			path = Game;
 			sourceTree = "<group>";
@@ -481,6 +481,7 @@
 		DFE491452D8194EB00A9FA2C = {
 			isa = PBXGroup;
 			children = (
+				DFA9A58F2D93364800BCE8CA /* README.md */,
 				DF7EECE22D8868C300ADACAA /* temp.md */,
 				DFE491502D8194EB00A9FA2C /* monopolytech */,
 				DFE491622D8194ED00A9FA2C /* monopolytechTests */,
