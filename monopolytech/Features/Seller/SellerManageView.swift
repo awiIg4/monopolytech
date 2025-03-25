@@ -129,7 +129,7 @@ struct SellerDetailCard: View {
                 
                 HStack {
                     VStack(alignment: .leading, spacing: 8) {
-                        StatRow(title: "Jeux déposés", value: "\(stats.totalDepositedGames)", icon: "shippingbox.fill")
+                        StatRow(title: "Jeux en stock", value: "\(stats.stockGames.count)", icon: "shippingbox.fill")
                         StatRow(title: "Jeux vendus", value: "\(stats.totalSoldGames)", icon: "cart.fill")
                         StatRow(title: "Gains totaux", value: "\(stats.totalEarned) €", icon: "creditcard.fill")
                     }

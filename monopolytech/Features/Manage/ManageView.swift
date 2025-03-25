@@ -21,6 +21,8 @@ struct ManageView: View {
     @State private var showEditorView = false
     @State private var showPromoCodeView = false
     @State private var showBuyerSheet = false
+    @State private var showSellerStatsView = false
+    @State private var showBilanView = false
     
     init() {
         self.viewModel = ManageViewModel()
@@ -83,6 +85,11 @@ struct ManageView: View {
             }
             .sheet(isPresented: $showBuyerSheet) {
                 BuyerView()
+            .sheet(isPresented: $showSellerStatsView) {
+                SellerStatsView()
+            }
+            .sheet(isPresented: $showBilanView) {
+                BilanView()
             }
         }
     }
@@ -93,6 +100,8 @@ struct ManageView: View {
             showDepositView = true
         case "seller":
             showSellerView = true
+        case "seller/stats":
+            showSellerStatsView = true
         case "manager/create":
             showManagerCreationView = true
         case "session/create":
@@ -109,6 +118,8 @@ struct ManageView: View {
             showPromoCodeView = true
         case "buyer/create":
             showBuyerSheet = true
+        case "bilan":
+            showBilanView = true
         default:
             break
         }

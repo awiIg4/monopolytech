@@ -73,6 +73,10 @@
 		DFA9A5812D91599900BCE8CA /* SellerStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA9A5802D91599900BCE8CA /* SellerStats.swift */; };
 		DFA9A5832D9159E700BCE8CA /* SellerStatsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA9A5822D9159E700BCE8CA /* SellerStatsViewModel.swift */; };
 		DFA9A5852D9159FD00BCE8CA /* SellerStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA9A5842D9159FD00BCE8CA /* SellerStatsView.swift */; };
+		DFA9A5882D93084700BCE8CA /* BilanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA9A5872D93084700BCE8CA /* BilanView.swift */; };
+		DFA9A58A2D9309ED00BCE8CA /* BilanModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA9A5892D9309ED00BCE8CA /* BilanModel.swift */; };
+		DFA9A58C2D930A0800BCE8CA /* BilanViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA9A58B2D930A0800BCE8CA /* BilanViewModel.swift */; };
+		DFA9A58E2D930BB200BCE8CA /* GestionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA9A58D2D930BB200BCE8CA /* GestionService.swift */; };
 		DFE491522D8194EB00A9FA2C /* monopolytechApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE491512D8194EB00A9FA2C /* monopolytechApp.swift */; };
 		DFE491542D8194EB00A9FA2C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE491532D8194EB00A9FA2C /* ContentView.swift */; };
 		DFE491562D8194EC00A9FA2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFE491552D8194EC00A9FA2C /* Assets.xcassets */; };
@@ -167,6 +171,10 @@
 		DFA9A5802D91599900BCE8CA /* SellerStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellerStats.swift; sourceTree = "<group>"; };
 		DFA9A5822D9159E700BCE8CA /* SellerStatsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellerStatsViewModel.swift; sourceTree = "<group>"; };
 		DFA9A5842D9159FD00BCE8CA /* SellerStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellerStatsView.swift; sourceTree = "<group>"; };
+		DFA9A5872D93084700BCE8CA /* BilanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BilanView.swift; sourceTree = "<group>"; };
+		DFA9A5892D9309ED00BCE8CA /* BilanModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BilanModel.swift; sourceTree = "<group>"; };
+		DFA9A58B2D930A0800BCE8CA /* BilanViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BilanViewModel.swift; sourceTree = "<group>"; };
+		DFA9A58D2D930BB200BCE8CA /* GestionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestionService.swift; sourceTree = "<group>"; };
 		DFE4914E2D8194EB00A9FA2C /* monopolytech.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = monopolytech.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFE491512D8194EB00A9FA2C /* monopolytechApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = monopolytechApp.swift; sourceTree = "<group>"; };
 		DFE491532D8194EB00A9FA2C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -294,6 +302,7 @@
 				C55830EF2D9187A400C70A36 /* PromoCode */,
 				C55830EA2D91850200C70A36 /* Editor */,
 				C55830E32D9179E400C70A36 /* License */,
+				DFA9A5862D93083700BCE8CA /* Bilan */,
 				C59DF8C92D8C78DA001A8531 /* Session */,
 				DFA9A5712D8DC0B800BCE8CA /* Game */,
 				DFA9A5642D8C803500BCE8CA /* Seller */,
@@ -338,6 +347,7 @@
 				DFA9A5622D8C558300BCE8CA /* GameToDeposit.swift */,
 				DFA9A5772D8F092D00BCE8CA /* GamePurchaseResultModel.swift */,
 				DFA9A5802D91599900BCE8CA /* SellerStats.swift */,
+				DFA9A5892D9309ED00BCE8CA /* BilanModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -394,6 +404,7 @@
 				DFA9A5572D8C468800BCE8CA /* EditorService.swift */,
 				DFA9A5602D8C551E00BCE8CA /* SellerService.swift */,
 				DFA9A5792D8F095C00BCE8CA /* BuyerService.swift */,
+				DFA9A58D2D930BB200BCE8CA /* GestionService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -456,6 +467,15 @@
 				DFA9A57E2D8F09D100BCE8CA /* GameSaleView.swift */,
 			);
 			path = Sale;
+			sourceTree = "<group>";
+		};
+		DFA9A5862D93083700BCE8CA /* Bilan */ = {
+			isa = PBXGroup;
+			children = (
+				DFA9A5872D93084700BCE8CA /* BilanView.swift */,
+				DFA9A58B2D930A0800BCE8CA /* BilanViewModel.swift */,
+			);
+			path = Bilan;
 			sourceTree = "<group>";
 		};
 		DFE491452D8194EB00A9FA2C = {
@@ -652,6 +672,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C591B82B2D88676000D3BB3B /* EditorModel.swift in Sources */,
+				DFA9A5882D93084700BCE8CA /* BilanView.swift in Sources */,
 				C59DF8B32D8A7703001A8531 /* GameDetailView.swift in Sources */,
 				C59DF8C82D8C46E3001A8531 /* ManagerView.swift in Sources */,
 				DFA9A5742D8DC4D400BCE8CA /* GameStockToSaleViewModel.swift in Sources */,
@@ -662,6 +683,7 @@
 				DFA9A56E2D8C808000BCE8CA /* SellerMainView.swift in Sources */,
 				DFA9A57F2D8F09D100BCE8CA /* GameSaleView.swift in Sources */,
 				C591B8272D88674F00D3BB3B /* BuyerModel.swift in Sources */,
+				DFA9A58E2D930BB200BCE8CA /* GestionService.swift in Sources */,
 				C591B8372D8869F400D3BB3B /* UserCard.swift in Sources */,
 				C55830F12D9187AD00C70A36 /* PromoCodeView.swift in Sources */,
 				C591B83C2D886C5200D3BB3B /* SellerListView.swift in Sources */,
@@ -670,11 +692,13 @@
 				C55830F92D931FC600C70A36 /* BuyerView.swift in Sources */,
 				C59DF8CB2D8C78E4001A8531 /* SessionView.swift in Sources */,
 				DF7EECE12D88583F00ADACAA /* APITestView.swift in Sources */,
+				DFA9A58C2D930A0800BCE8CA /* BilanViewModel.swift in Sources */,
 				DF7EECE72D886E7200ADACAA /* NotificationService.swift in Sources */,
 				DF7EECDD2D82E99D00ADACAA /* GameCard.swift in Sources */,
 				DFA9A5562D8C466D00BCE8CA /* LicenseService.swift in Sources */,
 				C59DF8AF2D89A923001A8531 /* CatalogView.swift in Sources */,
 				C59DF8CD2D8C78EC001A8531 /* SessionViewModel.swift in Sources */,
+				DFA9A58A2D9309ED00BCE8CA /* BilanModel.swift in Sources */,
 				C59DF8B72D8AC137001A8531 /* Navbar.swift in Sources */,
 				DFA9A5832D9159E700BCE8CA /* SellerStatsViewModel.swift in Sources */,
 				DF7EECE42D886DD100ADACAA /* GameService.swift in Sources */,

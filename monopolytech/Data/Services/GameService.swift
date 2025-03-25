@@ -406,4 +406,55 @@ class GameService {
         // Utiliser la méthode fetchGames existante avec la requête construite
         return try await fetchGames(query: queryString)
     }
+
+    /// Récupère des jeux (les marque comme récupérés)
+    /// - Parameter gameIds: Liste des IDs de jeux à récupérer
+    /// - Returns: Réponse de succès
+    /// - Throws: APIError si la requête échoue
+    func recoverGames(gameIds: [String]) async throws -> String {
+        let intIds = gameIds.compactMap { Int($0) }
+        
+        let payload: [String: Any] = [
+            "jeux_a_recup": intIds
+        ]
+        
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: payload)
+            
+            let (responseData, statusCode) = try await apiService.request(
+                "\(gameEndpoint)/recuperer",
+                httpMethod: "POST",
+                requestBody: jsonData,
+                returnRawResponse: true
+            )
+            
+            if (200...299).contains(statusCode) {
+                return "Jeux récupérés avec succès"
+            } else {
+                let errorMessage = String(data: responseData, encoding: .utf8) ?? "Erreur inconnue"
+                throw APIError.serverError(statusCode, errorMessage)
+            }
+        } catch {
+            throw error
+        }
+    }
+
+    /// Récupère les jeux récupérables d'un vendeur
+    /// - Parameters:
+    ///   - sellerId: ID du vendeur
+    ///   - sessionId: ID de la session
+    /// - Returns: Liste des jeux récupérables
+    /// - Throws: APIError si la requête échoue
+    func getSellerRecuperableGames(sellerId: String, sessionId: String) async throws -> [Game] {
+        do {
+            struct RecuperableGamesResponse: Decodable {
+                let jeux: [Game]
+            }
+            
+            let response: RecuperableGamesResponse = try await apiService.request("\(gameEndpoint)/a_recuperer?vendeur=\(sellerId)&session=\(sessionId)")
+            return response.jeux
+        } catch {
+            throw error
+        }
+    }
 }

@@ -14,6 +14,8 @@ class ManageViewModel: ObservableObject {
         ManageItem(label: "Créer un vendeur", route: "seller"),
         ManageItem(label: "Déposer un jeu", route: "game/deposit"),
         ManageItem(label: "Acheter des jeux", route: "game/sale"),
+        ManageItem(label: "Game Sale", route: "game/sale"),
+        ManageItem(label: "Statistiques", route: "seller/stats"),
         ManageItem(label: "Create Buyer", route: "buyer/create"),
         ManageItem(label: "Créer un gestionnaire", route: "manager/create"),
         ManageItem(label: "Créer une session", route: "session/create"),
