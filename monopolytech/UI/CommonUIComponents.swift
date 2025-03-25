@@ -101,27 +101,35 @@ public struct StatRow: View {
     let title: String
     let value: String
     let icon: String
+    let color: Color
     
-    public init(title: String, value: String, icon: String) {
+    public init(title: String, value: String, icon: String, color: Color = .primary) {
         self.title = title
         self.value = value
         self.icon = icon
+        self.color = color
     }
     
     public var body: some View {
         HStack(spacing: 10) {
             Image(systemName: icon)
-                .foregroundColor(.green)
+                .foregroundColor(color)
                 .frame(width: 20)
             
             Text(title)
                 .fontWeight(.medium)
-                .frame(width: 100, alignment: .leading)
+                .frame(width: 150, alignment: .leading)
+            
+            Spacer()
             
             Text(value)
-                .foregroundColor(.primary)
+                .foregroundColor(color)
                 .fontWeight(.semibold)
         }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(8)
+        .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
     }
 }
 
