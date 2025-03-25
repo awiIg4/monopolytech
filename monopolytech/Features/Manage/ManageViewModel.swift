@@ -11,18 +11,19 @@ import SwiftUI
 @MainActor
 class ManageViewModel: ObservableObject {
     @Published var manageItems: [ManageItem] = [
-        ManageItem(label: "Manage Seller", route: "seller"),
+        ManageItem(label: "Créer un vendeur", route: "seller"),
         ManageItem(label: "Déposer un jeu", route: "game/deposit"),
+        ManageItem(label: "Acheter des jeux", route: "game/sale"),
         ManageItem(label: "Game Sale", route: "game/sale"),
         ManageItem(label: "Statistiques", route: "seller/stats"),
         ManageItem(label: "Create Buyer", route: "buyer/create"),
         ManageItem(label: "Créer un gestionnaire", route: "manager/create"),
         ManageItem(label: "Créer une session", route: "session/create"),
-        ManageItem(label: "Create License", route: "license/create"),
-        ManageItem(label: "Create Editor", route: "editor/create"),
-        ManageItem(label: "Put games for sale", route: "game/stockToSale"),
-        ManageItem(label: "Create Sales Code", route: "code-promo"),
-        ManageItem(label: "Show Current Session Stats", route: "bilan")
+        ManageItem(label: "Mettre des jeux en rayon", route: "game/stockToSale"),
+        ManageItem(label: "Gérer les codes promo", route: "code-promo"),
+        ManageItem(label: "Show Current Session Stats", route: "bilan"),
+        ManageItem(label: "Gérer les licences", route: "license/manage"),
+        ManageItem(label: "Gérer les éditeurs", route: "editor/manage")
     ]
     
     @Published var userGames: [Game] = []

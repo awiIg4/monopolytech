@@ -21,31 +21,88 @@ class BuyerService {
     /// - Returns: L'acheteur trouvé
     /// - Throws: APIError si la requête échoue
     func getBuyerByEmail(email: String) async throws -> Buyer {
-        struct BuyerDTO: Decodable {
-            let id: Int  // Gardons le type Int comme dans le modèle original
-            let nom: String
-            let email: String
-            let telephone: String
-            let adresse: String?
-            
-            func toModel() -> Buyer {
-                return Buyer(
-                    id: id,  // Convertir l'ID Int en String pour correspondre au modèle Buyer
-                    nom: nom,
-                    email: email,
-                    telephone: telephone ?? "",  // Fournir une valeur par défaut si telephone est nil
-                    adresse: adresse  // adresse est déjà optionnel, donc on peut le passer directement
-                )
-            }
-        }
-        
-        let encodedEmail = email.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? email
+        // Encoder l'email pour l'URL
+        let encodedEmail = email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? email
         
         do {
-            let buyerDTO: BuyerDTO = try await apiService.request("\(endpoint)/\(encodedEmail)")
-            return buyerDTO.toModel()
+            // Récupérer les données brutes pour le débogage
+            let (data, statusCode) = try await apiService.request(
+                "\(endpoint)/\(encodedEmail)",
+                httpMethod: "GET",
+                returnRawResponse: true
+            )
+            
+            // Vérifier que le statut est OK
+            guard (200...299).contains(statusCode) else {
+                if let errorMessage = String(data: data, encoding: .utf8) {
+                    print("Erreur API: \(errorMessage)")
+                    throw APIError.serverError(statusCode, errorMessage)
+                } else {
+                    throw APIError.serverError(statusCode, "Erreur lors de la récupération de l'acheteur")
+                }
+            }
+            
+            // Imprimer la réponse pour debug
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("Réponse API: \(jsonString)")
+            }
+            
+            // Décoder la réponse directement vers le modèle Buyer avec adaptateur
+            let decoder = JSONDecoder()
+            
+            // Adapter le nom du champ adresse du JSON si nécessaire
+            let buyer = try decoder.decode(Buyer.self, from: data)
+            return buyer
         } catch {
+            print("Erreur détaillée: \(error)")
+            throw error
+        }
+    }
+    
+    /// Enregistre un nouvel acheteur
+    /// - Parameters:
+    ///   - nom: Nom de l'acheteur
+    ///   - email: Email de l'acheteur
+    ///   - telephone: Numéro de téléphone de l'acheteur
+    ///   - adresse: Adresse de l'acheteur
+    /// - Returns: Message de confirmation
+    /// - Throws: APIError si la requête échoue
+    func registerBuyer(nom: String, email: String, telephone: String, adresse: String) async throws -> String {
+        // Utiliser une structure plus simple qui correspond aux champs de l'API
+        let buyerRequest: [String: Any] = [
+            "nom": nom,
+            "email": email,
+            "telephone": telephone,
+            "adresse": adresse
+        ]
+        
+        let jsonData = try JSONSerialization.data(withJSONObject: buyerRequest)
+        
+        do {
+            // Effectuer la requête
+            let (data, statusCode) = try await apiService.request(
+                "\(endpoint)/register",
+                httpMethod: "POST",
+                requestBody: jsonData,
+                returnRawResponse: true
+            )
+            
+            // Vérifier que le statut est OK
+            guard (200...299).contains(statusCode) else {
+                if let errorMessage = String(data: data, encoding: .utf8) {
+                    print("Erreur API: \(errorMessage)")
+                    throw APIError.serverError(statusCode, errorMessage)
+                } else {
+                    throw APIError.serverError(statusCode, "Erreur lors de l'enregistrement de l'acheteur")
+                }
+            }
+            
+            // Retourner le message de succès
+            return String(data: data, encoding: .utf8) ?? "Compte acheteur créé avec succès."
+        } catch {
+            print("Erreur détaillée: \(error)")
             throw error
         }
     }
 }
+

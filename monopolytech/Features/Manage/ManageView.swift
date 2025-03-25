@@ -17,6 +17,10 @@ struct ManageView: View {
     @State private var showSessionView = false
     @State private var showStockToSaleView = false
     @State private var showGameSaleView = false
+    @State private var showLicenseView = false
+    @State private var showEditorView = false
+    @State private var showPromoCodeView = false
+    @State private var showBuyerSheet = false
     @State private var showSellerStatsView = false
     @State private var showBilanView = false
     
@@ -70,6 +74,17 @@ struct ManageView: View {
             .sheet(isPresented: $showGameSaleView) {
                 GameSaleView()
             }
+            .sheet(isPresented: $showLicenseView) {
+                LicenseView()
+            }
+            .sheet(isPresented: $showEditorView) {
+                EditorView()
+            }
+            .sheet(isPresented: $showPromoCodeView) {
+                PromoCodeView()
+            }
+            .sheet(isPresented: $showBuyerSheet) {
+                BuyerView()
             .sheet(isPresented: $showSellerStatsView) {
                 SellerStatsView()
             }
@@ -95,6 +110,14 @@ struct ManageView: View {
             showStockToSaleView = true
         case "game/sale":
             showGameSaleView = true
+        case "license/manage":
+            showLicenseView = true
+        case "editor/manage":
+            showEditorView = true
+        case "code-promo":
+            showPromoCodeView = true
+        case "buyer/create":
+            showBuyerSheet = true
         case "bilan":
             showBilanView = true
         default:
@@ -110,7 +133,7 @@ struct ManageView: View {
         case "buyer/create": return "person.badge.plus"
         case "manager/create": return "person.2.fill"
         case "session/create": return "calendar.badge.plus"
-        case "license/create": return "doc.badge.plus"
+        case "license/manage": return "doc.badge.plus"
         case "editor/create": return "building.2.fill"
         case "game/stockToSale": return "arrow.right.square.fill"
         case "code-promo": return "tag.fill"
