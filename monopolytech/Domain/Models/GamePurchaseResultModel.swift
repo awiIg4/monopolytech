@@ -33,6 +33,7 @@ struct PurchasedGame: Codable, Identifiable {
     let vendorName: String?
     let editorName: String?
     
+    /// Prix total incluant la commission
     var total: Double {
         return price + commission
     }

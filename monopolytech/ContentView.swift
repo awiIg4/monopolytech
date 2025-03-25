@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-// Définition de l'énumération Tab
+/// Définition des onglets disponibles dans l'application
 enum Tab {
     case home
     case catalog
@@ -16,13 +16,15 @@ enum Tab {
 }
 
 struct ContentView: View {
+    /// Service d'authentification pour gérer l'état de connexion
     @StateObject private var authService = AuthService.shared
+    /// Onglet actuellement sélectionné
     @State private var currentTab: Navbar.Tab = .home
     
     var body: some View {
         NavigationView {
             ZStack(alignment: .bottom) {
-                // Contenu principal basé sur l'onglet sélectionné
+                // Affichage du contenu en fonction de l'onglet sélectionné
                 Group {
                     switch currentTab {
                     case .home:
@@ -37,7 +39,7 @@ struct ContentView: View {
                 }
                 .padding(.bottom, 50)
                 
-                // Navbar personnalisée
+                // Barre de navigation personnalisée
                 VStack(spacing: 0) {
                     Divider()
                     Navbar(currentTab: $currentTab)
@@ -46,6 +48,7 @@ struct ContentView: View {
             }
             .ignoresSafeArea(edges: .bottom)
             .onChange(of: authService.isAuthenticated) { isAuthenticated in
+                // Changement automatique d'onglet lors de la connexion/déconnexion
                 if isAuthenticated {
                     currentTab = .manage
                 } else {
@@ -62,8 +65,6 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
-
-// In ManageViewModel.swift, update the setupActions method
 
 private func setupActions() {
     // Add navigation to game deposit

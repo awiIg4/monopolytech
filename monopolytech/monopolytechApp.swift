@@ -9,11 +9,11 @@ import SwiftUI
 
 @main
 struct monopolytechApp: App {
-    // Add state object to hold environment-wide auth service
+    /// Service d'authentification partagé dans l'application
     @StateObject private var authService = AuthService.shared
     
     init() {
-        // Set up notification observer for token expiration
+        // Configuration des notifications
         setupNotifications()
     }
     
@@ -21,21 +21,20 @@ struct monopolytechApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(authService)
-                .toastMessage() // Add the toast message modifier here
+                .toastMessage() // Ajout du modificateur pour les messages toast
         }
     }
     
+    /// Configure les observateurs de notifications
     private func setupNotifications() {
-        // Add observer for token expiration
+        // Observateur pour l'expiration du token
         NotificationCenter.default.addObserver(
             forName: NSNotification.Name("TokenExpired"),
             object: nil,
             queue: .main
         ) { _ in
-            // Show notification to user when token expires
+            // Affiche une notification lorsque le token expire
             NotificationService.shared.showInfo("Votre session a expiré. Veuillez vous reconnecter.")
-            
-            // No need to handle logout here as AuthService already does it
         }
     }
 }

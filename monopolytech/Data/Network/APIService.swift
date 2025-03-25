@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-/// Represents possible errors that can occur during API operations
+/// Types d'erreurs possibles lors des opérations API
 enum APIError: Error, LocalizedError {
     case invalidURL
     case networkError(Error)
@@ -35,40 +35,40 @@ enum APIError: Error, LocalizedError {
     }
 }
 
-/// Core service responsible for handling all network communication with the backend API
+/// Service gérant toutes les communications réseau avec l'API backend
 class APIService {
     private let apiBaseURL: String
     private let httpSession: URLSession
     private var securityToken: String?
     
-    /// Shared singleton instance for app-wide use
+    /// Instance partagée pour utilisation dans toute l'application
     static let shared = APIService()
     
-    /// Initialize the API service
+    /// Initialise le service API
     /// - Parameters:
-    ///   - apiBaseURL: The base URL for all API requests
-    ///   - httpSession: The URL session to use for network requests
+    ///   - apiBaseURL: URL de base pour toutes les requêtes API
+    ///   - httpSession: Session URL utilisée pour les requêtes réseau
     init(apiBaseURL: String = "https://back-projet-web-s7-de95e4be6979.herokuapp.com/api",
          httpSession: URLSession = .shared) {
         self.apiBaseURL = apiBaseURL
         self.httpSession = httpSession
     }
     
-    /// Set the authentication token for secured API endpoints
-    /// - Parameter token: The JWT or other authentication token
+    /// Définit le token d'authentification pour les points d'accès sécurisés
+    /// - Parameter token: Le JWT ou autre token d'authentification
     func setSecurityToken(_ token: String?) {
         self.securityToken = token
         URLCache.shared.removeAllCachedResponses()
     }
     
-    /// Makes a network request to the specified endpoint and decodes the response
+    /// Effectue une requête réseau au point d'accès spécifié et décode la réponse
     /// - Parameters:
-    ///   - endpoint: The API endpoint path (will be appended to the base URL)
-    ///   - httpMethod: The HTTP method (GET, POST, PUT, DELETE, etc.)
-    ///   - requestBody: Optional data to send in the request body
-    ///   - returnRawResponse: If true, returns raw data and status code instead of decoded data
-    /// - Returns: The decoded response object of type T or raw data with status code
-    /// - Throws: APIError if the request fails
+    ///   - endpoint: Chemin du point d'accès API (sera ajouté à l'URL de base)
+    ///   - httpMethod: Méthode HTTP (GET, POST, PUT, DELETE, etc.)
+    ///   - requestBody: Données optionnelles à envoyer dans le corps de la requête
+    ///   - returnRawResponse: Si vrai, renvoie les données brutes et le code d'état au lieu des données décodées
+    /// - Returns: L'objet réponse décodé de type T ou les données brutes avec le code d'état
+    /// - Throws: APIError si la requête échoue
     func request<T: Decodable>(
         _ endpoint: String,
         httpMethod: String = "GET",
@@ -88,7 +88,7 @@ class APIService {
                 throw APIError.unauthorized
             }
             
-            // For raw response requests, return the data and status code
+            // Pour les requêtes de réponse brute, renvoie les données et le code d'état
             if returnRawResponse, T.self == (Data, Int).self {
                 return (data, httpResponse.statusCode) as! T
             }
@@ -98,7 +98,7 @@ class APIService {
                 throw APIError.serverError(httpResponse.statusCode, errorMessage)
             }
             
-            // Decode the response
+            // Décode la réponse
             do {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .useDefaultKeys
@@ -114,7 +114,7 @@ class APIService {
         }
     }
     
-    /// Overload for returning raw response data and status code
+    /// Surcharge pour renvoyer les données de réponse brutes et le code d'état
     func request(_ endpoint: String, httpMethod: String = "GET", requestBody: Data? = nil, returnRawResponse: Bool = true) async throws -> (Data, Int) {
         let request = createURLRequest(for: endpoint, httpMethod: httpMethod, requestBody: requestBody)
         
@@ -127,13 +127,13 @@ class APIService {
         return (data, httpResponse.statusCode)
     }
     
-    /// Request that returns raw data, status code, and response headers
+    /// Requête qui renvoie les données brutes, le code d'état et les en-têtes de réponse
     /// - Parameters:
-    ///   - endpoint: The API endpoint path
-    ///   - httpMethod: HTTP method (default: "GET")
-    ///   - requestBody: Optional request body data
-    /// - Returns: Tuple containing data, status code, and response headers
-    /// - Throws: APIError if the request fails
+    ///   - endpoint: Chemin du point d'accès API
+    ///   - httpMethod: Méthode HTTP (par défaut: "GET")
+    ///   - requestBody: Données optionnelles du corps de la requête
+    /// - Returns: Tuple contenant les données, le code d'état et les en-têtes de réponse
+    /// - Throws: APIError si la requête échoue
     func requestWithHeaders(_ endpoint: String, 
                            httpMethod: String = "GET", 
                            requestBody: Data? = nil) async throws -> (Data, Int, [AnyHashable: Any]) {
@@ -152,12 +152,12 @@ class APIService {
         }
     }
     
-    /// Create a URL request for the specified endpoint
+    /// Crée une requête URL pour le point d'accès spécifié
     /// - Parameters:
-    ///   - endpoint: The API endpoint path (will be appended to the base URL)
-    ///   - httpMethod: The HTTP method (GET, POST, PUT, DELETE, etc.)
-    ///   - requestBody: Optional data to send in the request body
-    /// - Returns: The URL request
+    ///   - endpoint: Chemin du point d'accès API (sera ajouté à l'URL de base)
+    ///   - httpMethod: Méthode HTTP (GET, POST, PUT, DELETE, etc.)
+    ///   - requestBody: Données optionnelles à envoyer dans le corps de la requête
+    /// - Returns: La requête URL
     private func createURLRequest(for endpoint: String, httpMethod: String, requestBody: Data? = nil) -> URLRequest {
         guard let fullRequestURL = URL(string: "\(apiBaseURL)/\(endpoint)") else {
             fatalError("Invalid URL: \(apiBaseURL)/\(endpoint)")

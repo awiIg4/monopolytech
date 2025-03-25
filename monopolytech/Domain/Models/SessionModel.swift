@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Modèle représentant une session de vente
 struct Session: Identifiable, Codable, Hashable {
     let id: Int?
     let date_debut: String
@@ -16,7 +17,7 @@ struct Session: Identifiable, Codable, Hashable {
     let valeur_frais_depot: Double
     let frais_depot_en_pourcentage: Bool
     
-    // For preview and testing purposes
+    /// Instance pour les prévisualisations et les tests
     static let placeholder = Session(
         id: 1,
         date_debut: "2024-03-17",
@@ -27,7 +28,7 @@ struct Session: Identifiable, Codable, Hashable {
         frais_depot_en_pourcentage: true
     )
     
-    // Empty state placeholders
+    /// État vide pour gérer l'absence de données
     static let empty = Session(
         id: nil,
         date_debut: "No start date",
@@ -38,7 +39,7 @@ struct Session: Identifiable, Codable, Hashable {
         frais_depot_en_pourcentage: false
     )
     
-    // Helper computed properties for empty state handling
+    /// Propriétés calculées pour l'affichage adaptatif des données
     var displayDateDebut: String {
         return date_debut.isEmpty ? "No start date" : date_debut
     }

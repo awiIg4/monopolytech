@@ -8,96 +8,100 @@
 import Foundation
 import SwiftUI
 
-// TODO: Convert to a real test suite
+/// Classe utilitaire pour tester les fonctionnalités API
 class APITester {
     static let shared = APITester()
     private let gameService = GameService.shared
     
+    /// Teste la récupération des jeux
     func testFetchGames() async {
         do {
-            print("📱 Testing fetchGames()...")
+            print("📱 Test de fetchGames()...")
             let games = try await gameService.fetchGames()
-            print("✅ Successfully fetched \(games.count) games")
+            print("✅ Récupération réussie de \(games.count) jeux")
             if let firstGame = games.first {
-                print("First game: \(firstGame.licence_name ?? "Unknown")")
-                print("Price: \(firstGame.prix) €")
+                print("Premier jeu: \(firstGame.licence_name ?? "Inconnu")")
+                print("Prix: \(firstGame.prix) €")
             }
         } catch {
-            print("❌ Error fetching games: \(error.localizedDescription)")
+            print("❌ Erreur lors de la récupération des jeux: \(error.localizedDescription)")
         }
     }
     
+    /// Teste la récupération des détails d'un jeu
     func testFetchGameDetails() async {
         do {
-            print("📱 Testing fetchGames() first, to get an ID...")
+            print("📱 Test préalable de fetchGames() pour obtenir un ID...")
             let games = try await gameService.fetchGames()
             
             guard let firstGame = games.first, let id = firstGame.id else {
-                print("❌ No games available to test details")
+                print("❌ Aucun jeu disponible pour tester les détails")
                 return
             }
             
-            print("📱 Testing fetchGame(id: \(id))...")
+            print("📱 Test de fetchGame(id: \(id))...")
             let gameDetails = try await gameService.fetchGame(id: id)
-            print("✅ Successfully fetched game details for: \(gameDetails.licence_name ?? "Unknown")")
+            print("✅ Récupération réussie des détails du jeu: \(gameDetails.licence_name ?? "Inconnu")")
         } catch {
-            print("❌ Error fetching game details: \(error.localizedDescription)")
+            print("❌ Erreur lors de la récupération des détails du jeu: \(error.localizedDescription)")
         }
     }
     
+    /// Teste l'accès à la liste des utilisateurs
     func testGetUsers() async {
-        print("📱 Testing getUsers endpoint '/utilisateurs'...")
+        print("📱 Test du point d'accès '/utilisateurs'...")
         
         do {
-            // Try to access the users endpoint (authentication token will be used if present in APIService)
+            // Tente d'accéder au point d'accès des utilisateurs (le token d'authentification sera utilisé s'il est présent dans APIService)
             let (responseData, statusCode, _) = try await APIService.shared.requestWithHeaders(
                 "utilisateurs", 
                 httpMethod: "GET"
             )
             
             if (200...299).contains(statusCode) {
-                print("✅ Successfully accessed users endpoint with status: \(statusCode)")
-                let responseString = String(data: responseData, encoding: .utf8) ?? "No data"
-                print("Response preview: \(responseString.prefix(200))...")
+                print("✅ Accès réussi au point d'accès des utilisateurs avec statut: \(statusCode)")
+                let responseString = String(data: responseData, encoding: .utf8) ?? "Pas de données"
+                print("Aperçu de la réponse: \(responseString.prefix(200))...")
                 
-                // Try to parse the users data
+                // Tente d'analyser les données des utilisateurs
                 do {
                     let decoder = JSONDecoder()
                     let users = try decoder.decode([User].self, from: responseData)
-                    print("✅ Successfully parsed \(users.count) users")
+                    print("✅ Analyse réussie de \(users.count) utilisateurs")
                 } catch {
-                    print("⚠️ Could not parse users data: \(error.localizedDescription)")
-                    print("Raw response: \(responseString)")
+                    print("⚠️ Impossible d'analyser les données des utilisateurs: \(error.localizedDescription)")
+                    print("Réponse brute: \(responseString)")
                 }
             } else {
-                print("❌ Failed to access users endpoint. Status: \(statusCode)")
+                print("❌ Échec de l'accès au point d'accès des utilisateurs. Statut: \(statusCode)")
             }
         } catch {
-            print("❌ Error fetching users: \(error.localizedDescription)")
+            print("❌ Erreur lors de la récupération des utilisateurs: \(error.localizedDescription)")
         }
     }
     
-    // This method can be uncommented once you have a CategoryService
+    // Cette méthode peut être décommentée une fois que vous avez un CategoryService
     /*
     func testFetchCategories() async {
         do {
-            print("📱 Testing fetchCategories()...")
+            print("📱 Test de fetchCategories()...")
             let categories = try await CategoryService.shared.fetchCategories()
-            print("✅ Successfully fetched \(categories.count) categories")
-            print("Categories: \(categories.map { $0.name })")
+            print("✅ Récupération réussie de \(categories.count) catégories")
+            print("Catégories: \(categories.map { $0.name })")
         } catch {
-            print("❌ Error fetching categories: \(error.localizedDescription)")
+            print("❌ Erreur lors de la récupération des catégories: \(error.localizedDescription)")
         }
     }
     */
     
+    /// Exécute tous les tests disponibles
     func runAllTests() async {
         await testFetchGames()
         print("\n-------------------\n")
         await testFetchGameDetails()
         print("\n-------------------\n")
         await testGetUsers()
-        // Uncomment when CategoryService is implemented
+        // Décommentez lorsque CategoryService est implémenté
         // print("\n-------------------\n")
         // await testFetchCategories()
     }
