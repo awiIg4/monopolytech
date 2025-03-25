@@ -14,7 +14,6 @@ class BilanViewModel: ObservableObject {
     @Published var errorMessage: String = ""
     @Published var showAlert = false
     
-    // Utiliser GestionService au lieu de SellerService
     private let gestionService = GestionService.shared
     
     init() {
@@ -27,7 +26,6 @@ class BilanViewModel: ObservableObject {
         
         Task {
             do {
-                // Utiliser GestionService pour charger le bilan
                 let bilanData = try await gestionService.getBilanCurrentSession()
                 
                 await MainActor.run {
@@ -56,5 +54,25 @@ class BilanViewModel: ObservableObject {
         }
         
         return dateString
+    }
+    
+    /// Formate un montant en acceptant soit une chaîne, soit un nombre
+    func formatMontant(_ montant: String, suffixe: String = "", préfixe: String = "") -> String {
+        // Convertir la chaîne en Double
+        guard let valeur = Double(montant.replacingOccurrences(of: ",", with: ".")) else {
+            return "\(préfixe)\(montant) \(suffixe)"
+        }
+        
+        // Formater le nombre avec séparateurs de milliers
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 2
+        
+        if let texteFormatté = formatter.string(from: NSNumber(value: valeur)) {
+            return "\(préfixe)\(texteFormatté) \(suffixe)"
+        }
+        
+        return "\(préfixe)\(montant) \(suffixe)"
     }
 }

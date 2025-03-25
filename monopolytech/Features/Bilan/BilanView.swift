@@ -56,21 +56,24 @@ struct BilanView: View {
                                     .frame(maxWidth: .infinity, alignment: .center)
                                 
                                 StatRow(
-                                    title: "Total généré",
-                                    value: String(format: "%.2f €", bilan.bilan.total_generé_par_vendeurs),
-                                    icon: "dollarsign.circle.fill"
+                                    title: "Chiffre d'affaires",
+                                    value: viewModel.formatMontant(bilan.bilan.total_generé_par_vendeurs, suffixe: "€", préfixe: "+ "),
+                                    icon: "dollarsign.circle.fill",
+                                    color: .blue
                                 )
                                 
                                 StatRow(
-                                    title: "Total dû aux vendeurs",
-                                    value: String(format: "%.2f €", bilan.bilan.total_dû_aux_vendeurs),
-                                    icon: "person.2.fill"
+                                    title: "Commissions vendeurs",
+                                    value: viewModel.formatMontant(bilan.bilan.total_dû_aux_vendeurs, suffixe: "€", préfixe: "- "),
+                                    icon: "person.2.fill",
+                                    color: .orange
                                 )
                                 
                                 StatRow(
-                                    title: "Revenu de l'organisation",
-                                    value: String(format: "%.2f €", bilan.bilan.argent_généré_pour_admin),
-                                    icon: "building.2.fill"
+                                    title: "Bénéfice net",
+                                    value: viewModel.formatMontant(bilan.bilan.argent_généré_pour_admin, suffixe: "€", préfixe: "= "),
+                                    icon: "building.2.fill",
+                                    color: .green
                                 )
                                 
                                 // Bouton de rafraîchissement

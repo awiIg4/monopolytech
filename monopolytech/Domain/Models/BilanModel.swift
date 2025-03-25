@@ -7,33 +7,20 @@
 
 import Foundation
 
-struct BilanModel: Codable, Equatable {
-    let session: Session
+struct BilanModel: Codable {
+    let session: BilanSession
     let bilan: BilanDetails
     
-    struct BilanDetails: Codable, Equatable {
-        let total_generé_par_vendeurs: Double
-        let total_dû_aux_vendeurs: Double
-        let argent_généré_pour_admin: Double
+    // Structure simplifiée de Session uniquement pour le bilan
+    struct BilanSession: Codable {
+        let id: Int
+        let date_debut: String
+        let date_fin: String
     }
     
-    // Pour la prévisualisation et les tests
-    static let placeholder = BilanModel(
-        session: Session.placeholder,
-        bilan: BilanDetails(
-            total_generé_par_vendeurs: 1000.0,
-            total_dû_aux_vendeurs: 800.0,
-            argent_généré_pour_admin: 200.0
-        )
-    )
-    
-    // État vide
-    static let empty = BilanModel(
-        session: Session.empty,
-        bilan: BilanDetails(
-            total_generé_par_vendeurs: 0.0,
-            total_dû_aux_vendeurs: 0.0,
-            argent_généré_pour_admin: 0.0
-        )
-    )
+    struct BilanDetails: Codable {
+        let total_generé_par_vendeurs: String
+        let total_dû_aux_vendeurs: String
+        let argent_généré_pour_admin: String
+    }
 }
